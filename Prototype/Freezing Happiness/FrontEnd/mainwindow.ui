@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>605</width>
+    <height>430</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="objectTreeWidget">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3"/>
+  </widget>
+  <widget class="QDockWidget" name="attributeWidget">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5"/>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>605</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAdd">
+    <property name="title">
+     <string>Add</string>
+    </property>
+    <addaction name="actionEmpty"/>
+    <addaction name="actionSpline"/>
+    <addaction name="actionInstance"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+   </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionLoad"/>
+    <addaction name="actionSave"/>
+   </widget>
+   <widget class="QMenu" name="menuFunction">
+    <property name="title">
+     <string>Function</string>
+    </property>
+    <addaction name="actionDuplicate_Selected"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuAdd"/>
+   <addaction name="menuFunction"/>
+  </widget>
+  <action name="actionEmpty">
+   <property name="text">
+    <string>Empty</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionSpline">
+   <property name="text">
+    <string>Spline</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Load</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionInstance">
+   <property name="text">
+    <string>Instance</string>
+   </property>
+  </action>
+  <action name="actionDuplicate_Selected">
+   <property name="text">
+    <string>Duplicate Selected</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
