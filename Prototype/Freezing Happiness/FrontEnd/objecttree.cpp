@@ -22,10 +22,6 @@ ObjectTree::ObjectTree(QWidget *parent) : QTreeWidget(parent)
 
 void ObjectTree::setProject(Project *project)
 {
-    qDebug() << "test";
-    qDebug() << project->metaObject()->className();
-    qDebug() << "endtest;";
-
     _project = project;
     if (_project) {
         connect(_project, SIGNAL(structureChanged()), this, SLOT(updateStructure()));

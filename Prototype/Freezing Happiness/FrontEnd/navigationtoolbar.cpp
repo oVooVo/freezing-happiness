@@ -148,8 +148,9 @@ void NavigationToolbar::onCustomPositionEditChanged()
 void NavigationToolbar::onCustomRotationEditChanged()
 {
     if (_rotationEdit->isEmpty()) {
-        _viewport->setCustomPositionObject(0);
+        _viewport->setCustomRotationObject(0);
     } else {
-        _viewport->setCustomPositionObject(_project->getObject(_rotationEdit->id()));
-    }}
+        _viewport->setCustomRotationObject(_project->getObject(_rotationEdit->id()));
+    }
+}
 
