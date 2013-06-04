@@ -71,7 +71,6 @@ QByteArray Tag::toByteArray() const
 
 QDataStream& operator<<(QDataStream& out, Tag* t)
 {
-    qDebug() << t->metaObject()->className();
     QByteArray a = t->toByteArray();
     out << a;
     return out;

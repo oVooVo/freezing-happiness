@@ -318,38 +318,79 @@ void ConstraintTag::exec(QPainter &p)
     Q_UNUSED(p)
 
     if (!owner()) return;
-    affectPosition();
-    affectRotation();
-    affectScalation();
+
+    if (_hasPosId && owner()->isAncestorOf(owner()->project()->getObject(_posId))) {
+        qDebug() << "Cyclic dependency.";
+    } else {
+        affectPosition();
+    }
+
+    if (_hasRotId && owner()->isAncestorOf(owner()->project()->getObject(_rotId))) {
+        qDebug() << "Cyclic dependency.";
+    } else {
+        affectRotation();
+    }
+
+    if (_hasScaleId && owner()->isAncestorOf(owner()->project()->getObject(_scaleId))) {
+        qDebug() << "Cyclic dependency.";
+    } else {
+        affectScalation();
+    }
 }
 
 void ConstraintTag::affectPosition()
 {
-    Project* p = owner()->project();
-    Object* sub = p->getObject(_posId); //null if _posId is invalid.
-    if (_positionMode != ignore && _hasPosId && (_affectX || _affectY) && p && sub) {
-        bool g = (_positionMode == global);
-        QPointF newPos = g ? sub->globalePosition() : sub->localePosition();
-        QPointF oldPos;
-        if (!_affectX || !_affectY) {
-            oldPos = g ? owner()->globalePosition() : owner()->localePosition();
-        }
-        if (!_affectX) {
-            newPos.setX(oldPos.x());
-        }
-        if (!_affectY) {
-            newPos.setY(oldPos.y());
-        }
-        if (g) {
-            owner()->setGlobalePosition(newPos);
-        } else {
-            owner()->setLocalePosition(newPos);
-        }
+    if (!_hasPosId || _positionMode == ignore || !(_affectX || _affectY) || !owner() || !owner()->project()) return;
+    Object* sub = owner()->project()->getObject(_posId); //null if _posId is invalid.
+    if (!sub) return;
+
+    bool g = (_positionMode == global);
+    QPointF newPos = g ? sub->globalePosition() : sub->localePosition();
+    QPointF oldPos;
+    if (!_affectX || !_affectY) {
+        oldPos = g ? owner()->globalePosition() : owner()->localePosition();
+    }
+    if (!_affectX) {
+        newPos.setX(oldPos.x());
+    }
+    if (!_affectY) {
+        newPos.setY(oldPos.y());
+    }
+    if (g) {
+        owner()->setGlobalePosition(newPos);
+    } else {
+        owner()->setLocalePosition(newPos);
     }
 }
 
-void ConstraintTag::affectRotation() {}
-void ConstraintTag::affectScalation() {}
+void ConstraintTag::affectRotation()
+{
+    if (!_hasRotId || _rotationMode == ignore || !owner() || !owner()->project()) return;
+    Object* sub = owner()->project()->getObject(_rotId);
+    if (!sub) return;
+
+    bool g = (_positionMode == global);
+    qreal rotation = g ? sub->globaleRotation() : sub->localeRotation();
+    if (g) {
+        owner()->setGlobaleRotation(rotation);
+    } else {
+        owner()->setLocaleRotation(rotation);
+    }
+}
+void ConstraintTag::affectScalation()
+{
+    if (!_hasScaleId || _scalationMode == ignore || !owner() || !owner()->project()) return;
+    Object* sub = owner()->project()->getObject(_rotId);
+    if (!sub) return;
+
+    bool g = (_scalationMode == global);
+    qreal scalation = g ? sub->globaleScalation() : sub->localeScalation();
+    if (g) {
+        owner()->setGlobaleScalation(scalation);
+    } else {
+        owner()->setLocaleScalation(scalation);
+    }
+}
 
 
 

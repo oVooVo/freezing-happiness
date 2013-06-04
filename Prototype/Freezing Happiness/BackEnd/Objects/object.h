@@ -83,10 +83,10 @@ public:
     void setGlobalePosition(QPointF pos, Mode mode = ObjectMode);
     QPointF globalePosition();
     void setGlobaleScalation(qreal scale, Mode mode, QPointF center);
-    void setGlobaleScalation(qreal scale, Mode mode);
+    void setGlobaleScalation(qreal scale, Mode mode = ObjectMode);
     qreal globaleScalation();
     void setGlobaleRotation(qreal r, Mode mode, QPointF center);
-    void setGlobaleRotation(qreal r, Mode mode);
+    void setGlobaleRotation(qreal r, Mode mode = ObjectMode);
     qreal globaleRotation();
 
     bool isAncestorOf(Object* o) const;
