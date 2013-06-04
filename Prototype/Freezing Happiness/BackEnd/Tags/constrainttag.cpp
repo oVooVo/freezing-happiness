@@ -39,7 +39,7 @@ ConstraintTag::ConstraintTag(QByteArray* data)
         _rotId = rotId;
         _hasScaleId = (bool) hasScaleId;
         _scaleId = scaleId;
-        _affectX = (bool) affectY;
+        _affectX = (bool) affectX;
         _affectY = (bool) affectY;
     }
 }
