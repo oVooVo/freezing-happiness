@@ -559,7 +559,7 @@ Object* Object::deserialize(QDataStream &in, Project* project, bool assertId, bo
     }
 
     o->setProperties(props);
-    o->_tags = tags;
+    o->setTags(tags);
     o->setSelected(isSelected);
 
     if (recursive) {
@@ -605,4 +605,52 @@ void Object::setProperties(QMap<QString, Property *> props)
         props[key]->setProject(project());
         addProperty(key, props[key]);
     }
+}
+
+void Object::setTags(QList<Tag *> tags)
+{
+    foreach (Tag* tag, _tags) {
+        delete tag;
+    }
+    _tags.clear();
+
+    for (Tag* tag : tags) {
+        if (hasTag(tag)) continue;
+        _tags.append(tag);
+        tag->setOwner(this);
+    }
+    _project->emitStructureChanged();
+}
+
+bool Object::hasTag(QString className) const
+{
+    foreach (Tag* t, _tags) {
+        if (t->type() == className) return true;
+    }
+    return false;
+}
+
+bool Object::hasTag(Tag* tag) const
+{
+    return hasTag(tag->type());
+}
+
+void Object::newTag(QString tagName)
+{
+    if (hasTag(tagName)) return;
+
+    Tag* tag = Tag::createInstance(tagName);
+    tag->setOwner(this);
+    _tags.append(tag);
+    _project->emitStructureChanged();
+}
+
+Tag* Object::tag(QString className)
+{
+    foreach (Tag* tag, _tags) {
+        if (tag->type() == className) {
+            return tag;
+        }
+    }
+    return 0;
 }

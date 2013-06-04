@@ -211,6 +211,40 @@ void Project::addLogItem(QString item)
     _log.append(QString("(%2) -- %1")).arg(item).arg(QDateTime::currentDateTime().toString("YYYY.MM.dd hh:mm:ss.zzz"));
 }
 
+
+Object* Project::find(QString name)
+{
+    foreach (Object* o, objects()) {
+        if (o->name() == name) {
+            return o;
+        }
+    }
+    return 0;
+}
+
+void Project::paint(QPainter &p)
+{
+    p.setTransform(_root->localeTransform());
+    _root->paint(p);
+}
+
+void Project::duplicateSelected()
+{
+    qDebug() << "duplicate";
+    QList<Object*> selection = selectedParents();
+    foreach (Object* object, selection) {
+        QByteArray data;
+        QDataStream out(&data, QIODevice::WriteOnly);
+        object->serialize(out);
+
+        QDataStream in(&data, QIODevice::ReadOnly);
+        Object* copy = Object::deserialize(in, this, false);
+        copy->setName(object->name().append(tr(" (Copy)")));
+        copy->setTreeParent(object->treeParent());
+    }
+}
+
+
 QMap<QString, QList<Property*> > Project::activeProperties()
 {
 
@@ -247,34 +281,42 @@ QMap<QString, QList<Property*> > Project::activeProperties()
     return props;
 }
 
-Object* Project::find(QString name)
+
+QMap<QString, QList<Tag *> > Project::activeTags()
 {
-    foreach (Object* o, objects()) {
-        if (o->name() == name) {
-            return o;
+    if (selectedObjects().isEmpty()) {
+        return QMap<QString, QList<Tag*> >();
+    }
+
+    QList<QString> candidates;
+    foreach (Tag* t, selectedObjects().first()->tags()) {
+        candidates.append(t->type());
+    }
+
+    QList<QString> candidates2;
+
+    if (candidates.isEmpty()) {
+        return QMap<QString, QList<Tag*> >();
+    }
+
+    foreach (Object* object, selectedObjects()) {
+        foreach (QString s, candidates) {
+            if (object->hasTag(s)) {
+                candidates2.append(s);
+            }
         }
+        candidates = candidates2;
+        candidates2.clear();
     }
-    return 0;
-}
 
-void Project::paint(QPainter &p)
-{
-    p.setTransform(_root->localeTransform());
-    _root->paint(p);
-}
-
-void Project::duplicateSelected()
-{
-    qDebug() << "duplicate";
-    QList<Object*> selection = selectedParents();
-    foreach (Object* object, selection) {
-        QByteArray data;
-        QDataStream out(&data, QIODevice::WriteOnly);
-        object->serialize(out);
-
-        QDataStream in(&data, QIODevice::ReadOnly);
-        Object* copy = Object::deserialize(in, this, false);
-        copy->setName(object->name().append(tr(" (Copy)")));
-        copy->setTreeParent(object->treeParent());
+    QMap<QString, QList<Tag*> > tagsMap;
+    foreach (QString className, candidates) {
+        QList<Tag*> tags;
+        foreach (Object* object, selectedObjects()) {
+            tags.append(object->tag(className));
+        }
+        tagsMap.insert(className, tags);
     }
+
+    return tagsMap;
 }

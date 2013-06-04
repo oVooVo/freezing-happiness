@@ -32,8 +32,10 @@ void ObjectEdit::setId(quint64 id)
 
 void ObjectEdit::clear()
 {
-    _empty = true;
-    emit statusChanged();
+    if (!_empty) {
+        _empty = true;
+        emit statusChanged();
+    }
     QLineEdit::clear();
 }
 
@@ -63,7 +65,11 @@ void ObjectEdit::onTextEditFinished()
         object = _project->find(text());
     }
     if (object) {
-        _id = id;
+        if (_id != id || _empty != false) {
+            _id = id;
+            _empty = false;
+            emit statusChanged();
+        }
         setText(object->name());
     } else {
         clear();

@@ -37,8 +37,8 @@ signals:
 private:
     QString _category;
     QString _name;
-    Project* _project;
-    Object* _owner;
+    Project* _project = 0;
+    Object* _owner = 0; //unused!
 
 protected:
     //contains ctor for each Property

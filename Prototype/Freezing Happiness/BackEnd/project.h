@@ -39,6 +39,7 @@ public:
     QString log() const { return _log; }
 
     QMap<QString, QList<Property*> > activeProperties();
+    QMap<QString, QList<Tag*> > activeTags();
 
     void paint(QPainter &p);
 

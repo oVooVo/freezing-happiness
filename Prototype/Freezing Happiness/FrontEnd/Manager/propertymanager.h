@@ -3,6 +3,7 @@
 #include <QTabWidget>
 #include <FrontEnd/Manager/manager.h>
 #include <QLabel>
+#include "BackEnd/Tags/tag.h"
 
 class PropertyManager : public Manager
 {

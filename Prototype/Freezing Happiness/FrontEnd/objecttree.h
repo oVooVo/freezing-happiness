@@ -33,12 +33,13 @@ protected:
 private:
     Project* _project;
     QTreeWidgetItem* _doubleClickedObject;
+    QTreeWidgetItem* _rightClickedObject;
     QPoint _leftMouseDownPosition;
     QTreeWidgetItem* treeWidgetItemFromObject(Object* o);
     QMap<QTreeWidgetItem*, Object*> _objectsMap;
     QMap<Object*, QTreeWidgetItem*> _itemsMap;
     QMap<Object*, bool> _expanded;
-
+    void setUpContextMenu();
 
 
 

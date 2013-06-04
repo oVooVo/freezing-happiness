@@ -41,7 +41,8 @@ SOURCES += main.cpp \
     FrontEnd/objectedit.cpp \
     FrontEnd/combobox.cpp \
     BackEnd/Objects/instance.cpp \
-    BackEnd/Properties/referenceproperty.cpp
+    BackEnd/Properties/referenceproperty.cpp \
+    BackEnd/Tags/constrainttag.cpp
 
 
 HEADERS += \
@@ -68,8 +69,10 @@ HEADERS += \
     FrontEnd/objectedit.h \
     FrontEnd/combobox.h \
     BackEnd/Objects/instance.h \
-    BackEnd/Properties/referenceproperty.h
+    BackEnd/Properties/referenceproperty.h \
+    BackEnd/Tags/constrainttag.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \
-    FrontEnd/navigationtoolbar.ui
+    FrontEnd/navigationtoolbar.ui \
+    BackEnd/Tags/ConstraintWidget.ui

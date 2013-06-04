@@ -49,6 +49,9 @@ public:
     QMap<QString, Property*> properties() const { return _properties; }
     bool hasProperty(QString role) const;
     Property* property(QString role) const  { return _properties.value(role, 0); }
+    bool hasTag(QString className) const;
+    bool hasTag(Tag* tag) const;
+    Tag* tag(QString className);
     QList<Tag*> tags() const { return _tags; }
 
     //id administration
@@ -112,6 +115,8 @@ public:
     QPointF mapToGlobal(QPointF point);
     QPointF mapToLocal(QPointF point);
 
+    void newTag(QString tagName);
+
 
 public slots:
     void emitObjectChanged();
@@ -129,7 +134,7 @@ private:
     QList<Object*> selectedParents(); //Returns selected Objects, but never a child of a selected Object.
     QList<Object*> selectedChildren();//Returns selected Objects and every children of a selected Object.
     void setProperties(QMap<QString, Property*> props);
-    void setTags(QList<Tag*>) { Q_ASSERT_X(false, "Object::setProperties", "not implemented"); }
+    void setTags(QList<Tag*> tags);
     QTransform _globaleTransformCache;
     QTransform _globaleTransformInvertedCache;
     bool _globaleTransformUpToDate;

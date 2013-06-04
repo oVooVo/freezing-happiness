@@ -6,6 +6,8 @@
 #include <QMimeData>
 #include <QByteArray>
 #include <QTimer>
+#include <QAction>
+#include "BackEnd/Tags/tag.h"
 
 ObjectTree::ObjectTree(QWidget *parent) : QTreeWidget(parent)
 {
@@ -15,9 +17,11 @@ ObjectTree::ObjectTree(QWidget *parent) : QTreeWidget(parent)
     setDragDropMode(QAbstractItemView::DragDrop);
     setEditTriggers(QAbstractItemView::DoubleClicked);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
-    installEventFilter(this);
     setHeaderHidden(true);
+    installEventFilter(this);
     connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(selectionChanged()));
+
+    setUpContextMenu();
 }
 
 void ObjectTree::setProject(Project *project)
@@ -57,6 +61,7 @@ void ObjectTree::updateObject(Object *o)
 QTreeWidgetItem* ObjectTree::treeWidgetItemFromObject(Object *o)
 {
     QTreeWidgetItem* item = new QTreeWidgetItem(QStringList() << o->name());
+
     item->setFlags(item->flags() | Qt::ItemIsEditable);
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
             this, SLOT(insertExpandInformation(QTreeWidgetItem*)));
@@ -103,6 +108,8 @@ void ObjectTree::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         _leftMouseDownPosition = event->pos();
+    } else if (event->button() == Qt::RightButton) {
+        _rightClickedObject = itemAt(event->pos());
     }
     QTreeWidget::mousePressEvent(event);
 }
@@ -182,4 +189,18 @@ QMimeData* ObjectTree::mimeData(const QList<QTreeWidgetItem *> items) const
     QMimeData* m = QTreeWidget::mimeData(items);
     m->setText(text);
     return m;
+}
+
+void ObjectTree::setUpContextMenu()
+{
+    setContextMenuPolicy(Qt::ActionsContextMenu);
+    foreach (QString tagName, Tag::tags()) {
+        QAction* action = new QAction(tagName, this);
+        addAction(action);
+        connect(action, &QAction::triggered, [=]() {
+            Object* object = _objectsMap[_rightClickedObject];
+            if (!object) return;
+            object->newTag(tagName);
+        });
+    }
 }

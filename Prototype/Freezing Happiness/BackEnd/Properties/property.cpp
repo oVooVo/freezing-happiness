@@ -4,6 +4,8 @@
 
 QMap<QString, Property* (*)(QByteArray*)> *Property::_creatorMap = 0;
 QMap<QString, QWidget* (*)(QList<Property*>, QWidget*)> *Property::_widgetCreatorMap = 0;
+
+//TODO: store "background-color:yellow" instead of "yellow";
 const QString Property::MULTIPLE_VALUES_COLOR = "yellow";
 
 Property::Property(QByteArray *data)
@@ -11,7 +13,6 @@ Property::Property(QByteArray *data)
     Q_UNUSED(data);
     _category = "none";
     _name = "none";
-    _project = 0;
 }
 
 Property* Property::createInstance(QByteArray *data)
