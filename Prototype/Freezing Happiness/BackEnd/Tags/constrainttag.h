@@ -12,6 +12,7 @@ public:
     ConstraintTag(QByteArray* data);
     QByteArray toByteArray() const;
     static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
+    void exec(QPainter &p);
 
 public slots:
     void setPositionMode(Mode mode);
@@ -52,6 +53,10 @@ private:
 
     static int modeToIndex(Mode m) { return (int) m; }
     static Mode intToMode(int i) { return (Mode) i; }
+
+    void affectPosition();
+    void affectRotation();
+    void affectScalation();
 
 };
 

@@ -444,6 +444,11 @@ QString Object::toTikz() const
 void Object::paint(QPainter &p)
 {
     QPen pen;
+
+    for (Tag* tag : _tags) {
+        tag->exec(p);
+    }
+
     pen.setCosmetic(true);
     if (isSelected()) {
         pen.setWidth(2);

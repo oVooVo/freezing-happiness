@@ -318,3 +318,61 @@ void ConstraintTag::setScalationObject(quint64 id, bool isEmpty)
     _hasScaleId = !isEmpty;
     emit valueChanged();
 }
+
+void ConstraintTag::exec(QPainter &p)
+{
+    Q_UNUSED(p)
+
+    if (!owner()) return;
+    affectPosition();
+    affectRotation();
+    affectScalation();
+}
+
+void ConstraintTag::affectPosition()
+{
+    Project* p = owner()->project();
+    Object* sub = p->getObject(_posId); //null if _posId is invalid.
+    if (_positionMode != ignore && _hasPosId && (_affectX || _affectY) && p && sub) {
+        bool g = (_positionMode == global);
+        QPointF newPos = g ? sub->globalePosition() : sub->localePosition();
+        QPointF oldPos;
+        if (!_affectX || !_affectY) {
+            oldPos = g ? owner()->globalePosition() : owner()->localePosition();
+        }
+        if (!_affectX) {
+            newPos.setX(oldPos.x());
+        }
+        if (!_affectY) {
+            newPos.setY(oldPos.y());
+        }
+        if (g) {
+            owner()->setGlobalePosition(newPos);
+        } else {
+            owner()->setLocalePosition(newPos);
+        }
+    }
+}
+
+void ConstraintTag::affectRotation() {}
+void ConstraintTag::affectScalation() {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

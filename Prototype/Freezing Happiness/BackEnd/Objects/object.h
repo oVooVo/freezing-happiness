@@ -80,7 +80,7 @@ public:
     void setGlobaleTransform(QTransform t);
     QTransform globaleTransform();
     QTransform globaleTransformInverted();
-    void setGlobalePosition(QPointF pos, Mode mode);
+    void setGlobalePosition(QPointF pos, Mode mode = ObjectMode);
     QPointF globalePosition();
     void setGlobaleScalation(qreal scale, Mode mode, QPointF center);
     void setGlobaleScalation(qreal scale, Mode mode);
