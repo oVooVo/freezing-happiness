@@ -33,6 +33,7 @@ void PropertyManager::updateProperties()
 
     foreach (QString name, properties.keys()) {
         if (properties[name].isEmpty()) continue;
+
         QString category = properties[name].first()->category();
         QVBoxLayout* layout;
         if (propWidgets.contains(category)) {
@@ -80,7 +81,7 @@ void PropertyManager::updateProperties()
         QWidget* w = new QWidget(_tabWidget);
         w->setLayout(propWidgets[category]);
         _tabWidget->insertTab(_tabWidget->count(), w, category);
-        _tabWidget->tabBar()->tabButton(0,QTabBar::RightSide)->resize(0,0);
+        _tabWidget->tabBar()->tabButton(_tabWidget->count()  - 1, QTabBar::RightSide)->resize(0,0);
     }
     int propertyCount = _tabWidget->count();
     foreach (QString className, tags.keys()) {

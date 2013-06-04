@@ -1,5 +1,6 @@
 #include "tag.h"
 #include <QDebug>
+#include "BackEnd/project.h"
 
 QMap<QString, Tag* (*)(QByteArray*)> *Tag::_creatorMap = 0;
 QMap<QString, QWidget* (*)(QList<Tag*>, QWidget*)> *Tag::_widgetCreatorMap = 0;
@@ -106,4 +107,11 @@ QWidget* Tag::createWidget(QList<Tag*> tags, QWidget* parent)
     }
 
     return (it.value())(tags, parent);
+}
+
+void Tag::createUndoRecord(bool force)
+{
+    if (owner() && owner()->project()) {
+        owner()->project()->createNewUndoRecord(force);
+    }
 }
