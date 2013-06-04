@@ -230,7 +230,6 @@ void Project::paint(QPainter &p)
 
 void Project::duplicateSelected()
 {
-    qDebug() << "duplicate";
     QList<Object*> selection = selectedParents();
     foreach (Object* object, selection) {
         QByteArray data;

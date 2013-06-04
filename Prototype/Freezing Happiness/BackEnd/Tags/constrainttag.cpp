@@ -29,7 +29,6 @@ ConstraintTag::ConstraintTag(QByteArray* data)
                >> posMode >> affectX >> affectY >> hasPosId >> posId
                >> rotMode >> hasRotId >> rotId
                >> scaleMode >> hasScaleId >> scaleId;
-        qDebug() << "got posMode =" << posMode;
         _positionMode = (Mode) posMode;
         _rotationMode = (Mode) rotMode;
         _scalationMode = (Mode) scaleMode;
@@ -46,20 +45,17 @@ ConstraintTag::ConstraintTag(QByteArray* data)
 
 QByteArray ConstraintTag::toByteArray() const
 {
-    qDebug() << "toByteArray()";
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream << type()
            << (quint8) _positionMode << (quint8) _affectX << (quint8) _affectY << (quint8) _hasPosId << (quint64) _posId
            << (quint8) _rotationMode << (quint8) _hasRotId << (quint64) _rotId
            << (quint8) _scalationMode << (quint8) _hasScaleId << (quint64) _scaleId;
-    qDebug() << "saved _positionMode = " << (quint8) _positionMode;
     return data;
 }
 
 QWidget* ConstraintTag::createWidget(QList<Tag *> tags, QWidget *parent)
 {
-    qDebug() << "createWidget";
     // === Create Widget ===
     QWidget* base = new QWidget(parent);
     QHBoxLayout* horLayout = new QHBoxLayout();
@@ -293,8 +289,6 @@ void ConstraintTag::setPositionObject(quint64 id, bool isEmpty)
 {
     if (_posId == id && _hasPosId != isEmpty) return;
 
-    qDebug() << "_posId = " << id;
-    qDebug() << "_hasPosId = " << !isEmpty;
     _posId = id;
     _hasPosId = !isEmpty;
 

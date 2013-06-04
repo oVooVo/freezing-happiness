@@ -3,11 +3,13 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QDebug>
+#include <QTabBar>
 
 PropertyManager::PropertyManager(QWidget *parent) :
     Manager(parent)
 {
     _tabWidget = new QTabWidget(this);
+    _tabWidget->setTabsClosable(true);
     _objectsLabel = new QLabel(this);
     QVBoxLayout* layout = new QVBoxLayout();
     layout->addWidget(_objectsLabel);
@@ -77,12 +79,22 @@ void PropertyManager::updateProperties()
     foreach (QString category, propWidgets.keys()) {
         QWidget* w = new QWidget(_tabWidget);
         w->setLayout(propWidgets[category]);
-        _tabWidget->insertTab(0, w, category);
+        _tabWidget->insertTab(_tabWidget->count(), w, category);
+        _tabWidget->tabBar()->tabButton(0,QTabBar::RightSide)->resize(0,0);
     }
-    foreach (QString className, tagWidgets.keys()) {
-        QWidget* w = new QWidget(_tabWidget);
-        w->setLayout(tagWidgets[className]);
+    int propertyCount = _tabWidget->count();
+    foreach (QString className, tags.keys()) {
+        if (tags[className].isEmpty()) continue;
+        QWidget* w = Tag::createWidget(tags[className], _tabWidget);
+        _tagMap.append(tags[className]);
         _tabWidget->insertTab(_tabWidget->count(), w, className);
+        connect(_tabWidget, &QTabWidget::tabCloseRequested, [=](int index) {
+            for (Tag* t : _tagMap[index - propertyCount]) {
+                t->owner()->deleteTag(t);
+            }
+            _tagMap.removeAt(index - propertyCount);
+        });
+
     }
 
 

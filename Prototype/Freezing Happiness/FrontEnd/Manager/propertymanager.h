@@ -18,6 +18,7 @@ protected slots:
 private:
     QTabWidget* _tabWidget;
     QLabel* _objectsLabel;
+    QList<QList<Tag*>> _tagMap;
     void updateProperties();
     
 };

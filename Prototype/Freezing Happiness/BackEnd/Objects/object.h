@@ -88,6 +88,7 @@ public:
     void setGlobaleRotation(qreal r, Mode mode, QPointF center);
     void setGlobaleRotation(qreal r, Mode mode);
     qreal globaleRotation();
+
     bool isAncestorOf(Object* o) const;
     bool isDescedantOf(Object* o) const;
     void serialize(QDataStream &stream);
@@ -116,6 +117,7 @@ public:
     QPointF mapToLocal(QPointF point);
 
     void newTag(QString tagName);
+    void deleteTag(Tag* tag);
 
 
 public slots:

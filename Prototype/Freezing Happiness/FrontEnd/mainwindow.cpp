@@ -103,7 +103,7 @@ void MainWindow::load(bool createNew)
         if (!file.exists()) {
             qDebug() << "file does not exists."; return;
         } else if (!file.isReadable()) {
-            qDebug() << "file is not readable"; return;
+            qDebug() << "file is not readable."; return;
         } else {
             QDataStream stream(&file);
             stream >> p;
@@ -143,7 +143,7 @@ void MainWindow::save()
         QFile file(saveString);
         file.open(QIODevice::WriteOnly);
         if (!file.isWritable()) {
-            qDebug() << "File is not writable!";
+            qDebug() << "File is not writable.";
         } else {
             QDataStream stream(&file);
             stream << _pc->project();

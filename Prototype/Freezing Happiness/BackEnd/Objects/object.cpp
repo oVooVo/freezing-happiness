@@ -304,7 +304,7 @@ QTransform Object::globaleTransform()
 QTransform Object::globaleTransformInverted()
 {
     if (!_globaleTransformInvertedUpToDate) {
-        _globaleTransformInvertedCache = globaleTransform().inverted();
+        _globaleTransformInvertedCache = globaleTransform().inverted(); //TODO geht effizienter!
         _globaleTransformInvertedUpToDate = true;
     }
     return _globaleTransformInvertedCache;
@@ -648,6 +648,14 @@ void Object::newTag(QString tagName)
     tag->setOwner(this);
     _tags.append(tag);
     _project->emitStructureChanged();
+}
+
+void Object::deleteTag(Tag* tag)
+{
+    if (_tags.removeOne(tag)) {
+        delete tag;
+        project()->emitStructureChanged();
+    }
 }
 
 Tag* Object::tag(QString className)
