@@ -70,7 +70,9 @@ QTreeWidgetItem* ObjectTree::treeWidgetItemFromObject(Object *o)
     _itemsMap.insert(o, item);
 
     foreach (Object* child, o->directChildren()) {
-        item->addChild(treeWidgetItemFromObject(child));
+        if (child->visibleInObjectTree()) {
+            item->addChild(treeWidgetItemFromObject(child));
+        }
     }
 
     return item;
@@ -203,9 +205,8 @@ void ObjectTree::setUpContextMenu()
         QAction* action = new QAction(tagName, this);
         addAction(action);
         connect(action, &QAction::triggered, [=]() {
-            Object* object = _objectsMap[_rightClickedObject];
-            if (!object) return;
-            object->newTag(tagName);
+            for (Object* object : project()->selectedObjects())
+                object->newTag(tagName);
         });
     }
 }

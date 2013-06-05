@@ -42,7 +42,9 @@ SOURCES += main.cpp \
     FrontEnd/combobox.cpp \
     BackEnd/Objects/instance.cpp \
     BackEnd/Properties/referenceproperty.cpp \
-    BackEnd/Tags/constrainttag.cpp
+    BackEnd/Tags/constrainttag.cpp \
+    BackEnd/Objects/point.cpp \
+    BackEnd/Tags/pointtag.cpp
 
 
 HEADERS += \
@@ -70,7 +72,9 @@ HEADERS += \
     FrontEnd/combobox.h \
     BackEnd/Objects/instance.h \
     BackEnd/Properties/referenceproperty.h \
-    BackEnd/Tags/constrainttag.h
+    BackEnd/Tags/constrainttag.h \
+    BackEnd/Objects/point.h \
+    BackEnd/Tags/pointtag.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \

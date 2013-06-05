@@ -26,6 +26,7 @@ public:
     void emitStructureChanged();
     void emitSelectionChanged();
 
+    void clearSelection();
     QList<Object*> selectedObjects(); //Returns all selected Objects.
     QList<Object*> objects();         //Returns all objects.
     QList<Object*> selectedParents(); //Returns selected Objects, but never a child of a selected Object.
@@ -42,6 +43,7 @@ public:
     QMap<QString, QList<Tag*> > activeTags();
 
     void paint(QPainter &p);
+    bool addPoint(QPointF globalePosition);
 
 public slots:
     void createNewUndoRecord(bool force = false);

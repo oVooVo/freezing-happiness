@@ -29,6 +29,7 @@ ConstraintTag::ConstraintTag(QByteArray* data)
                >> posMode >> affectX >> affectY >> hasPosId >> posId
                >> rotMode >> hasRotId >> rotId
                >> scaleMode >> hasScaleId >> scaleId;
+        Q_ASSERT(className == type());
         _positionMode = (Mode) posMode;
         _rotationMode = (Mode) rotMode;
         _scalationMode = (Mode) scaleMode;
@@ -105,7 +106,6 @@ QWidget* ConstraintTag::createWidget(QList<Tag *> tags, QWidget *parent)
     horLayout->addLayout(posLayout);
     horLayout->addLayout(rotLayout);
     horLayout->addLayout(scaleLayout);
-    base->setLayout(horLayout);
     // === end create Widget ===
 
     // === define update function ===
@@ -241,7 +241,12 @@ QWidget* ConstraintTag::createWidget(QList<Tag *> tags, QWidget *parent)
         });
     }
     update();
-    return base;
+    QWidget* w = new QWidget(parent);
+    QVBoxLayout* layout = new QVBoxLayout();
+    layout->addWidget(Tag::closeButton(tags, parent));
+    layout->addLayout(horLayout);
+    w->setLayout(layout);
+    return w;
 }
 
 

@@ -9,6 +9,7 @@ class Spline : public Object
 public:
     Spline(Project* project, QString name = "Spline");
     void customDraw(QPainter &p);
+    bool isPointObject() const { return true; }
 
 private:
     REGISTER_DECL_OBJECTTYPE(Spline);

@@ -9,6 +9,7 @@
 #include <QEventLoop>
 #include <FrontEnd/combobox.h>
 #include <BackEnd/Objects/empty.h>
+#include "BackEnd/Objects/point.h"
 
 Viewport::Viewport(QWidget *parent) : Manager(parent)
 {
@@ -157,6 +158,7 @@ Object* Viewport::clickedObject(QPoint pos, bool askObject)
         return objects[0];
     }
 
+    /*
     ComboBox* box = new ComboBox();
     QStringList items;
     foreach (Object* object, objects) {
@@ -177,6 +179,8 @@ Object* Viewport::clickedObject(QPoint pos, bool askObject)
     loop.exec();   
     delete box;
     return returnedObject;
+    */
+    return objects[0];
 }
 
 bool Viewport::isInEnvironmentOf(QPoint pos, Object *o)
@@ -193,19 +197,7 @@ bool Viewport::isInEnvironmentOf(QPoint pos, Object *o)
 
 void Viewport::newPoint(QPoint pos)
 {
-    if (!project() || !project()->selectedObjects().size() > 1)  return;
-
-    Object* parent;
-    if (project()->selectedObjects().isEmpty()) {
-        parent = project()->root();
-    } else {
-        parent = project()->selectedObjects().first();
-    }
-
-    Object* point = new Empty(project(), "Point");
-    point->setTreeParent(parent, false); //non invariant global transform, becaus glob trans becomes overridden soon
-    point->setGlobalePosition(pos, Object::ObjectMode);
-
+    project()->addPoint(pos);
 }
 
 

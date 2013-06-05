@@ -109,6 +109,9 @@ public:
     virtual void customDraw(QPainter &p) { Q_UNUSED(p) }
     virtual bool drawChildren() { return true; }
     virtual bool valid() { return true; }
+    virtual bool canHaveChildren() const { return true; }
+    virtual bool visibleInObjectTree() const { return true; }
+    virtual bool isPointObject() const { return false; }
 
     //export
     virtual QString toTikz() const;

@@ -72,6 +72,7 @@ Object::~Object()
 bool Object::setTreeParent(Object *parent, bool invariantGlobalTransform)
 {
     if (parent->isDescedantOf(this)) return false;  //prevent cyclic parentship
+    if (parent && !parent->canHaveChildren()) return false;
 
     _project->createNewUndoRecord();
 
@@ -305,7 +306,7 @@ QTransform Object::globaleTransform()
 QTransform Object::globaleTransformInverted()
 {
     if (!_globaleTransformInvertedUpToDate) {
-        _globaleTransformInvertedCache = globaleTransform().inverted(); //TODO geht effizienter!
+        _globaleTransformInvertedCache = globaleTransform().inverted();
         _globaleTransformInvertedUpToDate = true;
     }
     return _globaleTransformInvertedCache;
@@ -318,6 +319,7 @@ void Object::setGlobaleTransform(QTransform t)
     } else {
         setLocaleTransform(t);
     }
+    qDebug() << "setGlobaleTransform" << name() << ": " << t << MathUtility::isOrthogonal(t);
     _globaleTransformCache = t;
     _globaleTransformUpToDate = true;
 }
@@ -660,7 +662,7 @@ void Object::newTag(QString tagName)
 void Object::deleteTag(Tag* tag)
 {
     if (_tags.removeOne(tag)) {
-        delete tag;
+        tag->deleteLater();
         project()->emitStructureChanged();
     }
 }

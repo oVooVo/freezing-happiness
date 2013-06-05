@@ -1,6 +1,7 @@
 #include "tag.h"
 #include <QDebug>
 #include "BackEnd/project.h"
+#include <QPushButton>
 
 QMap<QString, Tag* (*)(QByteArray*)> *Tag::_creatorMap = 0;
 QMap<QString, QWidget* (*)(QList<Tag*>, QWidget*)> *Tag::_widgetCreatorMap = 0;
@@ -107,6 +108,23 @@ QWidget* Tag::createWidget(QList<Tag*> tags, QWidget* parent)
     }
 
     return (it.value())(tags, parent);
+}
+
+QWidget* Tag::closeButton(QList<Tag *> tags, QWidget *parent)
+{
+    QPushButton* button = new QPushButton(tr("X"), parent);
+    connect(button, &QPushButton::clicked, [=](){
+        if (!tags.isEmpty()) {
+            tags.first()->owner()->project()->createNewUndoRecord();
+            tags.first()->owner()->project()->blockSignals(true);
+            for (Tag* t : tags) {
+                t->owner()->deleteTag(t);
+            }
+            tags.first()->owner()->project()->blockSignals(false);
+            tags.first()->owner()->project()->emitStructureChanged();
+        }
+    } );
+    return button;
 }
 
 void Tag::createUndoRecord(bool force)

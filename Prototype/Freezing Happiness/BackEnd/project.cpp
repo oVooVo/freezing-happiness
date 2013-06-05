@@ -2,6 +2,7 @@
 #include <QDebug>
 #include "Tags/tag.h"
 #include <QDateTime>
+#include "Objects/point.h"
 
 
 Project::Project(Object *root)
@@ -244,6 +245,7 @@ void Project::duplicateSelected()
         QDataStream in(&data, QIODevice::ReadOnly);
         Object* copy = Object::deserialize(in, this, false);
         copy->setName(object->name().append(tr(" (Copy)")));
+        copy->setSelected(false);
         copy->setTreeParent(object->treeParent());
     }
     root()->setSelected(_rootWasSelected);
@@ -325,6 +327,37 @@ QMap<QString, QList<Tag *> > Project::activeTags()
         }
         tagsMap.insert(className, tags);
     }
-
     return tagsMap;
+}
+
+bool Project::addPoint(QPointF globalePosition)
+{
+    Object* parent = 0;
+    QListIterator<Object*> it(selectedObjects());
+    while (it.hasNext()) {
+        Object* tester = it.next();
+        if (tester->isPointObject()) {
+            parent = tester;
+            break;
+        }
+    }
+
+    if (!parent) return false;
+
+    Object* point = new Point(this, "Point");
+    point->setTreeParent(parent, false); //non invariant global transform, becaus glob trans becomes overridden soon
+    point->setGlobalePosition(globalePosition, Object::ObjectMode);
+    return true;
+
+}
+
+void Project::clearSelection()
+{
+    if (selectedObjects().isEmpty()) return;
+    foreach (Object* o, selectedObjects()) {
+        o->blockSignals(true);
+        o->setSelected(false);
+        o->blockSignals(false);
+    }
+    emitSelectionChanged();
 }

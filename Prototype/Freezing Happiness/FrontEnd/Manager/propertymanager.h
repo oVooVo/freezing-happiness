@@ -4,6 +4,7 @@
 #include <FrontEnd/Manager/manager.h>
 #include <QLabel>
 #include "BackEnd/Tags/tag.h"
+#include <QDebug>
 
 class PropertyManager : public Manager
 {
@@ -18,7 +19,7 @@ protected slots:
 private:
     QTabWidget* _tabWidget;
     QLabel* _objectsLabel;
-    QList<QList<Tag*>> _tagMap;
+    QList<QList<Tag*>> _tagList;
     void updateProperties();
     
 };

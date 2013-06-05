@@ -26,7 +26,10 @@ qreal MathUtility::rotation(QTransform t)
     qreal s = scalation(t);
     QPointF rotation = QPointF(qAtan2(t.m21()/s, t.m11()/s), -qAtan2(t.m12()/s, t.m22()/s));
 
-    Q_ASSERT(qFuzzyCompare(rotation.x(), rotation.y()));
+    if (!qFuzzyCompare(rotation.x(), rotation.y())) {
+        qDebug() << "non-orthogonal axes";
+        //Q_ASSERT(false);
+    }
 
     return rotation.x();
 }
@@ -34,7 +37,10 @@ qreal MathUtility::rotation(QTransform t)
 qreal MathUtility::scalation(QTransform t)
 {
     QPointF scalation = QPointF(dist(QPointF(t.m11(), t.m21())), dist(QPointF(t.m12(), t.m22())));
-    Q_ASSERT(qFuzzyCompare(scalation.x(), scalation.y()));
+    if (!qFuzzyCompare(scalation.x(), scalation.y())) {
+        qDebug() << "non-equal scalations";
+        //Q_ASSERT(false);
+    }
     return scalation.x();
 
 }

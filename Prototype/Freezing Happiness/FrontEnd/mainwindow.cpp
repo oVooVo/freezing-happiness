@@ -50,9 +50,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoad, SIGNAL(triggered()), this, SLOT(load()));
     connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(save()));
     connect(ui->actionNew, &QAction::triggered, [this]() { load(true); });
-    connect(ui->actionEmpty, &QAction::triggered, [=]() { new Empty(_pc->project()); } );
-    connect(ui->actionSpline, &QAction::triggered, [=]() { new Spline(_pc->project()); } );
-    connect(ui->actionInstance, &QAction::triggered, [=]() { new Instance(_pc->project()); } );
+    connect(ui->actionEmpty, &QAction::triggered, [=]() {
+        Object* e = new Empty(_pc->project());
+        _pc->project()->clearSelection();
+        e->setSelected(true);
+    } );
+    connect(ui->actionSpline, &QAction::triggered, [=]() {
+        Object* s = new Spline(_pc->project());
+        _pc->project()->clearSelection();
+        s->setSelected(true);
+    } );
+    connect(ui->actionInstance, &QAction::triggered, [=]() {
+        Instance* i = new Instance(_pc->project());
+        _pc->project()->clearSelection();
+        i->setSelected(true);
+    } );
 
 
 }
