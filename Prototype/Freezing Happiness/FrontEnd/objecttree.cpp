@@ -46,7 +46,7 @@ void ObjectTree::updateStructure()
         addTopLevelItem(treeWidgetItemFromObject(_project->root()));
 
     foreach (QTreeWidgetItem* item, _objectsMap.keys()) {
-        item->setExpanded(_expanded.value(_objectsMap[item], true));
+        item->setExpanded(_objectsMap[item]->isExpanded());
     }
 }
 
@@ -63,10 +63,8 @@ QTreeWidgetItem* ObjectTree::treeWidgetItemFromObject(Object *o)
     QTreeWidgetItem* item = new QTreeWidgetItem(QStringList() << o->name());
 
     item->setFlags(item->flags() | Qt::ItemIsEditable);
-    connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
-            this, SLOT(insertExpandInformation(QTreeWidgetItem*)));
-    connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
-            this, SLOT(insertExpandInformation(QTreeWidgetItem*)));
+    connect(this, &QTreeWidget::itemExpanded, [=](QTreeWidgetItem* item) {_objectsMap[item]->setExpanded(true);});
+    connect(this, &QTreeWidget::itemCollapsed, [=](QTreeWidgetItem* item) {_objectsMap[item]->setExpanded(false);});
 
     _objectsMap.insert(item, o);
     _itemsMap.insert(o, item);
@@ -114,11 +112,18 @@ void ObjectTree::mousePressEvent(QMouseEvent *event)
     QTreeWidget::mousePressEvent(event);
 }
 
+void ObjectTree::mouseReleaseEvent(QMouseEvent *event)
+{
+    selectionChanged();
+    QTreeWidget::mouseReleaseEvent(event);
+}
+
+/*
 void ObjectTree::insertExpandInformation(QTreeWidgetItem *item)
 {
     _expanded.insert(_objectsMap[item], item->isExpanded());
 }
-
+*/
 void ObjectTree::mouseDoubleClickEvent(QMouseEvent *event)
 {
     _doubleClickedObject = itemAt(event->pos());

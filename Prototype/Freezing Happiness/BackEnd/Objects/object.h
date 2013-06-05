@@ -57,9 +57,11 @@ public:
     //id administration
     quint64 id() const { return _id; }
 
-    //selection administration
+    //selection and expanded administration
     bool isSelected() const { return _isSelected; }
     void setSelected(bool selected);
+    bool isExpanded() const { return _isExpanded; }
+    void setExpanded(bool expanded);
 
 
     //object specific properties
@@ -131,6 +133,7 @@ private:
     QList<Tag*> _tags;
     quint64 _id;
     bool _isSelected;
+    bool _isExpanded;
     QList<Object*> selectedObjects(); //Returns all selected Children.
     QList<Object*> subjects();        //Returns all objects.
     QList<Object*> selectedParents(); //Returns selected Objects, but never a child of a selected Object.

@@ -230,6 +230,11 @@ void Project::paint(QPainter &p)
 
 void Project::duplicateSelected()
 {
+    createNewUndoRecord();
+    blockSignals(true);
+    setRecordHistory(false);
+    bool _rootWasSelected = root()->isSelected();
+    root()->setSelected(false);
     QList<Object*> selection = selectedParents();
     foreach (Object* object, selection) {
         QByteArray data;
@@ -241,6 +246,10 @@ void Project::duplicateSelected()
         copy->setName(object->name().append(tr(" (Copy)")));
         copy->setTreeParent(object->treeParent());
     }
+    root()->setSelected(_rootWasSelected);
+    blockSignals(false);
+    setRecordHistory(true);
+    emitStructureChanged();
 }
 
 

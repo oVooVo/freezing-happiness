@@ -19,7 +19,7 @@ private slots:
     void updateStructure();
     void updateObject(Object* o);
     void updateSelection();
-    void insertExpandInformation(QTreeWidgetItem* item);
+    //void insertExpandInformation(QTreeWidgetItem* item);
     void selectionChanged();
 
 protected:
@@ -27,6 +27,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     bool eventFilter(QObject *o, QEvent *e);
     QMimeData* mimeData(const QList<QTreeWidgetItem *> items) const;
 
@@ -38,7 +39,7 @@ private:
     QTreeWidgetItem* treeWidgetItemFromObject(Object* o);
     QMap<QTreeWidgetItem*, Object*> _objectsMap;
     QMap<Object*, QTreeWidgetItem*> _itemsMap;
-    QMap<Object*, bool> _expanded;
+    //QMap<Object*, bool> _expanded;
     void setUpContextMenu();
 
 

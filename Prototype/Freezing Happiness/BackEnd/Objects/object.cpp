@@ -21,6 +21,7 @@ Object::Object(Project* project, QString name, bool isRoot)
         project->createNewUndoRecord();
     }
     _isSelected = false;
+    _isExpanded = true;
     _project = project;
     if (!project) return;
 
@@ -436,6 +437,11 @@ void Object::setSelected(bool selected)
     }
 }
 
+void Object::setExpanded(bool expanded)
+{
+    _isExpanded = expanded;
+}
+
 QString Object::toTikz() const
 {
     return QString();
@@ -538,7 +544,7 @@ bool Object::isRoot() const
 
 void Object::serialize(QDataStream &out)
 {
-    out << type() << (quint64) _children.size() << id() << _properties << _tags << isSelected();
+    out << type() << (quint64) _children.size() << id() << _properties << _tags << (quint8) isSelected() << (quint8) isExpanded();
     foreach (Object* child, _children) {
         child->serialize(out);
     }
@@ -551,9 +557,9 @@ Object* Object::deserialize(QDataStream &in, Project* project, bool assertId, bo
     QString className;
     QMap<QString, Property*> props;
     QList<Tag*> tags;
-    bool isSelected;
+    quint8 isSelected, isExpanded;
 
-    in >> className >> childrenCount >> id >> props >> tags >> isSelected;
+    in >> className >> childrenCount >> id >> props >> tags >> isSelected >> isExpanded;
     o = Object::createInstance(className, project);
 
     if (o->id() != id) {
@@ -565,7 +571,8 @@ Object* Object::deserialize(QDataStream &in, Project* project, bool assertId, bo
 
     o->setProperties(props);
     o->setTags(tags);
-    o->setSelected(isSelected);
+    o->setSelected((bool) isSelected);
+    o->setExpanded((bool) isExpanded);
 
     if (recursive) {
         for (quint64 i = 0; i < childrenCount; i++) {
