@@ -315,11 +315,10 @@ QTransform Object::globaleTransformInverted()
 void Object::setGlobaleTransform(QTransform t)
 {
     if (_parent) {
-        setLocaleTransform(t * _parent->globaleTransformInverted());
+        setLocaleTransform(MathUtility::mult(t, _parent->globaleTransformInverted()));
     } else {
         setLocaleTransform(t);
     }
-    qDebug() << "setGlobaleTransform" << name() << ": " << t << MathUtility::isOrthogonal(t);
     _globaleTransformCache = t;
     _globaleTransformUpToDate = true;
 }

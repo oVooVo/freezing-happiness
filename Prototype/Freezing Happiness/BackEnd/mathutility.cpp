@@ -23,25 +23,12 @@ QPointF MathUtility::translation(QTransform t)
 
 qreal MathUtility::rotation(QTransform t)
 {
-    qreal s = scalation(t);
-    QPointF rotation = QPointF(qAtan2(t.m21()/s, t.m11()/s), -qAtan2(t.m12()/s, t.m22()/s));
-
-    if (!qFuzzyCompare(rotation.x(), rotation.y())) {
-        qDebug() << "non-orthogonal axes";
-        //Q_ASSERT(false);
-    }
-
-    return rotation.x();
+    return qAtan2(t.m21(), t.m11());
 }
 
 qreal MathUtility::scalation(QTransform t)
 {
-    QPointF scalation = QPointF(dist(QPointF(t.m11(), t.m21())), dist(QPointF(t.m12(), t.m22())));
-    if (!qFuzzyCompare(scalation.x(), scalation.y())) {
-        qDebug() << "non-equal scalations";
-        //Q_ASSERT(false);
-    }
-    return scalation.x();
+    return dist(QPointF(t.m11(), t.m21()));
 
 }
 
@@ -75,26 +62,16 @@ qreal MathUtility::aSin(qreal t)
 
 QTransform MathUtility::mult(QTransform x, QTransform y)
 {
-    Q_ASSERT_X(false, "MathUtility::mult", "use QTransform::operator* instead!");
+    qreal t11 = x.m11() * y.m11() + x.m12() * y.m21();
+    qreal t12 = x.m11() * y.m12() + x.m12() * y.m22();
 
-    qreal a, b, c,
-          d, e, f,
-          g, h, i;
+    qreal t21 = x.m21() * y.m11() + x.m22() * y.m21();
+    qreal t22 = x.m21() * y.m12() + x.m22() * y.m22();
 
-    a = x.m11()*y.m11() + x.m12()*y.m21() + x.m13()*y.m31();
-    b = x.m11()*y.m12() + x.m12()*y.m22() + x.m13()*y.m32();
-    c = x.m11()*y.m13() + x.m12()*y.m23() + x.m13()*y.m33();
+    qreal t31 = x.m31() * y.m11() + x.m32() * y.m21() + y.m31();
+    qreal t32 = x.m31() * y.m12() + x.m32() * y.m22() + y.m32();
 
-    d = x.m21()*y.m11() + x.m22()*y.m21() + x.m23()*y.m31();
-    e = x.m21()*y.m12() + x.m22()*y.m22() + x.m23()*y.m32();
-    f = x.m21()*y.m13() + x.m22()*y.m23() + x.m23()*y.m33();
-
-    g = x.m31()*y.m11() + x.m32()*y.m21() + x.m33()*y.m31();
-    h = x.m31()*y.m12() + x.m32()*y.m22() + x.m33()*y.m32();
-    i = x.m31()*y.m13() + x.m32()*y.m23() + x.m33()*y.m33();
-
-
-    return QTransform(a, b, c, d, e, f, g, h, i);
+    return QTransform(t11, t12, 0, t21, t22, 0, t31, t32, 1);
 }
 
 

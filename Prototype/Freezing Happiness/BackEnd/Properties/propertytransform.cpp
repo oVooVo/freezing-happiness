@@ -50,23 +50,11 @@ QByteArray PropertyTransform::toByteArray()
 
 void PropertyTransform::setTransform(QTransform t)
 {
-    qreal x = position().x();
-    qreal y = position().y();
-    qreal s = scalation();
-    qreal r = rotation();
-
-    if (t == _transform) {
-        return;
-    }
+    if (t == _transform) return;
 
     project()->createNewUndoRecord();
 
     _transform = t;
-
-    if (x != position().x()) emit xPositionChanged();
-    if (y != position().y()) emit yPositionChanged();
-    if (r != rotation()) emit rotationChanged();
-    if (s != scalation()) emit scalationChanged();
     emit valueChanged();
 }
 
@@ -210,6 +198,11 @@ QWidget* PropertyTransform::createWidget(QList<Property *> props, QWidget *paren
     auto updateY = [updateQDSB]() { updateQDSB(1); };
     auto updateR = [updateQDSB]() { updateQDSB(2); };
     auto updateS = [updateQDSB]() { updateQDSB(3); };
+    auto updateAll = [updateQDSB]() {
+        for (int i = 0; i < 4; i++) {
+            updateQDSB(i);
+        }
+    };
 
     foreach (Property* property, props) {
         PropertyTransform* propTrans = ((PropertyTransform*) property);
@@ -221,6 +214,7 @@ QWidget* PropertyTransform::createWidget(QList<Property *> props, QWidget *paren
         connect(propTrans, &PropertyTransform::yPositionChanged, updateY );
         connect(propTrans, &PropertyTransform::rotationChanged, updateR );
         connect(propTrans, &PropertyTransform::scalationChanged, updateS );
+        connect(propTrans, &PropertyTransform::valueChanged, updateAll);
 
     }
     for (int i = 0; i < 4; i++) {
