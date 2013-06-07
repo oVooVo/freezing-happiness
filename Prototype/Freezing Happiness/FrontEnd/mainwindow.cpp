@@ -80,7 +80,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateActiveProject(Project *project)
-{
+{  
     foreach (Manager* m, _managers) {
         m->setProject(project);
     }
@@ -88,6 +88,9 @@ void MainWindow::updateActiveProject(Project *project)
     connect(ui->actionUndo, SIGNAL(triggered()), project, SLOT(undo()));
     connect(ui->actionRedo, SIGNAL(triggered()), project, SLOT(redo()));
     connect(ui->actionDuplicate_Selected, SIGNAL(triggered()), project, SLOT(duplicateSelected()));
+    connect(ui->actionRender, SIGNAL(triggered()), project, SLOT(render()));
+    connect(ui->actionShowRenderFrame, &QAction::triggered, [project](bool checked) { project->showRenderFrame = checked; } );
+    project->showRenderFrame = ui->actionShowRenderFrame->isChecked();
 }
 
 void MainWindow::addManager(Manager *manager)
@@ -108,6 +111,7 @@ void MainWindow::load(bool createNew)
     if (!createNew) {
         _filepath = QFileDialog::getOpenFileName(this, tr("Open Project"), _filepath);
     }
+    if (_pc) disconnect(_pc->project());
     Project* p = 0;
     if (!createNew && !_filepath.isEmpty()) {
         QFile file(_filepath);

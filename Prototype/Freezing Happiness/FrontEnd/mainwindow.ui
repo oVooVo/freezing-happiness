@@ -65,10 +65,19 @@
     </property>
     <addaction name="actionDuplicate_Selected"/>
    </widget>
+   <widget class="QMenu" name="menuRender">
+    <property name="title">
+     <string>Render</string>
+    </property>
+    <addaction name="actionOptions"/>
+    <addaction name="actionRender"/>
+    <addaction name="actionShowRenderFrame"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuAdd"/>
    <addaction name="menuFunction"/>
+   <addaction name="menuRender"/>
   </widget>
   <action name="actionEmpty">
    <property name="text">
@@ -119,6 +128,24 @@
   <action name="actionDuplicate_Selected">
    <property name="text">
     <string>Duplicate Selected</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="text">
+    <string>Options</string>
+   </property>
+  </action>
+  <action name="actionRender">
+   <property name="text">
+    <string>Render</string>
+   </property>
+  </action>
+  <action name="actionShowRenderFrame">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>ShowRenderFrame</string>
    </property>
   </action>
  </widget>

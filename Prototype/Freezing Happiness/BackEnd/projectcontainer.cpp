@@ -52,6 +52,7 @@ void ProjectContainer::newFutureRecord()
 
 void ProjectContainer::undo()
 {
+    qDebug() << "undo";
     if (!_project) return;
     if (!_history.isEmpty()) {
         newFutureRecord();

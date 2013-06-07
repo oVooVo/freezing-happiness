@@ -81,6 +81,7 @@ public:
     //globaleTransforms
     void setGlobaleTransform(QTransform t);
     QTransform globaleTransform();
+    QTransform globaleTransformWithoutRoot() const;
     QTransform globaleTransformInverted();
     void setGlobalePosition(QPointF pos, Mode mode = ObjectMode);
     QPointF globalePosition();

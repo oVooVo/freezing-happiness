@@ -11,7 +11,6 @@ Spline::Spline(Project* project, QString name) : Object(project, name)
 
 void Spline::customDraw(QPainter &p)
 {
-
     QList<QPointF> points;
     QList<Object*> extras;
     for (Object* child : directChildren()) {

@@ -205,8 +205,12 @@ void ObjectTree::setUpContextMenu()
         QAction* action = new QAction(tagName, this);
         addAction(action);
         connect(action, &QAction::triggered, [=]() {
+            _project->createNewUndoRecord();
+            _project->blockSignals(true);
             for (Object* object : project()->selectedObjects())
                 object->newTag(tagName);
+            _project->blockSignals(false);
+            _project->emitStructureChanged();
         });
     }
 }

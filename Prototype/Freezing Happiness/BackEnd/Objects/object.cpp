@@ -303,6 +303,17 @@ QTransform Object::globaleTransform()
     return _globaleTransformCache;
 }
 
+QTransform Object::globaleTransformWithoutRoot() const
+{
+    QTransform glob;
+    const Object* o = this;
+    while (o && !o->isRoot()) {
+        glob = glob * o->localeTransform();
+        o = o->treeParent();
+    }
+    return glob;
+}
+
 QTransform Object::globaleTransformInverted()
 {
     if (!_globaleTransformInvertedUpToDate) {

@@ -13,6 +13,7 @@ public:
 
 private:
     REGISTER_DECL_OBJECTTYPE(Spline);
+    QList<QPointF> _points;
 };
 
 #endif // SPLINE_H

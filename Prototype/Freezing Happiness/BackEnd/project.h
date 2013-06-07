@@ -4,6 +4,7 @@
 #include "BackEnd/Objects/object.h"
 #include <QDataStream>
 #include <QUndoStack>
+#include "BackEnd/renderoptions.h"
 
 class Object;
 class Project : public QObject
@@ -44,12 +45,14 @@ public:
 
     void paint(QPainter &p);
     bool addPoint(QPointF globalePosition);
+    bool showRenderFrame;
 
 public slots:
     void createNewUndoRecord(bool force = false);
     void undo() { emit undoRequest(); }
     void redo() { emit redoRequest(); }
     void duplicateSelected();
+    void render();
 
 signals:
     void selectionChanged();
@@ -78,6 +81,9 @@ private:
 
     bool _recordHistory;
     QString _log;
+
+    RenderOptions _options;
+    QWidget* _result;
 
     //Should be used only by operator>> and operator<< implementation!
 private:

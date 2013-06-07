@@ -44,7 +44,8 @@ SOURCES += main.cpp \
     BackEnd/Properties/referenceproperty.cpp \
     BackEnd/Tags/constrainttag.cpp \
     BackEnd/Objects/point.cpp \
-    BackEnd/Tags/pointtag.cpp
+    BackEnd/Tags/pointtag.cpp \
+    BackEnd/renderoptions.cpp
 
 
 HEADERS += \
@@ -74,9 +75,11 @@ HEADERS += \
     BackEnd/Properties/referenceproperty.h \
     BackEnd/Tags/constrainttag.h \
     BackEnd/Objects/point.h \
-    BackEnd/Tags/pointtag.h
+    BackEnd/Tags/pointtag.h \
+    BackEnd/renderoptions.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \
     FrontEnd/navigationtoolbar.ui \
-    BackEnd/Tags/ConstraintWidget.ui
+    BackEnd/Tags/ConstraintWidget.ui \
+    RenderOptions.ui

@@ -3,10 +3,15 @@
 #include "Tags/tag.h"
 #include <QDateTime>
 #include "Objects/point.h"
+#include "BackEnd/renderoptions.h"
+#include <QImageReader>
+#include <QLabel>
+#include <qmath.h>
 
 
 Project::Project(Object *root)
 {
+    _result = 0;
     _recordHistory = false;
     _root = root;
     _maxId = 0;
@@ -225,6 +230,15 @@ Object* Project::find(QString name)
 
 void Project::paint(QPainter &p)
 {
+    if (showRenderFrame) {
+        p.save();
+        QPen pen;
+        pen.setCosmetic(true);
+        p.setPen(pen);
+        p.setTransform(root()->globaleTransform());
+        p.drawRect(-_options.size().width()/2, -_options.size().height()/2, _options.size().width(), _options.size().height());
+        p.restore();
+    }
     p.setTransform(_root->localeTransform());
     _root->paint(p);
 }
@@ -361,3 +375,40 @@ void Project::clearSelection()
     }
     emitSelectionChanged();
 }
+
+void Project::render()
+{
+    qDebug() << "render " << this;
+    QImage i = QImage(_options.size(), QImage::Format_RGB32);
+    i.fill(_options.backgroundColor());
+    QPainter p(&i);
+    if (!p.isActive()) { qDebug() << "Painter not active."; return; }
+    p.setRenderHint(QPainter::Antialiasing);
+
+    for (Object* o : objects()) {
+        p.save();
+
+        p.translate(_options.size().width()/2, _options.size().height()/2);
+        p.setTransform(o->globaleTransformWithoutRoot(), true);
+
+        o->customDraw(p);
+        p.restore();
+    }
+
+    if (!_result) _result = new QLabel();
+    //i.save(_options.filePath());
+    ((QLabel*) _result)->setPixmap(QPixmap::fromImage(i));
+    _result->show();
+}
+
+
+
+
+
+
+
+
+
+
+
+
