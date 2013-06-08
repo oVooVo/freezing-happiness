@@ -45,7 +45,8 @@ SOURCES += main.cpp \
     BackEnd/Tags/constrainttag.cpp \
     BackEnd/Objects/point.cpp \
     BackEnd/Tags/pointtag.cpp \
-    BackEnd/renderoptions.cpp
+    BackEnd/renderoptions.cpp \
+    BackEnd/Properties/boolproperty.cpp
 
 
 HEADERS += \
@@ -76,7 +77,8 @@ HEADERS += \
     BackEnd/Tags/constrainttag.h \
     BackEnd/Objects/point.h \
     BackEnd/Tags/pointtag.h \
-    BackEnd/renderoptions.h
+    BackEnd/renderoptions.h \
+    BackEnd/Properties/boolproperty.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \

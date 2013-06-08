@@ -115,7 +115,6 @@ QWidget* Tag::closeButton(QList<Tag *> tags, QWidget *parent)
     QPushButton* button = new QPushButton(tr("X"), parent);
     connect(button, &QPushButton::clicked, [=](){
         if (!tags.isEmpty()) {
-            tags.first()->owner()->project()->createNewUndoRecord();
             tags.first()->owner()->project()->blockSignals(true);
             for (Tag* t : tags) {
                 t->owner()->deleteTag(t);
@@ -125,11 +124,4 @@ QWidget* Tag::closeButton(QList<Tag *> tags, QWidget *parent)
         }
     } );
     return button;
-}
-
-void Tag::createUndoRecord(bool force)
-{
-    if (owner() && owner()->project()) {
-        owner()->project()->createNewUndoRecord(force);
-    }
 }

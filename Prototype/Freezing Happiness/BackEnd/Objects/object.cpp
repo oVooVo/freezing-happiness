@@ -17,9 +17,6 @@ Object::Object(Project* project, QString name, bool isRoot)
 {
     _globaleTransformUpToDate = false;
     _globaleTransformInvertedUpToDate = false;
-    if (project) {
-        project->createNewUndoRecord();
-    }
     _isSelected = false;
     _isExpanded = true;
     _project = project;
@@ -74,8 +71,6 @@ bool Object::setTreeParent(Object *parent, bool invariantGlobalTransform)
     if (parent->isDescedantOf(this)) return false;  //prevent cyclic parentship
     if (parent && !parent->canHaveChildren()) return false;
 
-    _project->createNewUndoRecord();
-
     QTransform gTransform = QTransform();
     if (invariantGlobalTransform)
         gTransform = globaleTransform();   //should be invariant
@@ -102,7 +97,6 @@ bool Object::moveBelow(Object *above)
         return false;
     }
 
-    _project->createNewUndoRecord();
     Q_ASSERT(parent->_children.last() == this);
     parent->_children.takeLast();
 
@@ -127,7 +121,6 @@ bool Object::moveAbove(Object *below)
     }
 
 
-    _project->createNewUndoRecord();
     Q_ASSERT(parent->_children.last() == this);
     parent->_children.takeLast();
 

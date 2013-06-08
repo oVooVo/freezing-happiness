@@ -38,9 +38,7 @@ void PropertyString::setString(QString s)
 {
     if (s == _string) return;
 
-    project()->createNewUndoRecord();
     _string = s;
-
     emit valueChanged();
 }
 

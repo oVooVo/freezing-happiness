@@ -254,7 +254,6 @@ void ConstraintTag::setPositionMode(Mode mode)
 {
     if (_positionMode == mode) return;
 
-    createUndoRecord();
     _positionMode = mode;
     emit valueChanged();
 }
@@ -263,7 +262,6 @@ void ConstraintTag::setRotationMode(Mode mode)
 {
     if (_rotationMode == mode) return;
 
-    createUndoRecord();
     _rotationMode = mode;
     emit valueChanged();
 }
@@ -272,7 +270,6 @@ void ConstraintTag::setScalationMode(Mode mode)
 {
     if (_scalationMode == mode) return;
 
-    createUndoRecord();
     _scalationMode = mode;
     emit valueChanged();
 }
@@ -281,7 +278,6 @@ void ConstraintTag::setAffectX(bool on)
 {
     if (_affectX == on) return;
 
-    createUndoRecord();
     _affectX = on;
     emit valueChanged();
 }
@@ -290,7 +286,6 @@ void ConstraintTag::setAffectY(bool on)
 {
     if (_affectY == on) return;
 
-    createUndoRecord();
     _affectY = on;
     emit valueChanged();
 }
@@ -299,7 +294,6 @@ void ConstraintTag::setPositionObject(quint64 id, bool isEmpty)
 {
     if (_posId == id && _hasPosId != isEmpty) return;
 
-    createUndoRecord();
     _posId = id;
     _hasPosId = !isEmpty;
 
@@ -310,7 +304,6 @@ void ConstraintTag::setRotationObject(quint64 id, bool isEmpty)
 {
     if (_rotId == id && _hasRotId != isEmpty) return;
 
-    createUndoRecord();
     _rotId = id;
     _hasRotId = !isEmpty;
     emit valueChanged();
@@ -320,7 +313,6 @@ void ConstraintTag::setScalationObject(quint64 id, bool isEmpty)
 {
     if (_scaleId == id && _hasScaleId != isEmpty) return;
 
-    createUndoRecord();
     _scaleId = id;
     _hasScaleId = !isEmpty;
     emit valueChanged();

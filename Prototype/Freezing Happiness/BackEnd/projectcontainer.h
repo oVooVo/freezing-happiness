@@ -14,8 +14,8 @@ public:
     ~ProjectContainer();
     Project* project() const { return _project; }
     void setProject(Project *project);
-    bool canUndo() { return !_history.isEmpty(); }
-    bool canRedo() { return !_future.isEmpty(); }
+    bool canUndo() { return true; }// _history.size() > 1; }
+    bool canRedo() { return false; }// !_future.isEmpty(); }
 
 public slots:
     void undo();
@@ -30,10 +30,11 @@ private slots:
     void record();
 private:
     QList<QByteArray> _history;
-    QList<QByteArray> _future;
+    QByteArray _buffer;
+
     Project* _project;
     void newHistoryRecord();
-    void newFutureRecord();
+    //void newFutureRecord();
 
 };
 

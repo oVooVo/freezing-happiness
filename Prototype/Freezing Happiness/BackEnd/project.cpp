@@ -114,11 +114,13 @@ Object* Project::getObject(quint64 id)
 void Project::emitObjectChanged(Object *object)
 {
     emit objectChanged(object);
+    createNewUndoRecord();
 }
 
 void Project::emitStructureChanged()
 {
     emit structureChanged();
+    createNewUndoRecord();
     _selectedObjectsCacheUptodate = false;
     _objectsCacheUptodate = false;
     _selectedParentsCacheUptodate = false;
@@ -245,7 +247,6 @@ void Project::paint(QPainter &p)
 
 void Project::duplicateSelected()
 {
-    createNewUndoRecord();
     blockSignals(true);
     setRecordHistory(false);
     bool _rootWasSelected = root()->isSelected();
@@ -378,11 +379,9 @@ void Project::clearSelection()
 
 void Project::render()
 {
-    qDebug() << "render " << this;
     QImage i = QImage(_options.size(), QImage::Format_RGB32);
     i.fill(_options.backgroundColor());
     QPainter p(&i);
-    if (!p.isActive()) { qDebug() << "Painter not active."; return; }
     p.setRenderHint(QPainter::Antialiasing);
 
     for (Object* o : objects()) {

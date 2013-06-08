@@ -11,6 +11,7 @@ ProjectContainer::ProjectContainer(Project *project)
     connect(_project, SIGNAL(newUndoRecordRequest()), this, SLOT(record()));
     connect(_project, SIGNAL(undoRequest()), this, SLOT(undo()));
     connect(_project, SIGNAL(redoRequest()), this, SLOT(redo()));
+    record();
 }
 
 ProjectContainer::~ProjectContainer()
@@ -21,7 +22,7 @@ ProjectContainer::~ProjectContainer()
 void ProjectContainer::record()
 {
     if (!_project) return;
-    _future.clear();
+    //_future.clear();
     emit canRedoChanged(false);
     newHistoryRecord();
 }
@@ -29,15 +30,20 @@ void ProjectContainer::record()
 void ProjectContainer::newHistoryRecord()
 {
     if (!_project) return;
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
+
+    if (!_buffer.isEmpty()) {
+        _history.append(_buffer);
+        qDebug() << "hist" << _history.size();
+    }
+
+    QDataStream stream(&_buffer, QIODevice::WriteOnly);
     stream << _project;
-    _history.append(data);
+
     if (_history.size() == 1) {
         emit canUndoChanged(true);
     }
 }
-
+/*
 void ProjectContainer::newFutureRecord()
 {
     if (!_project) return;
@@ -49,13 +55,11 @@ void ProjectContainer::newFutureRecord()
         emit canRedoChanged(true);
     }
 }
-
+*/
 void ProjectContainer::undo()
 {
-    qDebug() << "undo";
     if (!_project) return;
     if (!_history.isEmpty()) {
-        newFutureRecord();
 
         disconnect(_project, SIGNAL(newUndoRecordRequest()), this, SLOT(record()));
         disconnect(_project, SIGNAL(undoRequest()), this, SLOT(undo()));
@@ -65,6 +69,7 @@ void ProjectContainer::undo()
 
         QByteArray record = _history.takeLast();
         if (_history.isEmpty()) {
+            qDebug() << "_history empty";
             emit canUndoChanged(false);
         }
         QDataStream stream(&record, QIODevice::ReadOnly);
@@ -78,13 +83,17 @@ void ProjectContainer::undo()
         _project->emitStructureChanged();
         _project->setRecordHistory(true);
 
+        _buffer.clear();
+        QDataStream bufferStream(&_buffer, QIODevice::WriteOnly);
+        bufferStream << _project;
+
     } else {
         _project->addLogItem("Try to undo although there is nothing to undo.");
     }
 }
 
 void ProjectContainer::redo()
-{
+{/*
     if (!_project) return;
     if (!_future.isEmpty()) {
         newHistoryRecord();
@@ -111,5 +120,5 @@ void ProjectContainer::redo()
         _project->setRecordHistory(true);
     } else {
         _project->addLogItem("Try to redo although there is nothing to redo.");
-    }
+    }*/
 }

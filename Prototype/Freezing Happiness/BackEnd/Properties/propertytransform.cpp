@@ -52,8 +52,6 @@ void PropertyTransform::setTransform(QTransform t)
 {
     if (t == _transform) return;
 
-    project()->createNewUndoRecord();
-
     _transform = t;
     emit valueChanged();
 }

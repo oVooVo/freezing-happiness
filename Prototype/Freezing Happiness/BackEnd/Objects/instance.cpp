@@ -1,12 +1,13 @@
 #include "instance.h"
 #include "BackEnd/Properties/referenceproperty.h"
+#include <QDebug>
 
 REGISTER_DEFN_OBJECTTYPE(Instance);
 
 Instance::Instance(Project *project, QString name) : Object(project, name)
 {
-    polish();
     addProperty("reference", new ReferenceProperty("Instance", "Reference"));
+    polish();
 }
 
 void Instance::customDraw(QPainter &p)

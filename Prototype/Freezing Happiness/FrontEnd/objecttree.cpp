@@ -80,7 +80,6 @@ QTreeWidgetItem* ObjectTree::treeWidgetItemFromObject(Object *o)
 
 void ObjectTree::dropEvent(QDropEvent *event)
 {
-    _project->createNewUndoRecord();
     _project->blockSignals(true);
     QTreeWidgetItem* parent = itemAt(event->pos());
     if (event->dropAction() == Qt::MoveAction) {
@@ -167,7 +166,6 @@ void ObjectTree::updateSelection()
 void ObjectTree::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == 16777223 && _project) { //entf
-        _project->createNewUndoRecord();
         foreach (Object* o, _project->selectedParents()) {
             if (o->deletable()) {
                 _project->blockSignals(true);
@@ -205,7 +203,6 @@ void ObjectTree::setUpContextMenu()
         QAction* action = new QAction(tagName, this);
         addAction(action);
         connect(action, &QAction::triggered, [=]() {
-            _project->createNewUndoRecord();
             _project->blockSignals(true);
             for (Object* object : project()->selectedObjects())
                 object->newTag(tagName);

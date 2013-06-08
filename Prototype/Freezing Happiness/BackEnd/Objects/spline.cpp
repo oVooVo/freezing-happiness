@@ -1,11 +1,13 @@
 #include "spline.h"
 #include "point.h"
 #include "BackEnd/Tags/pointtag.h"
+#include "BackEnd/Properties/boolproperty.h"
 
 REGISTER_DEFN_OBJECTTYPE(Spline);
 
 Spline::Spline(Project* project, QString name) : Object(project, name)
 {
+    addProperty("closed", new BoolProperty("Spline", "Closed", false));
     polish();
 }
 

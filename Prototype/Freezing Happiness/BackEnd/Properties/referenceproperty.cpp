@@ -101,7 +101,6 @@ void ReferenceProperty::setId(quint64 id, bool isEmpty)
 {
     if (_id == id && _empty == isEmpty) return;
 
-    project()->createNewUndoRecord();
     _id = id;
     _empty = isEmpty;
     emit valueChanged();
