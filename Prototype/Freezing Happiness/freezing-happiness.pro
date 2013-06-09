@@ -46,7 +46,9 @@ SOURCES += main.cpp \
     BackEnd/Objects/point.cpp \
     BackEnd/Tags/pointtag.cpp \
     BackEnd/renderoptions.cpp \
-    BackEnd/Properties/boolproperty.cpp
+    BackEnd/Properties/boolproperty.cpp \
+    FrontEnd/rendermanager.cpp \
+    BackEnd/Objects/camera.cpp
 
 
 HEADERS += \
@@ -78,10 +80,13 @@ HEADERS += \
     BackEnd/Objects/point.h \
     BackEnd/Tags/pointtag.h \
     BackEnd/renderoptions.h \
-    BackEnd/Properties/boolproperty.h
+    BackEnd/Properties/boolproperty.h \
+    FrontEnd/rendermanager.h \
+    BackEnd/Objects/camera.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \
     FrontEnd/navigationtoolbar.ui \
     BackEnd/Tags/ConstraintWidget.ui \
-    RenderOptions.ui
+    RenderOptions.ui \
+    FrontEnd/rendermanager.ui

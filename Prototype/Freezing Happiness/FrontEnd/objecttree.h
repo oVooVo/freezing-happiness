@@ -19,7 +19,6 @@ private slots:
     void updateStructure();
     void updateObject(Object* o);
     void updateSelection();
-    //void insertExpandInformation(QTreeWidgetItem* item);
     void selectionChanged();
 
 protected:
@@ -39,7 +38,6 @@ private:
     QTreeWidgetItem* treeWidgetItemFromObject(Object* o);
     QMap<QTreeWidgetItem*, Object*> _objectsMap;
     QMap<Object*, QTreeWidgetItem*> _itemsMap;
-    //QMap<Object*, bool> _expanded;
     void setUpContextMenu();
 
 

@@ -14,23 +14,23 @@ public:
     ~RenderOptions();
 
 public:
-    QWidget* configurator();
-    QSize size() const { return _size; }
+    QSize resolution() const { return _resolution; }
     QString filePath() const { return _filePath; }
-    QColor backgroundColor() const { return _backgroundColor; }
-    QPointF offset() const { return _offset; }
-    qreal scale() const { return _scale; }
+    void showConfigurator();
+    bool saveFile() const { return _saveFile; }
 
 private:
-    QSize _size = QSize(800, 600);
+    QSize _resolution = QSize(800, 600);
+
     QString _filePath = QDir::homePath().append(QDir::separator()).append(QObject::tr("untitled.png"));
-    QColor _backgroundColor = QColor(Qt::white);
-    QPointF _offset = QPointF();
-    qreal _scale = 1;
+    bool _saveFile;
+
+
+    static const QStringList dontSaveButtonCaption;
+    static const QStringList useCameraButtonCaption;
 
     QWidget* _configurator;
-    void createConfigurator();
-
+    void setUpConfigurator();
 
 };
 

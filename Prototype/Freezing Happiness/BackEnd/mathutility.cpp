@@ -1,5 +1,6 @@
 #include "mathutility.h"
 #include <QDebug>
+#include <QColor>
 
 MathUtility::MathUtility()
 {
@@ -74,6 +75,10 @@ QTransform MathUtility::mult(QTransform x, QTransform y)
     return QTransform(t11, t12, 0, t21, t22, 0, t31, t32, 1);
 }
 
+QString MathUtility::colorToString(QColor color)
+{
+    return QString("rgb(%1,%2,%3)").arg(color.red()).arg(color.green()).arg(color.blue());
+}
 
 
 

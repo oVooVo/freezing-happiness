@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "BackEnd/Objects/camera.h"
 #include "FrontEnd/viewport.h"
 #include "BackEnd/Objects/empty.h"
 #include "BackEnd/Objects/root.h"
@@ -13,6 +14,7 @@
 #include <FrontEnd/Manager/viewportmanager.h>
 #include <FrontEnd/Manager/propertymanager.h>
 #include <QFileDialog>
+#include <BackEnd/renderoptions.h>
 #include <qsettings.h>
 
 
@@ -65,6 +67,13 @@ MainWindow::MainWindow(QWidget *parent) :
         _pc->project()->clearSelection();
         i->setSelected(true);
     } );
+    connect(ui->actionCamera, &QAction::triggered, [=]() {
+        Camera* i = new Camera(_pc->project());
+        _pc->project()->clearSelection();
+        i->setSelected(true);
+    } );
+    _renderManager = new RenderManager(this);
+    connect(ui->actionRender, SIGNAL(triggered()), this, SLOT(render()));
 
 
 }
@@ -88,7 +97,7 @@ void MainWindow::updateActiveProject(Project *project)
     connect(ui->actionUndo, SIGNAL(triggered()), project, SLOT(undo()));
     connect(ui->actionRedo, SIGNAL(triggered()), project, SLOT(redo()));
     connect(ui->actionDuplicate_Selected, SIGNAL(triggered()), project, SLOT(duplicateSelected()));
-    connect(ui->actionRender, SIGNAL(triggered()), project, SLOT(render()));
+    connect(ui->actionOptions, SIGNAL(triggered()), project, SLOT(showRenderOptions()));
     connect(ui->actionShowRenderFrame, &QAction::triggered, [project](bool checked) { project->showRenderFrame = checked; } );
     project->showRenderFrame = ui->actionShowRenderFrame->isChecked();
 }
@@ -167,4 +176,13 @@ void MainWindow::save()
         }
         file.close();
     }
+}
+
+void MainWindow::render()
+{
+    if (!_pc->project()) return;
+
+    QImage image = _pc->project()->render();
+    _renderManager->addImage(image, _pc->project()->renderOptions().saveFile());
+    _renderManager->show();
 }

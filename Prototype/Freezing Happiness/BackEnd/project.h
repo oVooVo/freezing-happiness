@@ -1,10 +1,12 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
+#include <QMainWindow>
 #include "BackEnd/Objects/object.h"
 #include <QDataStream>
 #include <QUndoStack>
 #include "BackEnd/renderoptions.h"
+#include <QLabel>
 
 class Object;
 class Project : public QObject
@@ -46,13 +48,15 @@ public:
     void paint(QPainter &p);
     bool addPoint(QPointF globalePosition);
     bool showRenderFrame;
+    RenderOptions renderOptions() const { return _renderOptions; }
 
 public slots:
     void createNewUndoRecord(bool force = false);
     void undo() { emit undoRequest(); }
     void redo() { emit redoRequest(); }
     void duplicateSelected();
-    void render();
+    QImage render();
+    void showRenderOptions();
 
 signals:
     void selectionChanged();
@@ -82,8 +86,8 @@ private:
     bool _recordHistory;
     QString _log;
 
-    RenderOptions _options;
-    QWidget* _result;
+    RenderOptions _renderOptions;
+    Object* cameraObject(); //cache?
 
     //Should be used only by operator>> and operator<< implementation!
 private:
