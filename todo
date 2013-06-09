@@ -1,0 +1,49 @@
+TODO
+
+Render: 
+ - Render in QList<QImage>, show all rendered Images in Picture manager! Images must be saveable.
+ - optionally show frame of rendered area
+ - options:
+    - size
+    - zoom (zoom=1 means one unit is one pixel)
+    - offset from root
+    - optionally choose custom "camera" object, which defines offset and zoom via its global position and scalation
+    - Backgroundcolor (default is invisible)
+	
+
+Layers:
+ - Provide layer tag, render multiple layers.
+    If an object has no layer tag:
+      If parent has a layer tag, render on this layer. ( go recursively up until layer tag found.)
+      If no parent, grandparent, great-grandparent has a layer, render to default layer.
+
+Tags:
+ - Align-to tag (let x/y-axis point to specifyed object)
+ - Style-tag (fill, draw, colors, patterns, dashed/dotted/solid/invisible/...)
+
+General:
+ - Use RGBA
+ - Export each layer on its own
+ - try to export all layers in psd format
+ - tikz export
+ - pdf export (http://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm)
+ - Objects should be convertable to editable objects (e.g. instance can be made editable independently from its reference. Thus instance is no more connected to its reference!)
+
+
+Objects:
+ - Mirror
+ - Clone
+    - align linear
+    - align circular
+    - align grid
+    - align randomly (reproducable randomness!)
+    - align on spline
+ - Ellipse
+ - Rectangle
+ - Image
+ - Spline: 
+	Different interpolations.
+	Points should have tangents
+ - Text
+ - ...
+

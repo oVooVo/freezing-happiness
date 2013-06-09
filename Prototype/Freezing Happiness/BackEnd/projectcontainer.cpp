@@ -22,7 +22,7 @@ ProjectContainer::~ProjectContainer()
 void ProjectContainer::record()
 {
     if (!_project) return;
-    //_future.clear();
+    _future.clear();
     emit canRedoChanged(false);
     newHistoryRecord();
 }
@@ -35,7 +35,7 @@ void ProjectContainer::newHistoryRecord()
         _history.append(_buffer);
         qDebug() << "hist" << _history.size();
     }
-
+    _buffer.clear();
     QDataStream stream(&_buffer, QIODevice::WriteOnly);
     stream << _project;
 
@@ -43,7 +43,7 @@ void ProjectContainer::newHistoryRecord()
         emit canUndoChanged(true);
     }
 }
-/*
+
 void ProjectContainer::newFutureRecord()
 {
     if (!_project) return;
@@ -55,11 +55,13 @@ void ProjectContainer::newFutureRecord()
         emit canRedoChanged(true);
     }
 }
-*/
+
 void ProjectContainer::undo()
 {
     if (!_project) return;
     if (!_history.isEmpty()) {
+
+        newFutureRecord();
 
         disconnect(_project, SIGNAL(newUndoRecordRequest()), this, SLOT(record()));
         disconnect(_project, SIGNAL(undoRequest()), this, SLOT(undo()));
@@ -93,10 +95,18 @@ void ProjectContainer::undo()
 }
 
 void ProjectContainer::redo()
-{/*
+{
     if (!_project) return;
     if (!_future.isEmpty()) {
-        newHistoryRecord();
+
+        QByteArray data;
+        QDataStream auxStream(&data, QIODevice::WriteOnly);
+        _buffer.clear();
+        auxStream << _project;
+        _history.append(data);
+        if (_history.size() == 1)
+            emit canUndoChanged(true);
+
 
         disconnect(_project, SIGNAL(newUndoRecordRequest()), this, SLOT(record()));
         disconnect(_project, SIGNAL(undoRequest()), this, SLOT(undo()));
@@ -120,5 +130,5 @@ void ProjectContainer::redo()
         _project->setRecordHistory(true);
     } else {
         _project->addLogItem("Try to redo although there is nothing to redo.");
-    }*/
+    }
 }
