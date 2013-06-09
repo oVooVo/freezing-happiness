@@ -22,10 +22,15 @@ void Spline::customDraw(QPainter &p)
             extras.append(child);
         }
     }
+    qSort(extras.begin(), extras.end(), [](Object* a, Object* b)
+        { return ((PointTag*) a->tag("PointTag"))->index() > ((PointTag*) b->tag("PointTag"))->index(); } );
     for (Object* extraObject : extras) {
         points.insert(((PointTag*) extraObject->tag("PointTag"))->index(), extraObject->localePosition());
     }
 
+    if (((BoolProperty*) properties()["closed"])->value() && !points.isEmpty()) {
+        points.append(points.first());
+    }
     for (int i = 0; i < points.size() - 1; i++) {
         p.drawLine(points[i], points[i+1]);
     }
