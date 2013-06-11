@@ -100,5 +100,3 @@ QWidget* SelectProperty::createWidget(QList<Property *> props, QWidget *parent)
         return w;
     }
 }
-
-const QStringList SelectProperty::PEN_STYLES = QStringList() << tr("dotted") << tr("solid");

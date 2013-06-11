@@ -110,9 +110,7 @@ void ObjectTree::mousePressEvent(QMouseEvent *event)
     } else if (event->button() == Qt::RightButton) {
         _rightClickedObject = itemAt(event->pos());
     }
-    if (event->modifiers() == Qt::NoModifier) {
-        clearSelection();
-    }
+
     QTreeWidget::mousePressEvent(event);
 }
 

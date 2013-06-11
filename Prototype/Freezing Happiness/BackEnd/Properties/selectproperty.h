@@ -21,9 +21,6 @@ private:
     REGISTER_DECL_PROPERTYTYPE(SelectProperty);
     quint64 _currentIndex;
     QStringList _options;
-
-public:
-    static const QStringList PEN_STYLES;
 };
 
 #endif // SELECTPROPERTY_H

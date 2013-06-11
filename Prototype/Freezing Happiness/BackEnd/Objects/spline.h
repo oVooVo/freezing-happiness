@@ -11,9 +11,18 @@ public:
     void customDraw(QPainter &p);
     bool isPointObject() const { return true; }
 
+public slots:
+    void emitObjectChanged();
+
+protected:
+    void childrenHasChanged();
+    bool eventFilter(QObject *o, QEvent *e);
+
 private:
     REGISTER_DECL_OBJECTTYPE(Spline);
     QList<QPointF> _points;
+    QPainterPath _path;
+    void updatePath();
 };
 
 #endif // SPLINE_H

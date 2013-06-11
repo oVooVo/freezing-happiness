@@ -47,6 +47,7 @@ void Object::addProperty(QString key, Property *property)
 void Object::emitObjectChanged()
 {
     dumpGlobaleTransformationCache();
+    if (_parent) _parent->childrenHasChanged();
     _project->emitObjectChanged(this);
 }
 
@@ -88,6 +89,8 @@ bool Object::setTreeParent(Object *parent, bool invariantGlobalTransform)
     if (invariantGlobalTransform)
         setGlobaleTransform(gTransform);
 
+    setParent(_parent);
+    if (_parent) _parent->childrenHasChanged();
     _project->emitStructureChanged();
     return true;
 }
@@ -454,30 +457,28 @@ QString Object::toTikz() const
     return QString();
 }
 
-void Object::paint(QPainter &p)
+void Object::paint(QPainter &p, bool setStyle)
 {
-    QPen pen;
 
     for (Tag* tag : _tags) {
         tag->exec(p);
     }
 
+    p.save();
+    QPen pen;
     pen.setCosmetic(true);
-    if (isSelected()) {
-        pen.setWidth(2);
-        pen.setColor(QColor(255, 125, 0));
-    } else {
-        pen.setWidth(1);
-        pen.setColor(QColor(0,0,0));
-    }
     p.setPen(pen);
 
     p.save();
     p.setTransform(QTransform::fromTranslate(p.transform().dx(), p.transform().dy()));
     p.drawRect(-1, -1, 2, 2);
     p.restore();
+    p.restore();
 
     if (valid()) {
+        if (setStyle && hasProperty("style")) {
+            applyStyleOptions(p);
+        }
         customDraw(p);
     }
     if (drawChildren())  {
@@ -680,4 +681,23 @@ Tag* Object::tag(QString className)
         }
     }
     return 0;
+}
+
+void Object::applyStyleOptions(QPainter &p)
+{
+    StyleProperty* sp = ((StyleProperty*) properties()["style"]);
+
+    QPen pen;
+    pen.setColor(sp->drawColor());
+    pen.setWidth(sp->width());
+    pen.setStyle(sp->penStyle());
+    p.setPen(pen);
+
+    QBrush brush;
+    QMatrix m = sp->isGlobal() ? globaleTransformInverted().toAffine() : QMatrix();
+    brush.setMatrix(m * sp->transform());
+
+    brush.setColor(sp->fillColor());
+    brush.setStyle(sp->brushStyle());
+    p.setBrush(brush);
 }
