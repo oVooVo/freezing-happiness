@@ -39,6 +39,7 @@ private:
     QMap<QTreeWidgetItem*, Object*> _objectsMap;
     QMap<Object*, QTreeWidgetItem*> _itemsMap;
     void setUpContextMenu();
+    void clearSelection();
 
 
 

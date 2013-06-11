@@ -33,7 +33,7 @@ protected:
     static QMap<QString, QWidget* (*)(QList<Tag*>, QWidget*)> *_widgetCreatorMap;
     void emitValueChanged() { emit valueChanged(); }
 
-    
+
 public:  //TODO private
     Object* _owner;
 };

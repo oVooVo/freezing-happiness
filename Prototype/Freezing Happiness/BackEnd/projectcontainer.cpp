@@ -33,7 +33,6 @@ void ProjectContainer::newHistoryRecord()
 
     if (!_buffer.isEmpty()) {
         _history.append(_buffer);
-        qDebug() << "hist" << _history.size();
     }
     _buffer.clear();
     QDataStream stream(&_buffer, QIODevice::WriteOnly);

@@ -369,6 +369,10 @@ void Project::clearSelection()
 
 void Project::paint(QPainter &p)
 {
+    p.save();
+    p.setTransform(_root->localeTransform());
+    _root->paint(p);
+    p.restore();
     if (showRenderFrame) {
         p.save();
         QPen pen;
@@ -379,8 +383,6 @@ void Project::paint(QPainter &p)
                     _renderOptions.resolution().width(),    _renderOptions.resolution().height());
         p.restore();
     }
-    p.setTransform(_root->localeTransform());
-    _root->paint(p);
 }
 
 QImage Project::render()

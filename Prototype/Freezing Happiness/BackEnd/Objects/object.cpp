@@ -3,6 +3,7 @@
 #include <QDebug>
 #include "BackEnd/Properties/propertytransform.h"
 #include "BackEnd/Properties/propertystring.h"
+#include "BackEnd/Properties/styleproperty.h"
 #include <QString>
 #include "BackEnd/mathutility.h"
 #include <qmath.h>
@@ -25,6 +26,7 @@ Object::Object(Project* project, QString name, bool isRoot)
     _id = _project->reserveId(this);
     addProperty("Name", new PropertyString("Object", "Name", name));
     addProperty("localeMatrix", new PropertyTransform("Object", "Locale Matrix"));
+    addProperty("style", new StyleProperty("Object", "Style"));
 
     if (isRoot) {
         _parent = 0;

@@ -16,6 +16,8 @@
 #include <QFileDialog>
 #include <BackEnd/renderoptions.h>
 #include <qsettings.h>
+#include "FrontEnd/gradientedit.h"
+#include "gradienteditor.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -23,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
 
     qApp->setOrganizationName("Hallo");
     qApp->setApplicationName("Welt");
