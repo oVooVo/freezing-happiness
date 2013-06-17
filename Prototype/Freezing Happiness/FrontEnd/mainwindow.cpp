@@ -55,26 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoad, SIGNAL(triggered()), this, SLOT(load()));
     connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(save()));
     connect(ui->actionNew, &QAction::triggered, [this]() { load(true); });
-    connect(ui->actionEmpty, &QAction::triggered, [=]() {
-        Object* e = new Empty(_pc->project());
-        _pc->project()->clearSelection();
-        e->setSelected(true);
-    } );
-    connect(ui->actionSpline, &QAction::triggered, [=]() {
-        Object* s = new Spline(_pc->project());
-        _pc->project()->clearSelection();
-        s->setSelected(true);
-    } );
-    connect(ui->actionInstance, &QAction::triggered, [=]() {
-        Instance* i = new Instance(_pc->project());
-        _pc->project()->clearSelection();
-        i->setSelected(true);
-    } );
-    connect(ui->actionCamera, &QAction::triggered, [=]() {
-        Camera* i = new Camera(_pc->project());
-        _pc->project()->clearSelection();
-        i->setSelected(true);
-    } );
+    setUpObjectsMenu();
     _renderManager = new RenderManager(this);
     connect(ui->actionRender, SIGNAL(triggered()), this, SLOT(render()));
 
@@ -188,4 +169,22 @@ void MainWindow::render()
     QImage image = _pc->project()->render();
     _renderManager->addImage(image, _pc->project()->renderOptions().saveFile());
     _renderManager->show();
+}
+
+void MainWindow::newObject(QString className)
+{
+    Object* i = Object::createInstance(className, _pc->project());
+    _pc->project()->clearSelection();
+    i->setSelected(true);
+}
+
+void MainWindow::setUpObjectsMenu()
+{
+    QMenu* menu = ui->menuAdd;
+    for (QString className : Object::objectTypes()) {
+        if (className != "Point" && className != "Root") {
+            QAction* a = menu->addAction(tr(className.toLatin1()));
+            connect(a, &QAction::triggered, [=]() {newObject(className);});
+        }
+    }
 }

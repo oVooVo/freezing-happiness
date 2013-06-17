@@ -1,21 +1,21 @@
-#ifndef STYLEPROPERTY_H
-#define STYLEPROPERTY_H
+#ifndef STYLETAG_H
+#define STYLETAG_H
 
-#include <QDebug>
-#include "property.h"
+#include "tag.h"
+#include <QPainter>
 
-class StyleProperty : public Property
+class StyleTag : public Tag
 {
     Q_OBJECT
 public:
+
     static const QStringList PEN_STYLES;
     static const QStringList BRUSH_STYLES;
 
-    StyleProperty(QByteArray* data);
-    StyleProperty(QString category, QString name);
+    StyleTag(QByteArray *data = 0);
     QByteArray toByteArray();
     QString toString() const;
-    static QWidget* createWidget(QList<Property *> props, QWidget *parent);
+    static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
 
     Qt::PenStyle penStyle() const { return _penStyle; }
     Qt::BrushStyle brushStyle() const { return _brushStyle; }
@@ -53,6 +53,7 @@ signals:
     void isGlobaleChanged(bool);
 
 
+
 private:
     QColor _drawColor = Qt::black;
     QColor _fillColor = Qt::white;
@@ -66,8 +67,7 @@ private:
     bool _globale = true;
     qreal matrix(int i);
 
-    REGISTER_DECL_PROPERTYTYPE(StyleProperty);
-
+    REGISTER_DECL_TAGTYPE(StyleTag);
 };
 
-#endif // STYLEPROPERTY_H
+#endif // STYLETAG_H

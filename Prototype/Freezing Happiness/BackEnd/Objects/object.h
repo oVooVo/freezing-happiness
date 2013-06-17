@@ -106,10 +106,10 @@ public:
     static Object* createInstance(QString className, Project* project);
 
     //render
-    void paint(QPainter &p, bool setStyle = true);
+    void paint(QPainter &p);
     virtual void customDraw(QPainter &p) { Q_UNUSED(p) }
-    virtual bool drawChildren() { return true; }
-    virtual bool valid() { return true; }
+    virtual bool drawChildren() const { return true; }
+    virtual bool valid() const { return true; }
     virtual bool canHaveChildren() const { return true; }
     virtual bool visibleInObjectTree() const { return true; }
     virtual bool isPointObject() const { return false; }
@@ -124,6 +124,8 @@ public:
 
     void newTag(QString tagName);
     void deleteTag(Tag* tag);
+
+    static QStringList objectTypes() { return _creatorMap->keys(); }
 
 
 public slots:
@@ -151,11 +153,12 @@ private:
     void dumpGlobaleTransformationCache();
 
 protected:
-    void addProperty(QString key, Property* property);
+    Property* addProperty(QString key, Property* property);
     //contains ctor for each Object
     static QMap<QString, Object* (*)(Project*)> *_creatorMap;
     void applyStyleOptions(QPainter &p);
     virtual void childrenHasChanged() {}
+    virtual void adjustProperties() {} //is called when a Property changes
 };
 
 template<typename T>

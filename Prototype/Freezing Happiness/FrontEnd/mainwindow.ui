@@ -40,10 +40,6 @@
     <property name="title">
      <string>Add</string>
     </property>
-    <addaction name="actionEmpty"/>
-    <addaction name="actionSpline"/>
-    <addaction name="actionInstance"/>
-    <addaction name="actionCamera"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">

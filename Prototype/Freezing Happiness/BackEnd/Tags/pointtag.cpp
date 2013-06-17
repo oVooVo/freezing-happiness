@@ -69,9 +69,3 @@ QWidget* PointTag::createWidget(QList<Tag *> tags, QWidget *parent)
     w->setLayout(layout);
     return w;
 }
-
-void PointTag::exec(QPainter &p)
-{
-    Q_UNUSED(p);
-}
-

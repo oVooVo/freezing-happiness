@@ -1,72 +1,63 @@
-#include "styleproperty.h"
-#include <QPainter>
-#include <QLineEdit>
+#include "styletag.h"
+#include <QPushButton>
 #include <QComboBox>
 #include <QDoubleSpinBox>
-#include <QPushButton>
-#include <QColorDialog>
-#include <QLabel>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QCheckBox>
+#include <QColorDialog>
 #include <qmath.h>
+
+REGISTER_DEFN_TAGTYPE(StyleTag);
 
 #define MAX_RANGE -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max()
 #define POS_RANGE 0.001, std::numeric_limits<qreal>::max()
 
-REGISTER_DEFN_PROPERTYTYPE(StyleProperty);
-
-const QStringList StyleProperty::PEN_STYLES = QStringList() << tr("Nothing") <<  tr("solid") << tr("Dashed") << tr("Dotted") << tr("Dash Dotte") << tr("Dash dot dotted");
-const QStringList StyleProperty::BRUSH_STYLES = QStringList() << tr("Nothing") << tr("solid") << tr("Extremely dense") << tr("Very dense") << tr("Somewhat dense")
+const QStringList StyleTag::PEN_STYLES = QStringList() << tr("Nothing") <<  tr("solid") << tr("Dashed") << tr("Dotted") << tr("Dash Dotte") << tr("Dash dot dotted");
+const QStringList StyleTag::BRUSH_STYLES = QStringList() << tr("Nothing") << tr("solid") << tr("Extremely dense") << tr("Very dense") << tr("Somewhat dense")
                                                               << tr("Half dense") << tr("Somewhat sparse") << tr ("Very sparse") << tr("Extremely sparse") << tr("Horizontal") << tr("Vertical")
                                                               << tr("Cross") << tr("Backward diagonal") << tr("Forward diagonal") << tr ("Cross diagonal");
 
-StyleProperty::StyleProperty(QString category, QString name)
+StyleTag::StyleTag(QByteArray *data)
 {
-    setCategory(category);
-    setName(name);
+    if (data) {
+        QDataStream stream(data, QIODevice::ReadOnly);
+        quint8 brush, pen;
+        QString className;
+        qreal x, y, r, s;
+        quint8 g;
+
+        stream >> className >> brush >> pen >> _width >> _fillColor >> _drawColor
+               >> x >> y >> r >> s >> g;
+        setXOffset(x);
+        setYOffset(y);
+        setRotation(r);
+        setScalation(s);
+        setIsGlobal((bool) g);
+        Q_ASSERT(type() == className);
+
+        _brushStyle = (Qt::BrushStyle) brush;
+        _penStyle = (Qt::PenStyle) pen;
+    }
 }
 
-StyleProperty::StyleProperty(QByteArray *data)
-{
-    QDataStream stream(data, QIODevice::ReadOnly);
-    quint8 brush, pen;
-    QString className, category, name;
-    qreal x, y, r, s;
-    quint8 g;
-
-    stream >> className >> category >> name >> brush >> pen >> _width >> _fillColor >> _drawColor
-           >> x >> y >> r >> s >> g;
-    setXOffset(x);
-    setYOffset(y);
-    setRotation(r);
-    setScalation(s);
-    setIsGlobal((bool) g);
-    setCategory(category);
-    setName(name);
-    Q_ASSERT(type() == className);
-
-    _brushStyle = (Qt::BrushStyle) brush;
-    _penStyle = (Qt::PenStyle) pen;
-
-}
-
-QByteArray StyleProperty::toByteArray()
+QByteArray StyleTag::toByteArray()
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
 
-    stream << type() << category() << name() << (quint8) _brushStyle << (quint8) _penStyle << _width << _fillColor << _drawColor
+    stream << type() << (quint8) _brushStyle << (quint8) _penStyle << _width << _fillColor << _drawColor
            << xOffset() << yOffset() << rotation() << scalation() << (quint8) isGlobal();
 
     return data;
 }
 
-QString StyleProperty::toString() const
+QString StyleTag::toString() const
 {
     return  QString("%1(%2)").arg(this->type()).arg((quint64) this, 0, 16);
 }
 
-void StyleProperty::setPenStyle(Qt::PenStyle penStyle)
+void StyleTag::setPenStyle(Qt::PenStyle penStyle)
 {
     if (_penStyle == penStyle) return;
 
@@ -75,7 +66,7 @@ void StyleProperty::setPenStyle(Qt::PenStyle penStyle)
     emit penStyleChanged(_penStyle);
 }
 
-void StyleProperty::setBrushStyle(Qt::BrushStyle brushStyle)
+void StyleTag::setBrushStyle(Qt::BrushStyle brushStyle)
 {
     if (_brushStyle == brushStyle) return;
 
@@ -84,7 +75,7 @@ void StyleProperty::setBrushStyle(Qt::BrushStyle brushStyle)
     emit brushStyleChanged(_brushStyle);
 }
 
-void StyleProperty::setWidth(qreal width)
+void StyleTag::setWidth(qreal width)
 {
     if (_width == width) return;
 
@@ -93,7 +84,7 @@ void StyleProperty::setWidth(qreal width)
     emit widthChanged(_width);
 }
 
-void StyleProperty::setFillColor(QColor c)
+void StyleTag::setFillColor(QColor c)
 {
     if (_fillColor == c) return;
     _fillColor = c;
@@ -101,7 +92,7 @@ void StyleProperty::setFillColor(QColor c)
     emit fillColorChanged(_fillColor);
 }
 
-void StyleProperty::setDrawColor(QColor c)
+void StyleTag::setDrawColor(QColor c)
 {
     if (_drawColor == c) return;
     _drawColor = c;
@@ -109,7 +100,7 @@ void StyleProperty::setDrawColor(QColor c)
     emit drawColorChanged(_drawColor);
 }
 
-void StyleProperty::setXOffset(qreal x)
+void StyleTag::setXOffset(qreal x)
 {
     if (_xOff == x) return;
 
@@ -117,7 +108,7 @@ void StyleProperty::setXOffset(qreal x)
     emit xOffsetChanged(x);
 }
 
-void StyleProperty::setYOffset(qreal y)
+void StyleTag::setYOffset(qreal y)
 {
     if (_yOff == y) return;
 
@@ -125,7 +116,7 @@ void StyleProperty::setYOffset(qreal y)
     emit yOffsetChanged(y);
 }
 
-void StyleProperty::setRotation(qreal r)
+void StyleTag::setRotation(qreal r)
 {
     if (_rotation == r) return;
 
@@ -133,7 +124,7 @@ void StyleProperty::setRotation(qreal r)
     emit rotationChanged(r);
 }
 
-void StyleProperty::setScalation(qreal s)
+void StyleTag::setScalation(qreal s)
 {
     if (_scale == s) return;
 
@@ -141,7 +132,7 @@ void StyleProperty::setScalation(qreal s)
     emit scalationChanged(s);
 }
 
-void StyleProperty::setIsGlobal(bool s)
+void StyleTag::setIsGlobal(bool s)
 {
     if (_globale == s) return;
 
@@ -149,11 +140,10 @@ void StyleProperty::setIsGlobal(bool s)
     emit isGlobaleChanged(s);
 }
 
-QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
+QWidget* StyleTag::createWidget(QList<Tag *> tags, QWidget *parent)
 {
 
     QWidget* container = new QWidget(parent);
-    QString name = props.first()->name();
     QPushButton* brushColorButton = new QPushButton(container);
     //brushColorButton->setFlat(true);
     QPushButton* penColorButton = new QPushButton(container);
@@ -202,6 +192,7 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
 
 
     QVBoxLayout* layout = new QVBoxLayout();
+    layout->addWidget(Tag::closeButton(tags, container));
     layout->addLayout(drawLayout);
     layout->addLayout(fillLayout);
     layout->addWidget(useGlobalMatrixCheckBox);
@@ -211,10 +202,10 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
 
     auto updateCB = [=](bool i) {
         bool multipleValues = false;
-        quint8 index =  (i? (quint8)((StyleProperty*) props.first())->brushStyle() : (quint8)((StyleProperty*) props.first())->penStyle());
+        quint8 index =  (i? (quint8)((StyleTag*) tags.first())->brushStyle() : (quint8)((StyleTag*) tags.first())->penStyle());
 
-        foreach (Property* p, props) {
-            StyleProperty* sp = (StyleProperty*) p;
+        foreach (Tag* p, tags) {
+            StyleTag* sp = (StyleTag*) p;
             if ((i? (quint8)sp->brushStyle() : (quint8)sp->penStyle()) != index) {
                 multipleValues = true;
             }
@@ -233,7 +224,7 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
 
     auto updateColorButton = [=](bool i) {
         //bool multipleValues = false;
-        QColor color = (i? ((StyleProperty*) props.first())->fillColor() : ((StyleProperty*) props.first())->drawColor());
+        QColor color = (i? ((StyleTag*) tags.first())->fillColor() : ((StyleTag*) tags.first())->drawColor());
 
         /*foreach (Property* p, props) {
             StyleProperty* sp = (StyleProperty*) p;
@@ -249,10 +240,10 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
 
     auto updateSpinBox = [=]() {
         bool multipleValues = false;
-        double value = ((StyleProperty*) props.first())->width();
+        double value = ((StyleTag*) tags.first())->width();
 
-        foreach (Property* p, props) {
-            StyleProperty* sp = (StyleProperty*) p;
+        foreach (Tag* p, tags) {
+            StyleTag* sp = (StyleTag*) p;
             if (sp->width() != value) {
                 multipleValues = true;
             }
@@ -268,7 +259,7 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
 
     auto updateMatrix = [=](int i) {
         bool multipleValues = false;
-        double value = ((StyleProperty*) props.first())->matrix(i);
+        double value = ((StyleTag*) tags.first())->matrix(i);
         QDoubleSpinBox* spinBox = 0;
         switch (i) {
         case 0: spinBox = xOffsetSP; break;
@@ -277,8 +268,8 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
         default: spinBox = scalationSP; break;
         }
 
-        foreach (Property* p, props) {
-            StyleProperty* sp = (StyleProperty*) p;
+        foreach (Tag* p, tags) {
+            StyleTag* sp = (StyleTag*) p;
             if (sp->matrix(i) != value) {
                 multipleValues = true;
             }
@@ -289,10 +280,10 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
 
     auto updateGlobalCheckbox = [=]() {
         bool multipleValue = false;
-        bool value = ((StyleProperty*) props.first())->isGlobal();
+        bool value = ((StyleTag*) tags.first())->isGlobal();
 
-        foreach (Property* p, props) {
-            StyleProperty* sp = (StyleProperty*) p;
+        foreach (Tag* p, tags) {
+            StyleTag* sp = (StyleTag*) p;
             if (sp->isGlobal() != value) {
                 multipleValue = true;
             }
@@ -304,8 +295,8 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
     void (QComboBox:: *indexChangedInt)(int) = &QComboBox::currentIndexChanged;
     void (QDoubleSpinBox:: *valueChangedDouble)(double) = &QDoubleSpinBox::valueChanged;
 
-    foreach (Property* p, props) {
-        StyleProperty* sp = (StyleProperty*) p;
+    foreach (Tag* p, tags) {
+        StyleTag* sp = (StyleTag*) p;
         connect(brushStyleCB, indexChangedInt, [=](int index) {
             sp->setBrushStyle((Qt::BrushStyle) index);
         });
@@ -331,33 +322,33 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
             sp->setIsGlobal(useGlobalMatrixCheckBox->isChecked());
         });
 
-        connect(sp, &StyleProperty::penStyleChanged, [=](){updateCB(false);});
-        connect(sp, &StyleProperty::brushStyleChanged, [=](){updateCB(true);});
-        connect(sp, &StyleProperty::widthChanged, [=](){updateSpinBox();});
-        connect(sp, &StyleProperty::drawColorChanged, [=](){updateColorButton(false);});
-        connect(sp, &StyleProperty::fillColorChanged, [=](){updateColorButton(true);});
-        connect(sp, &StyleProperty::xOffsetChanged, [=](){updateMatrix(0);});
-        connect(sp, &StyleProperty::yOffsetChanged, [=](){updateMatrix(1);});
-        connect(sp, &StyleProperty::rotationChanged, [=](){updateMatrix(2);});
-        connect(sp, &StyleProperty::scalationChanged, [=](){updateMatrix(3);});
-        connect(sp, &StyleProperty::isGlobaleChanged, [=]() {updateGlobalCheckbox();});
+        connect(sp, &StyleTag::penStyleChanged, [=](){updateCB(false);});
+        connect(sp, &StyleTag::brushStyleChanged, [=](){updateCB(true);});
+        connect(sp, &StyleTag::widthChanged, [=](){updateSpinBox();});
+        connect(sp, &StyleTag::drawColorChanged, [=](){updateColorButton(false);});
+        connect(sp, &StyleTag::fillColorChanged, [=](){updateColorButton(true);});
+        connect(sp, &StyleTag::xOffsetChanged, [=](){updateMatrix(0);});
+        connect(sp, &StyleTag::yOffsetChanged, [=](){updateMatrix(1);});
+        connect(sp, &StyleTag::rotationChanged, [=](){updateMatrix(2);});
+        connect(sp, &StyleTag::scalationChanged, [=](){updateMatrix(3);});
+        connect(sp, &StyleTag::isGlobaleChanged, [=]() {updateGlobalCheckbox();});
     }
 
     connect(brushColorButton, &QPushButton::clicked, [=](){
-        QColor color = QColorDialog::getColor(((StyleProperty*) props.first())->fillColor(), container, "Fill Color", QColorDialog::ShowAlphaChannel);
+        QColor color = QColorDialog::getColor(((StyleTag*) tags.first())->fillColor(), container, "Fill Color", QColorDialog::ShowAlphaChannel);
         if (color.isValid()) {
-            foreach (Property* p, props) {
-                StyleProperty* sp = (StyleProperty*) p;
+            foreach (Tag* p, tags) {
+                StyleTag* sp = (StyleTag*) p;
                 sp->setFillColor(color);
             }
         }
     });
 
     connect(penColorButton, &QPushButton::clicked, [=](){
-        QColor color = QColorDialog::getColor(((StyleProperty*) props.first())->drawColor(), container, "Fill Color", QColorDialog::ShowAlphaChannel);
+        QColor color = QColorDialog::getColor(((StyleTag*) tags.first())->drawColor(), container, "Fill Color", QColorDialog::ShowAlphaChannel);
         if (color.isValid()) {
-            foreach (Property* p, props) {
-                StyleProperty* sp = (StyleProperty*) p;
+            foreach (Tag* p, tags) {
+                StyleTag* sp = (StyleTag*) p;
                 sp->setDrawColor(color);
             }
         }
@@ -372,22 +363,10 @@ QWidget* StyleProperty::createWidget(QList<Property *> props, QWidget *parent)
     for (int i : {0,1,2,3,})
         updateMatrix(i);
 
-    if (name.isEmpty()) {
-        return container;
-    } else {
-        QWidget* w = new QWidget(parent);
-        container->setParent(w);
-        QVBoxLayout* layout = new QVBoxLayout();
-        layout->addWidget(new QLabel(QString("%1:").arg(name), parent));
-        layout->addWidget(container);
-        layout->setContentsMargins(0,0,0,0);
-        layout->setSpacing(0);
-        w->setLayout(layout);
-        return w;
-    }
+    return container;
 }
 
-qreal StyleProperty::matrix(int i)
+qreal StyleTag::matrix(int i)
 {
     switch (i) {
     case 0: return _xOff;
@@ -399,9 +378,10 @@ qreal StyleProperty::matrix(int i)
     return 0;
 }
 
-QMatrix StyleProperty::transform() const
+QMatrix StyleTag::transform() const
 {
     return QMatrix( scalation() * qCos(rotation()), scalation() * qSin(rotation()),
                     -scalation() * qCos(rotation()), scalation() * qCos(rotation()),
                     xOffset(), yOffset());
 }
+

@@ -11,7 +11,6 @@ public:
     QByteArray toByteArray() const;
     quint64 index() const { return _index; }
     static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
-    void exec(QPainter &p);
 
 public slots:
     void setIndex(quint64 index);

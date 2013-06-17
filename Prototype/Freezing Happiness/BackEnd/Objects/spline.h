@@ -20,8 +20,7 @@ protected:
 
 private:
     REGISTER_DECL_OBJECTTYPE(Spline);
-    QList<QPointF> _points;
-    QPainterPath _path;
+    QVector<QPointF> _points;
     void updatePath();
 };
 

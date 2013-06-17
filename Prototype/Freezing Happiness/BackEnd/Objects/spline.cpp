@@ -3,7 +3,7 @@
 #include "BackEnd/Tags/pointtag.h"
 #include "BackEnd/Properties/boolproperty.h"
 #include "BackEnd/Properties/selectproperty.h"
-#include "BackEnd/Properties/styleproperty.h"
+#include "BackEnd/Tags/styletag.h"
 #include <QEvent>
 
 REGISTER_DEFN_OBJECTTYPE(Spline);
@@ -22,18 +22,18 @@ void Spline::childrenHasChanged()
 
 void Spline::customDraw(QPainter &p)
 {
-    p.drawPath(_path);
-    p.fillPath(_path, p.brush());
+    for (int i = 0; i < _points.size() - 1; i++) {
+        p.drawLine(_points[i], _points[i+1]);
+    }
 }
 
 void Spline::updatePath()
 {
-    _path = QPainterPath();
-    QList<QPointF> points;
+    _points.clear();
     QList<Object*> extras;
     for (Object* child : directChildren()) {
         if (child->type() == "Point") {
-            points.append(child->localePosition());
+            _points.append(child->localePosition());
         } else if (child->hasTag("PointTag")) {
             extras.append(child);
         }
@@ -41,17 +41,12 @@ void Spline::updatePath()
     qSort(extras.begin(), extras.end(), [](Object* a, Object* b)
         { return ((PointTag*) a->tag("PointTag"))->index() > ((PointTag*) b->tag("PointTag"))->index(); } );
     for (Object* extraObject : extras) {
-        points.insert(((PointTag*) extraObject->tag("PointTag"))->index(), extraObject->localePosition());
+        _points.insert(((PointTag*) extraObject->tag("PointTag"))->index(), extraObject->localePosition());
     }
 
-    if (((BoolProperty*) properties()["closed"])->value() && !points.isEmpty()) {
-        points.append(points.first());
+    if (((BoolProperty*) properties()["closed"])->value() && !_points.isEmpty()) {
+        _points.append(_points.first());
     }
-    QPolygonF poly;
-    for (QPointF point : points) {
-        poly.append(point);
-    }
-    _path.addPolygon(poly);
 }
 
 void Spline::emitObjectChanged()

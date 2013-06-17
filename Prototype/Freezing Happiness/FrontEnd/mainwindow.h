@@ -28,12 +28,14 @@ private:
     QString _filepath;
     QList<Manager*> _managers;
     RenderManager* _renderManager;
+    void setUpObjectsMenu();
 
 private slots:
     void updateActiveProject(Project* project);
     void load(bool createNew = false);
     void save();
     void render();
+    void newObject(QString className);
 };
 
 #endif // MAINWINDOW_H

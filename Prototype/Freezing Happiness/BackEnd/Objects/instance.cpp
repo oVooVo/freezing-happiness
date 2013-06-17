@@ -17,16 +17,13 @@ void Instance::customDraw(QPainter &p)
     Object* original = project()->getObject(((ReferenceProperty*) properties()["reference"])->id());
     if (original) {
         p.save();
-        if (((BoolProperty*) properties()["ownStyle"])->value()) {
-            applyStyleOptions(p);
-            original->paint(p, false);
-        }
-        else original->paint(p);
+        applyStyleOptions(p);
+        original->paint(p);
         p.restore();
     }
 }
 
-bool Instance::valid()
+bool Instance::valid() const
 {
     Object* original = project()->getObject(((ReferenceProperty*) properties()["reference"])->id());
     if (original == 0) return false;

@@ -50,10 +50,12 @@ SOURCES += main.cpp \
     FrontEnd/rendermanager.cpp \
     BackEnd/Objects/camera.cpp \
     BackEnd/Properties/selectproperty.cpp \
-    BackEnd/Tags/Tag.cpp \
     FrontEnd/gradientedit.cpp \
     FrontEnd/gradienteditor.cpp \
-    BackEnd/Properties/styleproperty.cpp
+    BackEnd/Objects/ellipse.cpp \
+    BackEnd/Properties/realproperty.cpp \
+    BackEnd/Tags/styletag.cpp \
+    BackEnd/Objects/cloner.cpp
 
 
 HEADERS += \
@@ -91,7 +93,10 @@ HEADERS += \
     BackEnd/Tags/tag.h \
     FrontEnd/gradientedit.h \
     FrontEnd/gradienteditor.h \
-    BackEnd/Properties/styleproperty.h
+    BackEnd/Objects/ellipse.h \
+    BackEnd/Properties/realproperty.h \
+    BackEnd/Tags/styletag.h \
+    BackEnd/Objects/cloner.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \

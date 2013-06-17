@@ -3,7 +3,7 @@
 #include <QDebug>
 #include "BackEnd/Properties/propertytransform.h"
 #include "BackEnd/Properties/propertystring.h"
-#include "BackEnd/Properties/styleproperty.h"
+#include "BackEnd/Tags/styletag.h"
 #include <QString>
 #include "BackEnd/mathutility.h"
 #include <qmath.h>
@@ -26,7 +26,6 @@ Object::Object(Project* project, QString name, bool isRoot)
     _id = _project->reserveId(this);
     addProperty("Name", new PropertyString("Object", "Name", name));
     addProperty("localeMatrix", new PropertyTransform("Object", "Locale Matrix"));
-    addProperty("style", new StyleProperty("Object", "Style"));
 
     if (isRoot) {
         _parent = 0;
@@ -36,16 +35,18 @@ Object::Object(Project* project, QString name, bool isRoot)
     }
 }
 
-void Object::addProperty(QString key, Property *property)
+Property* Object::addProperty(QString key, Property *property)
 {
     property->setProject(project());
     property->setOwner(this);
     _properties.insert(key, property);
     connect(property, SIGNAL(valueChanged()), this, SLOT(emitObjectChanged()));
+    return property;
 }
 
 void Object::emitObjectChanged()
 {
+    adjustProperties();
     dumpGlobaleTransformationCache();
     if (_parent) _parent->childrenHasChanged();
     _project->emitObjectChanged(this);
@@ -457,7 +458,7 @@ QString Object::toTikz() const
     return QString();
 }
 
-void Object::paint(QPainter &p, bool setStyle)
+void Object::paint(QPainter &p)
 {
 
     for (Tag* tag : _tags) {
@@ -476,9 +477,6 @@ void Object::paint(QPainter &p, bool setStyle)
     p.restore();
 
     if (valid()) {
-        if (setStyle && hasProperty("style")) {
-            applyStyleOptions(p);
-        }
         customDraw(p);
     }
     if (drawChildren())  {
@@ -685,7 +683,18 @@ Tag* Object::tag(QString className)
 
 void Object::applyStyleOptions(QPainter &p)
 {
-    StyleProperty* sp = ((StyleProperty*) properties()["style"]);
+    StyleTag* sp;
+    StyleTag fallBack;
+
+    Object* object = this;
+    while (!object->hasTag("StyleTag") && object->treeParent()) {
+        object = object->treeParent();
+    }
+    if (object->hasTag("StyleTag")) {
+        sp = ((StyleTag*) object->tag("StyleTag"));
+    } else {
+        sp = &fallBack;
+    }
 
     QPen pen;
     pen.setColor(sp->drawColor());
@@ -694,10 +703,11 @@ void Object::applyStyleOptions(QPainter &p)
     p.setPen(pen);
 
     QBrush brush;
-    QMatrix m = sp->isGlobal() ? globaleTransformInverted().toAffine() : QMatrix();
+    QMatrix m = sp->isGlobal() ? object->globaleTransformInverted().toAffine() : QMatrix();
     brush.setMatrix(m * sp->transform());
 
     brush.setColor(sp->fillColor());
     brush.setStyle(sp->brushStyle());
     p.setBrush(brush);
 }
+

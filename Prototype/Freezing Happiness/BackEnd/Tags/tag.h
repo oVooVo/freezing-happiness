@@ -22,7 +22,7 @@ public:
     static QStringList tags() { return _creatorMap->keys(); }
     static QWidget* createWidget(QList<Tag*> tags, QWidget* parent = 0);
     static QWidget* closeButton(QList<Tag*> tags, QWidget* parent = 0);
-    virtual void exec(QPainter &p) { Q_UNUSED(p) Q_ASSERT_X(false, "Tag::exec()", "pure virtual call"); }
+    virtual void exec(QPainter &p) { Q_UNUSED(p) }
 
 signals:
     void valueChanged();
