@@ -29,7 +29,6 @@ public:
     static Property* createInstance(QByteArray* data);
     void setProject(Project* project);
     Project* project() const { return _project; }
-    void setOwner(Object* owner);
 
 signals:
     void valueChanged();

@@ -18,11 +18,12 @@ IntegerProperty::IntegerProperty(QByteArray *data)
     stream >> _min >> _max >> _value;
 }
 
-IntegerProperty::IntegerProperty(QString category, QString name, qint64 min, qint64 max, qint64 value)
+IntegerProperty::IntegerProperty(QString category, QString name, int min, int max, qint64 value)
 {
     _min = min < max ? min : max;
     _max = min < max ? max : min;
     _value = value > max ? max : value < min ? min : value;
+    qDebug() << "set" << _min << _max;
     setCategory(category);
     setName(name);
 }
@@ -53,6 +54,7 @@ QWidget* IntegerProperty::createWidget(QList<Property *> props, QWidget *parent)
     QString name = props.first()->name();
     QSpinBox* spinBox = new QSpinBox(parent);
     spinBox->setRange(((IntegerProperty*) props.first())->_min, ((IntegerProperty*) props.first())->_max);
+    qDebug() << spinBox->minimum() << spinBox->maximum();
 
     auto updateSpinBox = [=]() {
         bool multipleValues = false;

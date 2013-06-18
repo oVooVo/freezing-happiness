@@ -14,12 +14,6 @@ Tag::Tag(Object *owner, QByteArray *data)
     _owner = owner;
 }
 
-void Tag::setOwner(Object *owner)
-{
-    _owner = owner;
-    addProperties();
-}
-
 Tag* Tag::createInstance(Object* owner, QByteArray *data)
 {
     if (!_creatorMap)
@@ -140,4 +134,27 @@ Property* Tag::addProperty(QString key, Property *property)
 void Tag::emitValueChanged()
 {
     emit valueChanged();
+}
+
+void Tag::saveProperties(QDataStream &stream) const
+{
+    stream << properties();
+}
+
+void Tag::restoreProperties(QDataStream &stream)
+{
+    QList<Property*> props;
+    stream >> props;
+    for (Property* p : props) {
+        addProperty(p->name(), p);
+    }
+}
+
+QList<Property*> Tag::getProperties(QString key, QList<Tag *> tags)
+{
+    QList<Property*> properties;
+    for (Tag* tag : tags) {
+        properties.append(tag->property(key));
+    }
+    return properties;
 }

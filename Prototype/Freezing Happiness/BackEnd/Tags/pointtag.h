@@ -9,18 +9,14 @@ class PointTag : public Tag
 public:
     PointTag(Object* owner, QByteArray* data = 0);
     QByteArray toByteArray() const;
-    quint64 index() const { return _index; }
+    qint64 index() const;
     static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
 
 public slots:
-    void setIndex(quint64 index);
-
-protected:
-    void addProperties();
+    void setIndex(qint64 ind);
 
 private:
     REGISTER_DECL_TAGTYPE(PointTag);
-    quint64 _index;
 };
 
 #endif // POINTTAG_H

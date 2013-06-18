@@ -21,8 +21,8 @@ public:
     static QStringList tags() { return _creatorMap->keys(); }
     static QWidget* createWidget(QList<Tag*> tags, QWidget* parent = 0);
     static QWidget* closeButton(QList<Tag*> tags, QWidget* parent = 0);
+    static QList<Property*> getProperties(QString key, QList<Tag *> tags);
     virtual void exec(QPainter &p) { Q_UNUSED(p) }
-    virtual void addProperties() {}
 
 signals:
     void valueChanged();
@@ -34,7 +34,9 @@ protected:
     Property* addProperty(QString key, Property* property);
     QList<Property*> properties() const { return _properties.values(); }
     Property* property(QString key) const { return _properties[key]; }
-    void setOwner(Object* owner);
+    void setOwner(Object* owner) { _owner = owner; }
+    void saveProperties(QDataStream& stream) const;
+    void restoreProperties(QDataStream& stream);
 
 
 private:
