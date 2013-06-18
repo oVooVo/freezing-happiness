@@ -3,21 +3,24 @@
 #include "BackEnd/project.h"
 #include <QPushButton>
 
-QMap<QString, Tag* (*)(QByteArray*)> *Tag::_creatorMap = 0;
+QMap<QString, Tag* (*)(Object*, QByteArray*)> *Tag::_creatorMap = 0;
 QMap<QString, QWidget* (*)(QList<Tag*>, QWidget*)> *Tag::_widgetCreatorMap = 0;
+Object* Tag::AUX_OWNER_BUFFER = 0;
 
 
-Tag::Tag(QByteArray *data)
+Tag::Tag(Object *owner, QByteArray *data)
 {
     Q_UNUSED(data);
+    _owner = owner;
 }
 
 void Tag::setOwner(Object *owner)
 {
     _owner = owner;
+    addProperties();
 }
 
-Tag* Tag::createInstance(QByteArray *data)
+Tag* Tag::createInstance(Object* owner, QByteArray *data)
 {
     if (!_creatorMap)
     {
@@ -29,17 +32,17 @@ Tag* Tag::createInstance(QByteArray *data)
     QDataStream stream(data, QIODevice::ReadOnly);
     stream >> className;
 
-    QMap<QString, Tag* (*)(QByteArray*)>::iterator it = _creatorMap->find(className);
+    QMap<QString, Tag* (*)(Object*, QByteArray*)>::iterator it = _creatorMap->find(className);
     if (it == _creatorMap->end()) {
         qDebug() << "Classname = " << className << ". I will crash now.";
         Q_ASSERT(false);
         return 0;
     }
 
-    return (it.value())(data);
+    return (it.value())(owner, data);
 }
 
-Tag* Tag::createInstance(QString className)
+Tag* Tag::createInstance(Object* owner, QString className)
 {
     if (!_creatorMap)
     {
@@ -47,14 +50,14 @@ Tag* Tag::createInstance(QString className)
         //_creatorMap = new QMap<QString, Property* (*)(QByteArray*)>();
     }
 
-    QMap<QString, Tag* (*)(QByteArray*)>::iterator it = _creatorMap->find(className);
+    QMap<QString, Tag* (*)(Object*, QByteArray*)>::iterator it = _creatorMap->find(className);
     if (it == _creatorMap->end()) {
         qDebug() << "Classname = " << className << ". I will crash now.";
         Q_ASSERT(false);
         return 0;
     }
 
-    return (it.value())(0);
+    return (it.value())(owner, 0);
 }
 
 
@@ -82,7 +85,7 @@ QDataStream& operator>>(QDataStream& in, Tag* &t)
 {
     QByteArray a;
     in >> a;
-    t = Tag::createInstance(&a);
+    t = Tag::createInstance(Tag::AUX_OWNER_BUFFER, &a);
     return in;
 }
 
@@ -124,4 +127,17 @@ QWidget* Tag::closeButton(QList<Tag *> tags, QWidget *parent)
         }
     } );
     return button;
+}
+
+Property* Tag::addProperty(QString key, Property *property)
+{
+    property->setProject(owner()->project());
+    _properties.insert(key, property);
+    connect(property, SIGNAL(valueChanged()), this, SLOT(emitValueChanged()));
+    return property;
+}
+
+void Tag::emitValueChanged()
+{
+    emit valueChanged();
 }

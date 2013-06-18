@@ -5,37 +5,47 @@
 #include "../Objects/object.h"
 
 class Tag;
-template<typename T> Tag *createT(QByteArray *data = 0) { return new T(data); }
+template<typename T> Tag *createT(Object* owner, QByteArray *data = 0) { return new T(owner, data); }
 template<typename T> QWidget *createWidgetT(QList<Tag*> tags, QWidget* parent = 0) { return T::createWidget(tags, parent); }
 
 class Tag : public QObject
 {
     Q_OBJECT
 public:
-    explicit Tag(QByteArray *data = 0);
-    void setOwner(Object* owner);
+    explicit Tag(Object* owner = 0, QByteArray *data = 0);
     Object* owner() const { return _owner; }
     QString type() const;
     virtual QByteArray toByteArray() const;
-    static Tag* createInstance(QString className);
-    static Tag* createInstance(QByteArray *data);
+    static Tag* createInstance(Object *owner, QString className);
+    static Tag* createInstance(Object *owner, QByteArray *data);
     static QStringList tags() { return _creatorMap->keys(); }
     static QWidget* createWidget(QList<Tag*> tags, QWidget* parent = 0);
     static QWidget* closeButton(QList<Tag*> tags, QWidget* parent = 0);
     virtual void exec(QPainter &p) { Q_UNUSED(p) }
+    virtual void addProperties() {}
 
 signals:
     void valueChanged();
 
 protected:
     //contains ctor for each Tag
-    static QMap<QString, Tag* (*)(QByteArray*)> *_creatorMap;
+    static QMap<QString, Tag* (*)(Object*, QByteArray*)> *_creatorMap;
     static QMap<QString, QWidget* (*)(QList<Tag*>, QWidget*)> *_widgetCreatorMap;
-    void emitValueChanged() { emit valueChanged(); }
+    Property* addProperty(QString key, Property* property);
+    QList<Property*> properties() const { return _properties.values(); }
+    Property* property(QString key) const { return _properties[key]; }
+    void setOwner(Object* owner);
 
 
-public:  //TODO private
+private:
     Object* _owner;
+    QMap<QString, Property*> _properties;
+
+private slots:
+    void emitValueChanged();
+
+public:
+    static Object* AUX_OWNER_BUFFER;
 };
 
 template<typename T>
@@ -44,7 +54,7 @@ struct TagRegister : Tag
     TagRegister(QString className) : Tag()
     {
         if (!_creatorMap)
-            _creatorMap = new QMap<QString, Tag* (*)(QByteArray*)>();
+            _creatorMap = new QMap<QString, Tag* (*)(Object*, QByteArray*)>();
         if (!_widgetCreatorMap)
             _widgetCreatorMap = new QMap<QString, QWidget* (*)(QList<Tag*>, QWidget*)>();
         _creatorMap->insert(className, &createT<T>);

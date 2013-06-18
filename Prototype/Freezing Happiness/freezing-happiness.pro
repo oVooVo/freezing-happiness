@@ -56,7 +56,8 @@ SOURCES += main.cpp \
     BackEnd/Tags/styletag.cpp \
     BackEnd/Objects/cloner.cpp \
     BackEnd/Properties/compositeproperty.cpp \
-    BackEnd/Properties/transformproperty.cpp
+    BackEnd/Properties/transformproperty.cpp \
+    BackEnd/Properties/integerproperty.cpp
 
 
 HEADERS += \
@@ -98,7 +99,8 @@ HEADERS += \
     BackEnd/Tags/styletag.h \
     BackEnd/Objects/cloner.h \
     BackEnd/Properties/compositeproperty.h \
-    BackEnd/Properties/transformproperty.h
+    BackEnd/Properties/transformproperty.h \
+    BackEnd/Properties/integerproperty.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \

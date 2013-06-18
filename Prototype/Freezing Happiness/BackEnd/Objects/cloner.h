@@ -5,6 +5,7 @@
 
 class Cloner : public Object
 {
+    Q_OBJECT
 public:
     Cloner(Project *project, QString name = "Cloner");
     void customDraw(QPainter &p);

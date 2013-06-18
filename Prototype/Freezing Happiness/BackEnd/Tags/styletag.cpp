@@ -18,9 +18,10 @@ const QStringList StyleTag::BRUSH_STYLES = QStringList() << tr("Nothing") << tr(
                                                               << tr("Half dense") << tr("Somewhat sparse") << tr ("Very sparse") << tr("Extremely sparse") << tr("Horizontal") << tr("Vertical")
                                                               << tr("Cross") << tr("Backward diagonal") << tr("Forward diagonal") << tr ("Cross diagonal");
 
-StyleTag::StyleTag(QByteArray *data)
+StyleTag::StyleTag(Object *owner, QByteArray *data)
 {
     if (data) {
+        setOwner(owner);
         QDataStream stream(data, QIODevice::ReadOnly);
         quint8 brush, pen;
         QString className;

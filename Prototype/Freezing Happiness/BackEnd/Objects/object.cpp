@@ -563,8 +563,12 @@ Object* Object::deserialize(QDataStream &in, Project* project, bool assertId, bo
     QList<Tag*> tags;
     quint8 isSelected, isExpanded;
 
-    in >> className >> childrenCount >> id >> props >> tags >> isSelected >> isExpanded;
+    in >> className;
     o = Object::createInstance(className, project);
+
+    Tag::AUX_OWNER_BUFFER = o;
+    in >> childrenCount >> id >> props >> tags >> isSelected >> isExpanded;
+    Tag::AUX_OWNER_BUFFER = 0;
 
     if (o->id() != id) {
         project->freeId(o->id());
@@ -633,7 +637,7 @@ void Object::setTags(QList<Tag *> tags)
     for (Tag* tag : tags) {
         if (hasTag(tag)) continue;
         _tags.append(tag);
-        tag->setOwner(this);
+        //tag->setOwner(this); //TODO check
     }
     _project->emitStructureChanged();
 }
@@ -655,8 +659,7 @@ void Object::newTag(QString tagName)
 {
     if (hasTag(tagName)) return;
 
-    Tag* tag = Tag::createInstance(tagName);
-    tag->setOwner(this);
+    Tag* tag = Tag::createInstance(this, tagName);
     _tags.append(tag);
     _project->emitStructureChanged();
 }

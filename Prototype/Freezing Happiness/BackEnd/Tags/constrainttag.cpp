@@ -9,8 +9,9 @@
 
 REGISTER_DEFN_TAGTYPE(ConstraintTag);
 
-ConstraintTag::ConstraintTag(QByteArray* data)
+ConstraintTag::ConstraintTag(Object *owner, QByteArray* data)
 {
+    setOwner(owner);
     if (data == 0) {
         _positionMode = Mode::ignore;
         _rotationMode = Mode::ignore;

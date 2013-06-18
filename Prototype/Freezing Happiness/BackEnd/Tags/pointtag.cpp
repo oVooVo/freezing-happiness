@@ -1,20 +1,24 @@
 #include "pointtag.h"
 #include <QSpinBox>
 #include <QVBoxLayout>
+#include <QDebug>
+#include "BackEnd/Properties/integerproperty.h"
 
 REGISTER_DEFN_TAGTYPE(PointTag);
 
-PointTag::PointTag(QByteArray *data)
+PointTag::PointTag(Object* owner, QByteArray *data)
 {
-    QDataStream stream(data, QIODevice::ReadOnly);
-    QString className;
-    stream >> className >> _index;
-    Q_ASSERT(className == type());
-}
-
-PointTag::PointTag()
-{
-    _index = 0;
+    if (data) {
+        setOwner(owner);
+        QDataStream stream(data, QIODevice::ReadOnly);
+        QString className;
+        QList<Property*> props;
+        stream >> className;
+        qDebug() << className << type();
+        Q_ASSERT(className == type());
+    } else {
+        _index = 0;
+    }
 }
 
 QByteArray PointTag::toByteArray() const
@@ -69,4 +73,9 @@ QWidget* PointTag::createWidget(QList<Tag *> tags, QWidget *parent)
     layout->addWidget(spinBox);
     w->setLayout(layout);
     return w;
+}
+
+void PointTag::addProperties()
+{
+    addProperty("index", new IntegerProperty("PointTag", "index", 0, std::numeric_limits<qint64>::max()));
 }

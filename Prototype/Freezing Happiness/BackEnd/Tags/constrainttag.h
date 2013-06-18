@@ -9,7 +9,7 @@ class ConstraintTag : public Tag
     Q_OBJECT
 public:
     enum Mode { ignore, local, global };
-    ConstraintTag(QByteArray* data);
+    ConstraintTag(Object* owner, QByteArray* data);
     QByteArray toByteArray() const;
     static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
     void exec(QPainter &p);
