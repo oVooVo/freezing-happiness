@@ -6,14 +6,15 @@ REGISTER_DEFN_TAGTYPE(PointTag);
 
 PointTag::PointTag(QByteArray *data)
 {
-    if (data) {
-        QDataStream stream(data, QIODevice::ReadOnly);
-        QString className;
-        stream >> className >> _index;
-        Q_ASSERT(className == type());
-    } else {
-        _index = 0;
-    }
+    QDataStream stream(data, QIODevice::ReadOnly);
+    QString className;
+    stream >> className >> _index;
+    Q_ASSERT(className == type());
+}
+
+PointTag::PointTag()
+{
+    _index = 0;
 }
 
 QByteArray PointTag::toByteArray() const

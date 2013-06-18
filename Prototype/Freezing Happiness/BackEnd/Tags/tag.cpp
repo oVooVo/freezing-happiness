@@ -26,8 +26,8 @@ Tag* Tag::createInstance(QByteArray *data)
     }
 
     QString className;
-    QDataStream in(data, QIODevice::ReadOnly);
-    in >> className;
+    QDataStream stream(data, QIODevice::ReadOnly);
+    stream >> className;
 
     QMap<QString, Tag* (*)(QByteArray*)>::iterator it = _creatorMap->find(className);
     if (it == _creatorMap->end()) {

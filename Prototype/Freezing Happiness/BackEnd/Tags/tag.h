@@ -5,7 +5,7 @@
 #include "../Objects/object.h"
 
 class Tag;
-template<typename T> Tag *createT(QByteArray* data = 0) { return new T(data); }
+template<typename T> Tag *createT(QByteArray *data = 0) { return new T(data); }
 template<typename T> QWidget *createWidgetT(QList<Tag*> tags, QWidget* parent = 0) { return T::createWidget(tags, parent); }
 
 class Tag : public QObject
@@ -17,8 +17,8 @@ public:
     Object* owner() const { return _owner; }
     QString type() const;
     virtual QByteArray toByteArray() const;
-    static Tag* createInstance(QByteArray* data);
     static Tag* createInstance(QString className);
+    static Tag* createInstance(QByteArray *data);
     static QStringList tags() { return _creatorMap->keys(); }
     static QWidget* createWidget(QList<Tag*> tags, QWidget* parent = 0);
     static QWidget* closeButton(QList<Tag*> tags, QWidget* parent = 0);

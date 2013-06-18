@@ -80,12 +80,6 @@ void Property::setProject(Project *project)
     _project = project;
 }
 
-void Property::setOwner(Object* owner)
-{
-    _owner = owner;
-}
-
-
 QString Property::toString() const
 {
     return type();

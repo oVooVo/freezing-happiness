@@ -24,7 +24,6 @@ SOURCES += main.cpp \
     BackEnd/Objects/root.cpp \
     BackEnd/Properties/property.cpp \
     BackEnd/Properties/propertystring.cpp \
-    BackEnd/Properties/propertytransform.cpp \
     BackEnd/mathutility.cpp \
     FrontEnd/objecttree.cpp \
     FrontEnd/mainwindow.cpp \
@@ -55,7 +54,9 @@ SOURCES += main.cpp \
     BackEnd/Objects/ellipse.cpp \
     BackEnd/Properties/realproperty.cpp \
     BackEnd/Tags/styletag.cpp \
-    BackEnd/Objects/cloner.cpp
+    BackEnd/Objects/cloner.cpp \
+    BackEnd/Properties/compositeproperty.cpp \
+    BackEnd/Properties/transformproperty.cpp
 
 
 HEADERS += \
@@ -65,7 +66,6 @@ HEADERS += \
     BackEnd/Objects/root.h \
     BackEnd/Properties/property.h \
     BackEnd/Properties/propertystring.h \
-    BackEnd/Properties/propertytransform.h \
     BackEnd/mathutility.h \
     FrontEnd/objecttree.h \
     FrontEnd/mainwindow.h \
@@ -96,7 +96,9 @@ HEADERS += \
     BackEnd/Objects/ellipse.h \
     BackEnd/Properties/realproperty.h \
     BackEnd/Tags/styletag.h \
-    BackEnd/Objects/cloner.h
+    BackEnd/Objects/cloner.h \
+    BackEnd/Properties/compositeproperty.h \
+    BackEnd/Properties/transformproperty.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \

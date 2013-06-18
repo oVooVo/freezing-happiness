@@ -9,6 +9,7 @@
 
 class Object;
 class Property;
+
 template<typename T> Property *createT(QByteArray* data) { return new T(data); }
 template<typename T> QWidget *createWidgetT(QList<Property*> props, QWidget* parent)
                                 { return T::createWidget(props, parent); }
@@ -29,7 +30,6 @@ public:
     void setProject(Project* project);
     Project* project() const { return _project; }
     void setOwner(Object* owner);
-    Object* owner() const { return _owner; }
 
 signals:
     void valueChanged();
@@ -38,7 +38,6 @@ private:
     QString _category;
     QString _name;
     Project* _project = 0;
-    Object* _owner = 0; //unused!
 
 protected:
     //contains ctor for each Property

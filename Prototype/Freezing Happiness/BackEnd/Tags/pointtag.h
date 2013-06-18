@@ -8,6 +8,7 @@ class PointTag : public Tag
     Q_OBJECT
 public:
     PointTag(QByteArray* data);
+    PointTag();
     QByteArray toByteArray() const;
     quint64 index() const { return _index; }
     static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);

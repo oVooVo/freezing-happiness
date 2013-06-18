@@ -2,7 +2,7 @@
 #include <QDebug>
 
 REGISTER_DEFN_OBJECTTYPE(Cloner);
-QStringList Cloner::MODES = QStringList() << tr("Linear") << tr("Grid") << tr("Circle");
+const QStringList Cloner::MODES = QStringList() << tr("Linear") << tr("Grid") << tr("Circle");
 
 Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
 {

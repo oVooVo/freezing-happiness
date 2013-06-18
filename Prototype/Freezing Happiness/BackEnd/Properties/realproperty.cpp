@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QDebug>
 
 REGISTER_DEFN_PROPERTYTYPE(RealProperty);
 
@@ -30,7 +31,7 @@ QByteArray RealProperty::toByteArray()
 {
     QByteArray array;
     QDataStream stream(&array, QIODevice::WriteOnly);
-    stream << type() << type() << name() << _min << _max << _value;
+    stream << type() << category() <<  name() << _min << _max << _value;
     return array;
 }
 

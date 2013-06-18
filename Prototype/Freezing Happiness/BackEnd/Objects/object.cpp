@@ -1,7 +1,6 @@
 #include "object.h"
 #include "BackEnd/project.h"
 #include <QDebug>
-#include "BackEnd/Properties/propertytransform.h"
 #include "BackEnd/Properties/propertystring.h"
 #include "BackEnd/Tags/styletag.h"
 #include <QString>
@@ -10,6 +9,7 @@
 #include "BackEnd/Tags/tag.h"
 #include <QTimer>
 #include <QMetaMethod>
+#include "BackEnd/Properties/transformproperty.h"
 
 
 QMap<QString, Object* (*)(Project*)> *Object::_creatorMap = 0;
@@ -25,7 +25,7 @@ Object::Object(Project* project, QString name, bool isRoot)
 
     _id = _project->reserveId(this);
     addProperty("Name", new PropertyString("Object", "Name", name));
-    addProperty("localeMatrix", new PropertyTransform("Object", "Locale Matrix"));
+    addProperty("localeMatrix", new TransformProperty("Object", "Locale Matrix"));
 
     if (isRoot) {
         _parent = 0;
@@ -38,7 +38,6 @@ Object::Object(Project* project, QString name, bool isRoot)
 Property* Object::addProperty(QString key, Property *property)
 {
     property->setProject(project());
-    property->setOwner(this);
     _properties.insert(key, property);
     connect(property, SIGNAL(valueChanged()), this, SLOT(emitObjectChanged()));
     return property;
@@ -237,7 +236,7 @@ void Object::setName(QString newName)
 
 QTransform Object::localeTransform() const
 {
-    return ((PropertyTransform*) _properties["localeMatrix"])->transform();
+    return ((TransformProperty*) _properties["localeMatrix"])->transform();
 }
 
 void Object::dumpGlobaleTransformationCache()
@@ -252,25 +251,25 @@ void Object::dumpGlobaleTransformationCache()
 void Object::setLocaleTransform(QTransform t)
 {
     dumpGlobaleTransformationCache();
-    ((PropertyTransform*) _properties["localeMatrix"])->setTransform(t);
+    ((TransformProperty*) _properties["localeMatrix"])->setTransform(t);
 }
 
 void Object::setLocalePosition(QPointF pos)
 {
     dumpGlobaleTransformationCache();
-    ((PropertyTransform*) _properties["localeMatrix"])->setPosition(pos);
+    ((TransformProperty*) _properties["localeMatrix"])->setPosition(pos);
 }
 
 void Object::setLocaleScalation(qreal scale)
 {
     dumpGlobaleTransformationCache();
-    ((PropertyTransform*) _properties["localeMatrix"])->setScalation(scale);
+    ((TransformProperty*) _properties["localeMatrix"])->setScalation(scale);
 }
 
 void Object::setLocaleRotation(qreal r)
 {
     dumpGlobaleTransformationCache();
-    ((PropertyTransform*) _properties["localeMatrix"])->setRotation(r);
+    ((TransformProperty*) _properties["localeMatrix"])->setRotation(r);
 }
 
 QPointF Object::localePosition() const
@@ -460,7 +459,6 @@ QString Object::toTikz() const
 
 void Object::paint(QPainter &p)
 {
-
     for (Tag* tag : _tags) {
         tag->exec(p);
     }
