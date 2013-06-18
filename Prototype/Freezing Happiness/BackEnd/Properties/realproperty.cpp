@@ -74,11 +74,9 @@ QWidget* RealProperty::createWidget(QList<Property *> props, QWidget *parent)
 
     };
 
-    void (QDoubleSpinBox:: *valueChanged)(qreal) = &QDoubleSpinBox::valueChanged;
-
     foreach (Property* p, props) {
         RealProperty* realProp = (RealProperty*) p;
-        connect(spinBox, valueChanged, [=]() {
+        connect(spinBox, &QDoubleSpinBox::editingFinished, [=]() {
             realProp->setValue(spinBox->value());
         });
 

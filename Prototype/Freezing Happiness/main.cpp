@@ -1,4 +1,3 @@
-#include <BackEnd/Properties/propertytransform.h>
 #include <BackEnd/mathutility.h>
 #include <QCoreApplication>
 #include <BackEnd/project.h>
