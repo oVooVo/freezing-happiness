@@ -7,7 +7,7 @@
 #include "BackEnd/Properties/splineproperty.h"
 
 REGISTER_DEFN_OBJECTTYPE(Cloner);
-const QStringList Cloner::MODES = QStringList() << tr("Linear") << tr("Grid") << tr("Circle");
+const QStringList Cloner::MODES = QStringList() << tr("Linear") << tr("Circle");
 
 Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
 {
@@ -21,6 +21,7 @@ Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
     addProperty("rot-curve", new SplineProperty(tr("Cloner"), tr("Rotation spread")));
     addProperty("scale-curve", new SplineProperty(tr("Cloner"), tr("Scalation spread")));
     addProperty("stepmode", new BoolProperty(tr("Cloner"), tr("Step mode"), true));
+    addProperty("Align", new BoolProperty(tr("Cloner"), tr("Align"), true));
 }
 
 void Cloner::customDraw(QPainter &p)

@@ -101,6 +101,7 @@ void SplineEdit::mouseDoubleClickEvent(QMouseEvent *event)
     } else {
         _data->removePoint(grab);
         _data->update();
+        _grabbedIndex = -1;
         update();
     }
     emit pointsChanged();
