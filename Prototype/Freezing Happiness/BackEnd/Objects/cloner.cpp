@@ -14,22 +14,35 @@ Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
     polish();
     addProperty("mode", new SelectProperty(tr("Cloner"), tr("Mode"), 0, MODES));
 
-    addProperty("count", new IntegerProperty(tr("Cloner"), tr("Count")));
-    addProperty("offset", new TransformProperty(tr("Cloner"), tr("Offset")));
-    addProperty("curve", new SplineProperty(tr("Cloner"), tr("Curve")));
+    addProperty("count", new IntegerProperty(tr("Cloner"), tr("Count"), 10));
+    addProperty("offset", new TransformProperty(tr("Cloner"), tr("Offset"), 100,0,0,0));
+    addProperty("xpos-curve", new SplineProperty(tr("Cloner"), tr("Pos x spread")));
+    addProperty("ypos-curve", new SplineProperty(tr("Cloner"), tr("Pos y spread")));
+    addProperty("rot-curve", new SplineProperty(tr("Cloner"), tr("Rotation spread")));
+    addProperty("scale-curve", new SplineProperty(tr("Cloner"), tr("Scalation spread")));
+    addProperty("stepmode", new BoolProperty(tr("Cloner"), tr("Step mode"), true));
 }
 
 void Cloner::customDraw(QPainter &p)
 {
-    if (!valid()) return;
-    for (int i = 0; i < 10; i++) {
-        directChildren()[i % directChildren().size()]->customDraw(p);
-        p.translate(100, 0);
+    int count = ((IntegerProperty*) properties()["count"])->value();
+    int c = ((BoolProperty*) properties()["stepmode"])->value() ? count : 1;
+    for (int i = 0; i < count; i++) {
+        qreal x = (double) i / count;
+        p.save();
+        p.translate(c*((SplineProperty*) properties()["xpos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().x(),
+                    c*((SplineProperty*) properties()["ypos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().y());
+        p.rotate(c*((SplineProperty*) properties()["rot-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->rotation());
+        qreal s = ((SplineProperty*) properties()["scale-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->scalation();
+        p.scale(1+c*s, 1+c*s);
+        directChildren()[i % directChildren().size()]->paint(p);
+        p.restore();
     }
 }
 
 bool Cloner::valid() const
 {
-    return directChildren().size() > 0;
+    return directChildren().size() > 0
+            && ((IntegerProperty*) properties()["count"])->value() > 0;
 }
 

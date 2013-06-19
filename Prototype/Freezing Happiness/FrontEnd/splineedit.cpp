@@ -2,19 +2,25 @@
 #include <QPainter>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QStyleOption>
 
 SplineEdit::SplineEdit(SplineProperty* data, QWidget *parent) :
     QWidget(parent)
 {
     _data = data;
-    _topLeft = QPoint(5,5);
+    _topLeft = QPoint(0,0);
 }
 
 void SplineEdit::paintEvent(QPaintEvent *event)
 {
+    // apply stylesheet
+    QStyleOption opt;
+    opt.init(this);
     QPainter painter(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+    // end stylesheet
 
-    _size = QSize(this->width() - 10, this->height() - 10);
+    _size = QSize(this->width() - 0, this->height() - 0);
 
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing, true);
@@ -33,7 +39,6 @@ void SplineEdit::paintEvent(QPaintEvent *event)
     painter.drawPath(curve);
     painter.restore();
 
-    QWidget::paintEvent(event);
 }
 
 QPoint SplineEdit::map(QPointF p)
@@ -56,19 +61,23 @@ QPointF SplineEdit::reMap(QPoint p)
 
 void SplineEdit::mousePressEvent(QMouseEvent *event)
 {
-    _grabbedIndex = -1;
+    _grabbedIndex = getIndexBelow(event->pos());
+}
+
+int SplineEdit::getIndexBelow(QPoint p)
+{
     for (int i = 0; i < _data->points().size(); i++) {
-        qreal dist = (map(_data->points()[i]) - event->pos()).manhattanLength();
+        qreal dist = (map(_data->points()[i]) - p).manhattanLength();
         if (dist < 5) {
-            _grabbedIndex = i;
-            qDebug() << "Treffer";
-            return;
+            return i;
         }
     }
+    return -1;
 }
 
 void SplineEdit::mouseReleaseEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
     _grabbedIndex = -1;
 }
 
@@ -77,12 +86,22 @@ void SplineEdit::mouseMoveEvent(QMouseEvent *event)
     if (_grabbedIndex < 0) return;
     _data->setPoint(_grabbedIndex, reMap(event->pos()));
     _data->update();
+    emit pointsChanged();
     update();
 }
 
 void SplineEdit::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    _data->addPoint(reMap(event->pos()));
-    _data->update();
-    update();
+    int grab = getIndexBelow(event->pos());
+    if (grab < 0) {
+        _data->addPoint(reMap(event->pos()));
+        _grabbedIndex = _data->points().size() - 1;
+        _data->update();
+        update();
+    } else {
+        _data->removePoint(grab);
+        _data->update();
+        update();
+    }
+    emit pointsChanged();
 }

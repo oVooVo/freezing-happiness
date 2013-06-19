@@ -8,7 +8,7 @@ class TransformProperty : public CompositeProperty
     Q_OBJECT
 public:
     TransformProperty(QByteArray *data);
-    TransformProperty(QString category, QString name);
+    TransformProperty(QString category, QString name, qreal x = 0, qreal y = 0, qreal rot = 0, qreal scale = 1);
     ~TransformProperty();
     static QWidget* createWidget(QList<Property *> props, QWidget *parent);
 

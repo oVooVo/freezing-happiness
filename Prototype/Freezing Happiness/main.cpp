@@ -23,17 +23,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    //MainWindow w;
-    //w.show();
+    MainWindow w;
+    w.show();
 
     //testBackend();
-
-
-    SplineEdit* splineEdit = new SplineEdit(new SplineProperty("Test", "TTEst"), 0);
-    splineEdit->data()->addPoint(QPointF(0,1));
-    splineEdit->data()->addPoint(QPointF(0.5,0.5));
-    splineEdit->data()->addPoint(QPointF(1,1));
-    splineEdit->show();
 
     return a.exec();
 }

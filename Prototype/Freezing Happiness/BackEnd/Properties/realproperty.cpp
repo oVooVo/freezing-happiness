@@ -60,7 +60,7 @@ QWidget* RealProperty::createWidget(QList<Property *> props, QWidget *parent)
 
         foreach (Property* p, props) {
             RealProperty* realProp = (RealProperty*) p;
-            if (realProp->value() != value) {
+            if (!qFuzzyCompare(realProp->value(), value)) {
                 multipleValues = true;
             }
         }

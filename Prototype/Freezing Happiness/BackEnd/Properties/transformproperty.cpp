@@ -19,14 +19,14 @@ TransformProperty::~TransformProperty()
     }
 }
 
-TransformProperty::TransformProperty(QString category, QString name)
+TransformProperty::TransformProperty(QString category, QString name, qreal x, qreal y, qreal rot, qreal scale)
 {
     setCategory(category);
     setName(name);
-    addProperty("x", new RealProperty(category, "x", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max()));
-    addProperty("y", new RealProperty(category, "y", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max()));
-    addProperty("Rotation", new RealProperty(category, "Rotation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max()));
-    addProperty("Scalation", new RealProperty(category, "Scalation", std::numeric_limits<qreal>::min(), std::numeric_limits<qreal>::max(), 1));
+    addProperty("x", new RealProperty(category, "x", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), x));
+    addProperty("y", new RealProperty(category, "y", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), y));
+    addProperty("Rotation", new RealProperty(category, "Rotation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), rot));
+    addProperty("Scalation", new RealProperty(category, "Scalation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), scale));
 }
 
 QWidget* TransformProperty::createWidget(QList<Property *> props, QWidget *parent)
@@ -78,59 +78,44 @@ void TransformProperty::setTransform(QTransform t)
 }
 
 
-void TransformProperty::setPosition(QPointF pos)
-{
-    QTransform t = transform();
-    t.setMatrix(t.m11(), t.m12(), t.m13(), t.m21(), t.m22(), t.m23(), pos.x(), pos.y(), t.m33());
-    setTransform(t);
-}
-
 void TransformProperty::setX(qreal x)
 {
-    QTransform t = transform();
-    t.setMatrix(t.m11(), t.m12(), t.m13(), t.m21(), t.m22(), t.m23(), x, t.m32(), t.m33());
-    setTransform(t);
+    ((RealProperty*) property("x"))->setValue(x);
 }
 
 void TransformProperty::setY(qreal y)
 {
-    QTransform t = transform();
-    t.setMatrix(t.m11(), t.m12(), t.m13(), t.m21(), t.m22(), t.m23(), t.m31(), y, t.m33());
-    setTransform(t);
+    ((RealProperty*) property("y"))->setValue(y);
 }
 
 void TransformProperty::setScalation(qreal scale)
 {
-    QTransform t = transform();
-    qreal s = scale / scalation();
-    t.setMatrix(t.m11()*s, t.m12()*s, t.m13(),
-                t.m21()*s, t.m22()*s, t.m23(),
-                t.m31(), t.m32(), t.m33());
-    setTransform(t);
+((RealProperty*) property("Rotation"))->setValue(scale);
 }
 
 void TransformProperty::setRotation(qreal r)
 {
-    QTransform t = transform();
-    qreal s = scalation();
-    t.setMatrix(qCos(r)*s, -qSin(r)*s, t.m13(),
-                qSin(r)*s,  qCos(r)*s, t.m23(),
-                t.m31(), t.m32(), t.m33());
-    setTransform(t);
+    ((RealProperty*) property("Rotation"))->setValue(r);
 }
 
 QPointF TransformProperty::position() const
 {
-    return MathUtility::translation(transform());
+    return QPointF(((RealProperty*) property("x"))->value(), ((RealProperty*) property("y"))->value());
 }
 
 qreal TransformProperty::rotation() const
 {
-    return MathUtility::rotation(transform());
+    return ((RealProperty*) property("Rotation"))->value();
 }
 
 qreal TransformProperty::scalation() const
 {
-    return MathUtility::scalation(transform());
+    return ((RealProperty*) property("Scalation"))->value();
+}
+
+void TransformProperty::setPosition(QPointF pos)
+{
+    setX(pos.x());
+    setY(pos.y());
 }
 

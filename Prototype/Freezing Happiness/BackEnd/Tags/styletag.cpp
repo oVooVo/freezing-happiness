@@ -7,6 +7,7 @@
 #include <QCheckBox>
 #include <QColorDialog>
 #include <qmath.h>
+#include <QDebug>
 
 REGISTER_DEFN_TAGTYPE(StyleTag);
 
@@ -42,7 +43,7 @@ StyleTag::StyleTag(Object *owner, QByteArray *data)
     }
 }
 
-QByteArray StyleTag::toByteArray()
+QByteArray StyleTag::toByteArray() const
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);

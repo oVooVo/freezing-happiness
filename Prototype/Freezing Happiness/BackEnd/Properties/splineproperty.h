@@ -15,6 +15,8 @@ public:
     static QWidget* createWidget(QList<Property *> props, QWidget *parent);
 
     void addPoint(QPointF p);
+    void setPoints(QList<QPointF> points);
+    void removePoint(int index);
     void setPoint(int index, QPointF p);
     QList<QPointF> points() const { return _points; }
     void update();
@@ -27,6 +29,7 @@ private:
     REGISTER_DECL_PROPERTYTYPE(SplineProperty);
     QList<QPointF> _points;
     QList<qreal> _coef;
+    quint64 hash() const;
 };
 
 #endif // SPLINEPROPERTY_H

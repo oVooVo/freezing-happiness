@@ -87,7 +87,9 @@ void PropertyManager::updateProperties()
     for (QString className : tags.keys()) {
         QWidget* tab = Tag::createWidget(tags[className], _tabWidget);
         _tagList.append(tags[className]);
-        tabs.append(tab);
+        QScrollArea* scroll = new QScrollArea(_tabWidget);
+        scroll->setWidget(tab);
+        tabs.append(scroll);
         _tabWidget->addTab(tab, className);
     }
 }

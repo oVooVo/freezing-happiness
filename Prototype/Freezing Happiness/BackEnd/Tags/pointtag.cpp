@@ -22,6 +22,7 @@ PointTag::PointTag(Object* owner, QByteArray *data)
 
 QByteArray PointTag::toByteArray() const
 {
+    qDebug() << "write PointTag tag";
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream << type();

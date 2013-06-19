@@ -23,7 +23,6 @@ IntegerProperty::IntegerProperty(QString category, QString name, int min, int ma
     _min = min < max ? min : max;
     _max = min < max ? max : min;
     _value = value > max ? max : value < min ? min : value;
-    qDebug() << "set" << _min << _max;
     setCategory(category);
     setName(name);
 }
@@ -46,6 +45,7 @@ void IntegerProperty::setValue(qint64 value)
     if (_value == value) return;
 
     _value = value;
+    qDebug() << "value changed int";
     emit valueChanged();
 }
 
@@ -54,7 +54,6 @@ QWidget* IntegerProperty::createWidget(QList<Property *> props, QWidget *parent)
     QString name = props.first()->name();
     QSpinBox* spinBox = new QSpinBox(parent);
     spinBox->setRange(((IntegerProperty*) props.first())->_min, ((IntegerProperty*) props.first())->_max);
-    qDebug() << spinBox->minimum() << spinBox->maximum();
 
     auto updateSpinBox = [=]() {
         bool multipleValues = false;
@@ -78,7 +77,7 @@ QWidget* IntegerProperty::createWidget(QList<Property *> props, QWidget *parent)
 
     foreach (Property* p, props) {
         IntegerProperty* realProp = (IntegerProperty*) p;
-        connect(spinBox, &QDoubleSpinBox::editingFinished, [=]() {
+        connect(spinBox, &QSpinBox::editingFinished, [=]() {
             realProp->setValue(spinBox->value());
         });
 

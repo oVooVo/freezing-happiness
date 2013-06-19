@@ -13,7 +13,7 @@ public:
     static const QStringList BRUSH_STYLES;
 
     StyleTag(Object* owner = 0, QByteArray *data = 0);
-    QByteArray toByteArray();
+    QByteArray toByteArray() const;
     QString toString() const;
     static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
 

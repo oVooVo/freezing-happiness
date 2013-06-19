@@ -18,6 +18,9 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
 
+signals:
+    void pointsChanged();
+
 private:
     SplineProperty* _data;
     QPoint _topLeft;
@@ -26,6 +29,7 @@ private:
     QPointF reMap(QPoint p);
 
     int _grabbedIndex = -1;
+    int getIndexBelow(QPoint p);
     
 };
 

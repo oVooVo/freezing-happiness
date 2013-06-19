@@ -1,4 +1,8 @@
 #include "splineproperty.h"
+#include "FrontEnd/splineedit.h"
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QDebug>
 
 REGISTER_DEFN_PROPERTYTYPE(SplineProperty);
 
@@ -17,6 +21,8 @@ SplineProperty::SplineProperty(QString category, QString name)
 {
     setName(name);
     setCategory(category);
+    addPoint(QPointF(0,0));
+    addPoint(QPointF(1,1));
 }
 
 QByteArray SplineProperty::toByteArray()
@@ -69,11 +75,13 @@ void SplineProperty::addPoint(QPointF p)
     }
     if (!overwritten)
         _points.append(p);
+    emit valueChanged();
 }
 
-QWidget* SplineProperty::createWidget(QList<Property *> props, QWidget *parent)
+void SplineProperty::removePoint(int index)
 {
-    return new QWidget(parent);
+    _points.removeAt(index);
+    emit valueChanged();
 }
 
 void SplineProperty::update()
@@ -83,6 +91,74 @@ void SplineProperty::update()
 
 void SplineProperty::setPoint(int index, QPointF p)
 {
+    p = QPointF(p.x() < 0 ? 0 : p.x() > 1 ? 1 : p.x(), p.y() < 0 ? 0 : p.y() > 1 ? 1 : p.y());
     _points[index] = p;
 }
 
+QWidget* SplineProperty::createWidget(QList<Property *> props, QWidget *parent)
+{
+    QString name = props.first()->name();
+    SplineEdit* edit = new SplineEdit(((SplineProperty*) props.first()), parent);
+
+    auto updateSplineEdit = [=]() {
+        bool multipleValues = false;
+        quint64 hash = ((SplineProperty*) props.first())->hash();
+
+        foreach (Property* p, props) {
+            SplineProperty* propSpline = (SplineProperty*) p;
+            if (propSpline->hash() != hash) {
+                multipleValues = true;
+            }
+        }
+
+        if (multipleValues) {
+            edit->setStyleSheet(QString("background-color:%1").arg(Property::MULTIPLE_VALUES_COLOR));
+        } else {
+            edit->setStyleSheet("");
+        }
+
+    };
+
+    foreach (Property* p, props) {
+        SplineProperty* propSpline = (SplineProperty*) p;
+        connect(edit, &SplineEdit::pointsChanged, [=]() {
+            propSpline->setPoints(edit->data()->points());
+            propSpline->update();
+        });
+
+        connect(propSpline, &SplineProperty::valueChanged, updateSplineEdit);
+    }
+
+    updateSplineEdit();
+
+    if (name.isEmpty()) {
+        return edit;
+    } else {
+        QWidget* w = new QWidget(parent);
+        edit->setParent(w);
+        QHBoxLayout* layout = new QHBoxLayout();
+        layout->addWidget(new QLabel(QString("%1:").arg(name), parent));
+        layout->addWidget(edit);
+        layout->setContentsMargins(0,0,0,0);
+        layout->setSpacing(0);
+        w->setLayout(layout);
+        return w;
+    }
+}
+
+quint64 SplineProperty::hash() const
+{
+    quint64 hash = 0;
+    for (int i = 0; i < _points.size(); i++) {
+        int x = _points[i].x() * 100000.0;
+        int y = _points[i].y() * 100000.0;
+        hash += (i+1) * (x + 17*y);
+    }
+    return hash;
+}
+
+void SplineProperty::setPoints(QList<QPointF> points)
+{
+    _points = points;
+    emit valueChanged();
+}
