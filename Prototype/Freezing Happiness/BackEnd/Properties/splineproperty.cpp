@@ -17,12 +17,31 @@ SplineProperty::SplineProperty(QByteArray* data)
     setName(name);
 }
 
-SplineProperty::SplineProperty(QString category, QString name)
+SplineProperty::SplineProperty(QString category, QString name, Initialization init)
 {
     setName(name);
     setCategory(category);
-    addPoint(QPointF(0,0));
-    addPoint(QPointF(1,1));
+    switch (init) {
+    case Up:
+        addPoint(QPointF(0,0));
+        addPoint(QPointF(1,1));
+        break;
+    case Down:
+        addPoint(QPointF(0,1));
+        addPoint(QPointF(1,0));
+        break;
+    case Null:
+        addPoint(QPointF(0,0));
+        addPoint(QPointF(1,0));
+        break;
+    case One:
+        addPoint(QPointF(0,1));
+        addPoint(QPointF(1,1));
+        break;
+    case None:
+        ;
+    }
+
 }
 
 QByteArray SplineProperty::toByteArray()

@@ -13,10 +13,16 @@ public:
 
 protected:
     bool drawChildren() const { return false; }
+    void emitObjectChanged();
 
 private:
     REGISTER_DECL_OBJECTTYPE(Cloner);
     static const QStringList MODES;
+    static const QStringList LINEAR_PROPERTIES;
+    static const QStringList CIRCLE_PROPERTIES;
+    void alignLinear(QPainter &p) const;
+    void alignCircle(QPainter &p) const;
+    void updatePropertiesVisibility();
 };
 
 #endif // CLONER_H

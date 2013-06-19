@@ -11,7 +11,7 @@ SplineEdit::SplineEdit(SplineProperty* data, QWidget *parent) :
     _topLeft = QPoint(0,0);
 }
 
-void SplineEdit::paintEvent(QPaintEvent *event)
+void SplineEdit::paintEvent(QPaintEvent *)
 {
     // apply stylesheet
     QStyleOption opt;

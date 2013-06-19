@@ -8,8 +8,9 @@ class SplineProperty : public Property
 {
     Q_OBJECT
 public:
+    enum Initialization { Null, One, Up, Down, None};
     SplineProperty(QByteArray *data);
-    SplineProperty(QString category, QString name);
+    SplineProperty(QString category, QString name, Initialization init = Up);
     qreal getValue(qreal x);
     QByteArray toByteArray();
     static QWidget* createWidget(QList<Property *> props, QWidget *parent);
@@ -20,6 +21,7 @@ public:
     void setPoint(int index, QPointF p);
     QList<QPointF> points() const { return _points; }
     void update();
+
 
 private:
     void calcCoef();

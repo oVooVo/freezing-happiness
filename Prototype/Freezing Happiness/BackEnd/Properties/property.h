@@ -29,6 +29,7 @@ public:
     static Property* createInstance(QByteArray* data);
     void setProject(Project* project);
     Project* project() const { return _project; }
+    bool isVisible = true;
 
 signals:
     void valueChanged();

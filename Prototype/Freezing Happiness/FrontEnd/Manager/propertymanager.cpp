@@ -32,6 +32,7 @@ void PropertyManager::updateProperties()
 
     foreach (QString name, properties.keys()) {
         if (properties[name].isEmpty()) continue;
+        if (!properties[name].first()->isVisible) continue;
 
         QString category = properties[name].first()->category();
         QVBoxLayout* layout;

@@ -159,6 +159,8 @@ protected:
     void applyStyleOptions(QPainter &p);
     virtual void childrenHasChanged() {}
     virtual void adjustProperties() {} //is called when a Property changes
+    virtual void updatePropertiesVisibility() {}
+
 };
 
 template<typename T>

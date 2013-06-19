@@ -463,17 +463,6 @@ void Object::paint(QPainter &p)
         tag->exec(p);
     }
 
-    p.save();
-    QPen pen;
-    pen.setCosmetic(true);
-    p.setPen(pen);
-
-    p.save();
-    p.setTransform(QTransform::fromTranslate(p.transform().dx(), p.transform().dy()));
-    p.drawRect(-1, -1, 2, 2);
-    p.restore();
-    p.restore();
-
     if (valid()) {
         customDraw(p);
     }
@@ -591,6 +580,7 @@ Object* Object::deserialize(QDataStream &in, Project* project, bool assertId, bo
     if (childrenCount_ != 0) {
         *childrenCount_ = childrenCount;
     }
+    o->updatePropertiesVisibility();
     return o;
 }
 

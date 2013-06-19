@@ -7,8 +7,8 @@ REGISTER_DEFN_OBJECTTYPE(Ellipse);
 
 Ellipse::Ellipse(Project* project, QString name) : Object(project, name, false)
 {
-    addProperty("xrad", new RealProperty("Ellipse", "x-Radius", 0, 100000000, 100));
-    addProperty("yrad", new RealProperty("Ellipse", "y-Radius", 0, 100000000, 100));
+    addProperty("xrad", new RealProperty("Ellipse", "x-Radius", 0, 100000000, 10));
+    addProperty("yrad", new RealProperty("Ellipse", "y-Radius", 0, 100000000, 10));
     addProperty("iscircle", new BoolProperty("Ellipse", "Circle", true));
     polish();
 }

@@ -5,26 +5,62 @@
 #include "BackEnd/Properties/selectproperty.h"
 #include "BackEnd/Properties/transformproperty.h"
 #include "BackEnd/Properties/splineproperty.h"
+#include "BackEnd/Properties/realproperty.h"
+#include <qmath.h>
+#include <BackEnd/project.h>
+
+const QStringList Cloner::LINEAR_PROPERTIES = QStringList() << "offset" << "xpos-curve" << "ypos-curve" << "linrot-curve" << "linscale-curve" << "stepmode";
+const QStringList Cloner::CIRCLE_PROPERTIES = QStringList() << "align" << "start" << "angle-curve" << "end" << "radius" << "radius-curve"
+                                                      << "scal" << "rot" << "circscale-curve" << "circrot-curve";
 
 REGISTER_DEFN_OBJECTTYPE(Cloner);
 const QStringList Cloner::MODES = QStringList() << tr("Linear") << tr("Circle");
 
 Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
 {
-    polish();
     addProperty("mode", new SelectProperty(tr("Cloner"), tr("Mode"), 0, MODES));
+    addProperty("count", new IntegerProperty(tr("Cloner"), tr("Count"), 0, std::numeric_limits<int>::max(), 10));
 
-    addProperty("count", new IntegerProperty(tr("Cloner"), tr("Count"), 10));
     addProperty("offset", new TransformProperty(tr("Cloner"), tr("Offset"), 100,0,0,0));
     addProperty("xpos-curve", new SplineProperty(tr("Cloner"), tr("Pos x spread")));
     addProperty("ypos-curve", new SplineProperty(tr("Cloner"), tr("Pos y spread")));
-    addProperty("rot-curve", new SplineProperty(tr("Cloner"), tr("Rotation spread")));
-    addProperty("scale-curve", new SplineProperty(tr("Cloner"), tr("Scalation spread")));
+    addProperty("linrot-curve", new SplineProperty(tr("Cloner"), tr("Rotation spread")));
+    addProperty("linscale-curve", new SplineProperty(tr("Cloner"), tr("Scalation spread")));
     addProperty("stepmode", new BoolProperty(tr("Cloner"), tr("Step mode"), true));
-    addProperty("Align", new BoolProperty(tr("Cloner"), tr("Align"), true));
+
+    addProperty("align", new BoolProperty(tr("Cloner"), tr("Align"), true));
+    addProperty("start", new RealProperty(tr("Cloner"), tr("Start")));
+    addProperty("angle-curve", new SplineProperty(tr("Cloner"), tr("Angle spread")));
+    addProperty("end", new RealProperty(tr("Cloner"), tr("End"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 360));
+    addProperty("radius", new RealProperty(tr("Cloner"), tr("Radius"), 0, std::numeric_limits<qreal>::max(), 100));
+    addProperty("radius-curve", new SplineProperty(tr("Cloner"), tr("Radius spread"), SplineProperty::One));
+    addProperty("scal", new RealProperty(tr("Cloner"), tr("Scalation"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0));
+    addProperty("rot", new RealProperty(tr("Cloner"), tr("Rotation"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0));
+    addProperty("circscale-curve", new SplineProperty(tr("Cloner"), tr("Scalation spread")));
+    addProperty("circrot-curve", new SplineProperty(tr("Cloner"), tr("Rotaion spread")));
+
+    updatePropertiesVisibility();
+    polish();
 }
 
 void Cloner::customDraw(QPainter &p)
+{
+
+    if (((SelectProperty*) properties()["mode"])->currentIndex() == 0) {
+        alignLinear(p);
+    } else {
+        alignCircle(p);
+    }
+
+}
+
+bool Cloner::valid() const
+{
+    return directChildren().size() > 0
+            && ((IntegerProperty*) properties()["count"])->value() > 0;
+}
+
+void Cloner::alignLinear(QPainter &p) const
 {
     int count = ((IntegerProperty*) properties()["count"])->value();
     int c = ((BoolProperty*) properties()["stepmode"])->value() ? count : 1;
@@ -33,17 +69,58 @@ void Cloner::customDraw(QPainter &p)
         p.save();
         p.translate(c*((SplineProperty*) properties()["xpos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().x(),
                     c*((SplineProperty*) properties()["ypos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().y());
-        p.rotate(c*((SplineProperty*) properties()["rot-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->rotation());
-        qreal s = ((SplineProperty*) properties()["scale-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->scalation();
+        p.rotate(c*((SplineProperty*) properties()["linrot-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->rotation());
+        qreal s = ((SplineProperty*) properties()["linscale-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->scalation();
         p.scale(1+c*s, 1+c*s);
         directChildren()[i % directChildren().size()]->paint(p);
         p.restore();
     }
 }
 
-bool Cloner::valid() const
+void Cloner::alignCircle(QPainter &p) const
 {
-    return directChildren().size() > 0
-            && ((IntegerProperty*) properties()["count"])->value() > 0;
+    int count = ((IntegerProperty*) properties()["count"])->value();
+    qreal r = ((RealProperty*) properties()["radius"])->value();
+    bool align = ((BoolProperty*) properties()["align"])->value();
+
+    qreal c = ((BoolProperty* ) properties()["stepmode"])->value() ? count : 1;
+    qreal span = ((RealProperty*) properties()["end"])->value() - ((RealProperty*) properties()["start"])->value();
+    qreal start = ((RealProperty*) properties()["start"])->value();
+    span *= M_PI / 180.0;
+    start *= M_PI / 180.0;
+
+    for (int i = 0; i < count; i++) {
+        p.save();
+        qreal x = (double)i/count;
+        qreal alpha = start + span * ((SplineProperty*) properties()["angle-curve"])->getValue(x);
+        qreal radius = r * ((SplineProperty*) properties()["radius-curve"])->getValue(x);
+        QPointF pos = QPointF(radius * qCos(alpha), radius * qSin(alpha));
+        p.translate(pos);
+        if (align) {
+          p.rotate(alpha * M_1_PI * 180);
+        }
+        p.rotate(c*((SplineProperty*) properties()["circrot-curve"])->getValue(x) * ((RealProperty*) properties()["rot"])->value());
+        qreal s = ((SplineProperty*) properties()["circscale-curve"])->getValue(x) * ((RealProperty*) properties()["scal"])->value();
+        p.scale(1+c*s, 1+c*s);
+        directChildren()[i % directChildren().size()]->paint(p);
+        p.restore();
+    }
+}
+
+void Cloner::updatePropertiesVisibility()
+{
+    for (QString lin : LINEAR_PROPERTIES) {
+        properties()[lin]->isVisible = (((SelectProperty*) properties()["mode"])->currentIndex() == 0);
+    }
+    for (QString circ : CIRCLE_PROPERTIES) {
+        properties()[circ]->isVisible = (((SelectProperty*) properties()["mode"])->currentIndex() == 1);
+    }
+    project()->emitSelectionChanged();
+}
+
+void Cloner::emitObjectChanged()
+{
+    updatePropertiesVisibility();
+    Object::emitObjectChanged();
 }
 
