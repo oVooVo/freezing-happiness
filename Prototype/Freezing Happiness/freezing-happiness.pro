@@ -57,7 +57,9 @@ SOURCES += main.cpp \
     BackEnd/Objects/cloner.cpp \
     BackEnd/Properties/compositeproperty.cpp \
     BackEnd/Properties/transformproperty.cpp \
-    BackEnd/Properties/integerproperty.cpp
+    BackEnd/Properties/integerproperty.cpp \
+    BackEnd/Properties/splineproperty.cpp \
+    FrontEnd/splineedit.cpp
 
 
 HEADERS += \
@@ -100,7 +102,9 @@ HEADERS += \
     BackEnd/Objects/cloner.h \
     BackEnd/Properties/compositeproperty.h \
     BackEnd/Properties/transformproperty.h \
-    BackEnd/Properties/integerproperty.h
+    BackEnd/Properties/integerproperty.h \
+    BackEnd/Properties/splineproperty.h \
+    FrontEnd/splineedit.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \

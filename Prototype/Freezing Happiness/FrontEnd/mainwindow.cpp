@@ -26,9 +26,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
     qApp->setOrganizationName("Hallo");
     qApp->setApplicationName("Welt");
+
+
 
     QSettings s;
     s.beginGroup("UI");
