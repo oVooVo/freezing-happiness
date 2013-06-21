@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "FrontEnd/viewport.h"
-#include "FrontEnd/objectedit.h"
+#include "FrontEnd/EditorWidgets/objectedit.h"
 
 namespace Ui {
 class NavigationToolbar;

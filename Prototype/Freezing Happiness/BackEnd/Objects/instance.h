@@ -2,7 +2,6 @@
 #define INSTANCE_H
 
 #include "object.h"
-#include "BackEnd/project.h"
 
 class Instance : public Object
 {

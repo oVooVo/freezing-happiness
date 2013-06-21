@@ -1,7 +1,6 @@
 #ifndef CONSTRAINTTAG_H
 #define CONSTRAINTTAG_H
 
-#include <QDebug>
 #include "tag.h"
 
 class ConstraintTag : public Tag

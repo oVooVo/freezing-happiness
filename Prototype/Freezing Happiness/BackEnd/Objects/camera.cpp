@@ -1,6 +1,5 @@
 #include "camera.h"
 #include "BackEnd/project.h"
-#include <QDebug>
 
 REGISTER_DEFN_OBJECTTYPE(Camera);
 

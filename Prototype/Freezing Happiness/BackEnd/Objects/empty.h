@@ -2,7 +2,6 @@
 #define EMPTY_H
 
 #include "object.h"
-#include <QDebug>
 
 class Empty : public Object
 {

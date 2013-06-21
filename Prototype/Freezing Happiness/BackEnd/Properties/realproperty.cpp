@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDebug>
+#include "FrontEnd/EditorWidgets/doubleedit.h"
 
 REGISTER_DEFN_PROPERTYTYPE(RealProperty);
 
@@ -15,14 +16,15 @@ RealProperty::RealProperty(QByteArray *data)
     setCategory(category);
     setName(name);
     Q_ASSERT(className == type());
-    stream >> _min >> _max >> _value;
+    stream >> _min >> _max >> _value >> _singleStep;
 }
 
-RealProperty::RealProperty(QString category, QString name, qreal min, qreal max, qreal value)
+RealProperty::RealProperty(QString category, QString name, qreal min, qreal max, qreal value, qreal singleStep)
 {
     _min = min < max ? min : max;
     _max = min < max ? max : min;
     _value = value > max ? max : value < min ? min : value;
+    _singleStep = singleStep > 0 ? singleStep : std::numeric_limits<qreal>::min();
     setCategory(category);
     setName(name);
 }
@@ -31,7 +33,7 @@ QByteArray RealProperty::toByteArray()
 {
     QByteArray array;
     QDataStream stream(&array, QIODevice::WriteOnly);
-    stream << type() << category() <<  name() << _min << _max << _value;
+    stream << type() << category() <<  name() << _min << _max << _value << _singleStep;
     return array;
 }
 
@@ -51,8 +53,9 @@ void RealProperty::setValue(qreal value)
 QWidget* RealProperty::createWidget(QList<Property *> props, QWidget *parent)
 {
     QString name = props.first()->name();
-    QDoubleSpinBox* spinBox = new QDoubleSpinBox(parent);
+    DoubleEdit* spinBox = new DoubleEdit(parent);
     spinBox->setRange(((RealProperty*) props.first())->_min, ((RealProperty*) props.first())->_max);
+    spinBox->setSingleStep(((RealProperty*) props.first())->_singleStep);
 
     auto updateSpinBox = [=]() {
         bool multipleValues = false;

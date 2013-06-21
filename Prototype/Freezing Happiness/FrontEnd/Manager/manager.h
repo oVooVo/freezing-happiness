@@ -3,6 +3,7 @@
 
 #include <BackEnd/project.h>
 #include <QWidget>
+#include <QDebug>
 
 class Manager : public QWidget
 {

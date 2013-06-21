@@ -2,7 +2,6 @@
 #define PATHOBJECT_H
 
 #include <QPainterPath>
-#include <QTransform>
 #include "BackEnd/Objects/object.h"
 
 class PathObject : public Object

@@ -11,7 +11,7 @@
 #include <QTransform>
 #include <qmath.h>
 #include <FrontEnd/mainwindow.h>
-#include "FrontEnd/splineedit.h"
+#include "FrontEnd/EditorWidgets/splineedit.h"
 #include "BackEnd/Properties/splineproperty.h"
 
 void saveProject(Project *p);

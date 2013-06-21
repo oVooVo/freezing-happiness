@@ -4,7 +4,6 @@
 #include <FrontEnd/Manager/manager.h>
 #include <QLabel>
 #include "BackEnd/Tags/tag.h"
-#include <QDebug>
 
 class PropertyManager : public Manager
 {

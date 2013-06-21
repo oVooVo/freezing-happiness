@@ -25,8 +25,8 @@ TransformProperty::TransformProperty(QString category, QString name, qreal x, qr
     setName(name);
     addProperty("x", new RealProperty(category, "x", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), x));
     addProperty("y", new RealProperty(category, "y", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), y));
-    addProperty("Rotation", new RealProperty(category, "Rotation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), rot));
-    addProperty("Scalation", new RealProperty(category, "Scalation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), scale));
+    addProperty("Rotation", new RealProperty(category, "Rotation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), rot, 0.1));
+    addProperty("Scalation", new RealProperty(category, "Scalation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), scale, 0.1));
 }
 
 QWidget* TransformProperty::createWidget(QList<Property *> props, QWidget *parent)
@@ -60,7 +60,7 @@ QTransform TransformProperty::transform() const
 {
     qreal x = ((RealProperty*) property("x"))->value();
     qreal y = ((RealProperty*) property("y"))->value();
-    qreal rot = ((RealProperty*) property("Rotation"))->value();
+    qreal rot = ((RealProperty*) property("Rotation"))->value() * M_PI /180 ;
     qreal scale = ((RealProperty*) property("Scalation"))->value();
 
     QTransform t = QTransform(qCos(rot) * scale, -qSin(rot) * scale, 0,
@@ -73,7 +73,7 @@ void TransformProperty::setTransform(QTransform t)
 {
     ((RealProperty*) property("x"))->setValue(MathUtility::translation(t).rx());
     ((RealProperty*) property("y"))->setValue(MathUtility::translation(t).ry());
-    ((RealProperty*) property("Rotation"))->setValue(MathUtility::rotation(t));
+    ((RealProperty*) property("Rotation"))->setValue(MathUtility::rotation(t) * 180 * M_1_PI);
     ((RealProperty*) property("Scalation"))->setValue(MathUtility::scalation(t));
 }
 

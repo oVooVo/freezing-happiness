@@ -1,5 +1,5 @@
 #include "splineproperty.h"
-#include "FrontEnd/splineedit.h"
+#include "FrontEnd/EditorWidgets/splineedit.h"
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDebug>

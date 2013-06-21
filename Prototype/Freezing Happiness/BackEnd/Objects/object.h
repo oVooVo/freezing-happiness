@@ -1,6 +1,8 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <QDebug>
+
 #include <QList>
 #include <QObject>
 #include <QDataStream>

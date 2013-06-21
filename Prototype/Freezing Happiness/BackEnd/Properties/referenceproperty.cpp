@@ -1,6 +1,6 @@
 #include "referenceproperty.h"
 #include "BackEnd/project.h"
-#include "FrontEnd/objectedit.h"
+#include "FrontEnd/EditorWidgets/objectedit.h"
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDebug>

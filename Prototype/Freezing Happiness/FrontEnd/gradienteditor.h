@@ -8,7 +8,7 @@
 #include <QDoubleSpinBox>
 #include <QSpinBox>
 #include <QLabel>
-#include "gradientedit.h"
+#include "EditorWidgets/gradientedit.h"
 #include <QGradient>
 #include <QPushButton>
 

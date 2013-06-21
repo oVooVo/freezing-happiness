@@ -16,7 +16,7 @@
 #include <QFileDialog>
 #include <BackEnd/renderoptions.h>
 #include <qsettings.h>
-#include "FrontEnd/gradientedit.h"
+#include "FrontEnd/EditorWidgets/objectedit.h"
 #include "gradienteditor.h"
 
 

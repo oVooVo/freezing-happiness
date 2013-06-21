@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 #include <QComboBox>
 #include <QCheckBox>
-#include "FrontEnd/objectedit.h"
+#include "FrontEnd/EditorWidgets/objectedit.h"
 
 REGISTER_DEFN_TAGTYPE(ConstraintTag);
 

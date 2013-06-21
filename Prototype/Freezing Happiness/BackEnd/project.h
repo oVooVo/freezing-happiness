@@ -1,12 +1,8 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include <QMainWindow>
 #include "BackEnd/Objects/object.h"
-#include <QDataStream>
-#include <QUndoStack>
 #include "BackEnd/renderoptions.h"
-#include <QLabel>
 
 class Object;
 class Project : public QObject

@@ -145,9 +145,13 @@ void ObjectTree::selectionChanged()
 {
     if (project()) {
         project()->blockSignals(true);
-        foreach (QTreeWidgetItem* item, _objectsMap.keys()) {
-            if (_objectsMap[item])
-                _objectsMap[item]->setSelected(item->isSelected());
+        foreach (Object* object,  project()->objects()) {
+            QTreeWidgetItem* item = _objectsMap.key(object, 0);
+            if (item) {
+                object->setSelected(item->isSelected());
+            } else {
+                object->setSelected(false);
+            }
         }
         project()->blockSignals(false);
         project()->emitSelectionChanged();

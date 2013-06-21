@@ -2,7 +2,6 @@
 #define ROOT_H
 
 #include <BackEnd/Objects/object.h>
-#include <QDebug>
 
 class Root : public Object
 {

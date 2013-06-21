@@ -1,7 +1,7 @@
 #include "instance.h"
 #include "BackEnd/Properties/boolproperty.h"
 #include "BackEnd/Properties/referenceproperty.h"
-#include <QDebug>
+#include "BackEnd/project.h"
 
 REGISTER_DEFN_OBJECTTYPE(Instance);
 

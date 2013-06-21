@@ -37,7 +37,7 @@ SOURCES += main.cpp \
     FrontEnd/Manager/manager.cpp \
     FrontEnd/Manager/objectmanager.cpp \
     FrontEnd/Manager/viewportmanager.cpp \
-    FrontEnd/objectedit.cpp \
+    FrontEnd/EditorWidgets/objectedit.cpp \
     FrontEnd/combobox.cpp \
     BackEnd/Objects/instance.cpp \
     BackEnd/Properties/referenceproperty.cpp \
@@ -49,7 +49,7 @@ SOURCES += main.cpp \
     FrontEnd/rendermanager.cpp \
     BackEnd/Objects/camera.cpp \
     BackEnd/Properties/selectproperty.cpp \
-    FrontEnd/gradientedit.cpp \
+    FrontEnd/EditorWidgets/gradientedit.cpp \
     FrontEnd/gradienteditor.cpp \
     BackEnd/Objects/ellipse.cpp \
     BackEnd/Properties/realproperty.cpp \
@@ -59,9 +59,10 @@ SOURCES += main.cpp \
     BackEnd/Properties/transformproperty.cpp \
     BackEnd/Properties/integerproperty.cpp \
     BackEnd/Properties/splineproperty.cpp \
-    FrontEnd/splineedit.cpp \
+    FrontEnd/EditorWidgets/splineedit.cpp \
     BackEnd/Tags/alignsplinetag.cpp \
-    BackEnd/Objects/pathobject.cpp
+    BackEnd/Objects/pathobject.cpp \
+    FrontEnd/EditorWidgets/doubleedit.cpp
 
 
 HEADERS += \
@@ -83,7 +84,7 @@ HEADERS += \
     FrontEnd/Manager/manager.h \
     FrontEnd/Manager/objectmanager.h \
     FrontEnd/Manager/viewportmanager.h \
-    FrontEnd/objectedit.h \
+    FrontEnd/EditorWidgets/objectedit.h \
     FrontEnd/combobox.h \
     BackEnd/Objects/instance.h \
     BackEnd/Properties/referenceproperty.h \
@@ -96,7 +97,7 @@ HEADERS += \
     BackEnd/Objects/camera.h \
     BackEnd/Properties/selectproperty.h \
     BackEnd/Tags/tag.h \
-    FrontEnd/gradientedit.h \
+    FrontEnd/EditorWidgets/gradientedit.h \
     FrontEnd/gradienteditor.h \
     BackEnd/Objects/ellipse.h \
     BackEnd/Properties/realproperty.h \
@@ -106,12 +107,12 @@ HEADERS += \
     BackEnd/Properties/transformproperty.h \
     BackEnd/Properties/integerproperty.h \
     BackEnd/Properties/splineproperty.h \
-    FrontEnd/splineedit.h \
+    FrontEnd/EditorWidgets/splineedit.h \
     BackEnd/Tags/alignsplinetag.h \
-    BackEnd/Objects/pathobject.h
+    BackEnd/Objects/pathobject.h \
+    FrontEnd/EditorWidgets/doubleedit.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \
     FrontEnd/navigationtoolbar.ui \
-    FrontEnd/rendermanager.ui \
-    FrontEnd/styleeditor.ui
+    FrontEnd/rendermanager.ui
