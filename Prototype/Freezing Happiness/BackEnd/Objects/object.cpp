@@ -49,6 +49,7 @@ void Object::emitObjectChanged()
     dumpGlobaleTransformationCache();
     if (_parent) _parent->childrenHasChanged();
     _project->emitObjectChanged(this);
+    emit iChanged();
 }
 
 Object::~Object()
@@ -600,7 +601,7 @@ Object* Object::deserialize(QDataStream &in, Project* project, bool assertId, bo
 
 void Object::polish()
 {
-    connectVisibilityTriggers();
+    connectPropertyTriggers();
     _project->emitStructureChanged();
 }
 

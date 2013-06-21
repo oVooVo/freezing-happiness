@@ -142,7 +142,7 @@ void StyleTag::setIsGlobal(bool s)
     emit isGlobaleChanged(s);
 }
 
-QWidget* StyleTag::createWidgetPrivate(QList<Tag *> tags, QWidget *parent)
+QWidget* StyleTag::createWidget(QList<Tag *> tags, QWidget *parent)
 {
 
     QWidget* container = new QWidget(parent);

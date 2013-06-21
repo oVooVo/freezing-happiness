@@ -18,12 +18,18 @@ public:
     QString toString();
     static QWidget* createWidget(QList<Property*> props, QWidget* parent = 0);
 
+signals:
+    void watchedObjectChanged();    //the object is still the same one, but a property changed.
+
 
 private:
     REGISTER_DECL_PROPERTYTYPE(ReferenceProperty);
 
     bool _empty;
     quint64 _id;
+
+private slots:
+    void emitWatchedObjectChanged();
 };
 
 #endif // REFERENCEPROPERTY_H

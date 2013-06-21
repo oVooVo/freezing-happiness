@@ -15,15 +15,17 @@ public:
 protected:
     bool drawChildren() const { return false; }
     void emitObjectChanged();
-    void connectVisibilityTriggers();
+    void connectPropertyTriggers();
 
 private:
     REGISTER_DECL_OBJECTTYPE(Cloner);
     static const QStringList MODES;
     static const QStringList LINEAR_PROPERTIES;
     static const QStringList CIRCLE_PROPERTIES;
+    static const QStringList SPLINE_PROPERTIES;
     void alignLinear();
     void alignCircle();
+    void alignSpline();
     void updatePropertiesVisibility();
     void updateMatrices();
     bool _dirtyMatrices = true;

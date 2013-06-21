@@ -132,6 +132,9 @@ public:
 public slots:
     virtual void emitObjectChanged();
 
+signals:
+    void iChanged();
+
 private:
     Project* _project;
     Object* _parent;
@@ -161,7 +164,7 @@ protected:
     virtual void childrenHasChanged() {}
     virtual void adjustProperties() {} //is called when a Property changes
     virtual void updatePropertiesVisibility() {}
-    virtual void connectVisibilityTriggers() {}
+    virtual void connectPropertyTriggers() {}
 
 };
 

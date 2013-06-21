@@ -27,7 +27,7 @@ QTransform PathObject::getLocaleTransformAt(qreal pos)
     }
 
 
-    QPointF p = _path.pointAtPercent(pos);
+    QPointF p = _path.pointAtPercent(pos < 0 ? 0 : pos > 1 ? 1 : pos);
     QPointF sek1 = _path.pointAtPercent(s1);
     QPointF sek2 = _path.pointAtPercent(s2);
     qreal r = qAtan2((sek1.y() - sek2.y()),

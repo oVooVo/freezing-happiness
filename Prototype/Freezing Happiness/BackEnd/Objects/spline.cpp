@@ -20,6 +20,7 @@ Spline::Spline(Project* project, QString name) : PathObject(project, name)
 
 void Spline::childrenHasChanged()
 {
+    emitObjectChanged();
     updatePath();
 }
 

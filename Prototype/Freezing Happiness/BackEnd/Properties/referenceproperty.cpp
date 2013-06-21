@@ -101,8 +101,23 @@ void ReferenceProperty::setId(quint64 id, bool isEmpty)
 {
     if (_id == id && _empty == isEmpty) return;
 
+    if (!_empty) {
+        Object* object = project()->getObject(id);
+        disconnect(object, SIGNAL(iChanged()), this, SLOT(emitWatchedObjectChanged()));
+    }
+
     _id = id;
     _empty = isEmpty;
+
+    if (!_empty) {
+        Object* object = project()->getObject(id);
+        connect(object, SIGNAL(iChanged()), this, SLOT(emitWatchedObjectChanged()));
+    }
+
     emit valueChanged();
 }
 
+void ReferenceProperty::emitWatchedObjectChanged()
+{
+    emit watchedObjectChanged();
+}
