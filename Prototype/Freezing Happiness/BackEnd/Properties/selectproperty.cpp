@@ -1,6 +1,7 @@
 #include "selectproperty.h"
 #include <QComboBox>
 #include <QLabel>
+#include <QDebug>
 #include <QHBoxLayout>
 
 REGISTER_DEFN_PROPERTYTYPE(SelectProperty);
@@ -41,6 +42,7 @@ void SelectProperty::setCurrentIndex(quint64 index)
     if (index == _currentIndex) return;
 
     _currentIndex = index;
+    qDebug() << "value changed";
     emit valueChanged();
 }
 

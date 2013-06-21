@@ -12,7 +12,7 @@ public:
     ConstraintTag(Object* owner, QByteArray* data);
     QByteArray toByteArray() const;
     static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
-    void exec(QPainter &p);
+    void exec();
 
 public slots:
     void setPositionMode(Mode mode);

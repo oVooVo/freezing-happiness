@@ -62,10 +62,11 @@ QString Tag::type() const
 
 QByteArray Tag::toByteArray() const
 {
-    QByteArray array;
-    QDataStream out(&array, QIODevice::WriteOnly);
-    out << type();
-    return array;
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << type();
+    saveProperties(stream);
+    return data;
 }
 
 QDataStream& operator<<(QDataStream& out, Tag* t)
@@ -138,15 +139,15 @@ void Tag::emitValueChanged()
 
 void Tag::saveProperties(QDataStream &stream) const
 {
-    stream << properties();
+    stream << _properties;
 }
 
 void Tag::restoreProperties(QDataStream &stream)
 {
-    QList<Property*> props;
+    QMap<QString, Property*> props;
     stream >> props;
-    for (Property* p : props) {
-        addProperty(p->name(), p);
+    for (QString key : props.keys()) {
+        addProperty(key, props[key]);
     }
 }
 
@@ -157,4 +158,10 @@ QList<Property*> Tag::getProperties(QString key, QList<Tag *> tags)
         properties.append(tag->property(key));
     }
     return properties;
+}
+
+void Tag::setOwner(Object *owner)
+{
+    _owner = owner;
+    connect(this, &Tag::valueChanged, [=]() { owner->emitObjectChanged(); });
 }

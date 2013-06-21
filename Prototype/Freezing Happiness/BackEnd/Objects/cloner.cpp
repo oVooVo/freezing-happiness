@@ -46,10 +46,13 @@ Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
 void Cloner::customDraw(QPainter &p)
 {
 
-    if (((SelectProperty*) properties()["mode"])->currentIndex() == 0) {
-        alignLinear(p);
-    } else {
-        alignCircle(p);
+    if (_dirtyMatrices) updateMatrices();
+    int count = ((IntegerProperty*) properties()["count"])->value();
+    for (int i = 0; i < count; i++) {
+        p.save();
+        p.setMatrix((QTransform(_matrices[i]) * globaleTransform()).toAffine());
+        directChildren()[i % directChildren().size()]->paint(p);
+        p.restore();
     }
 
 }
@@ -60,25 +63,26 @@ bool Cloner::valid() const
             && ((IntegerProperty*) properties()["count"])->value() > 0;
 }
 
-void Cloner::alignLinear(QPainter &p) const
+void Cloner::alignLinear()
 {
+    _matrices.clear();
     int count = ((IntegerProperty*) properties()["count"])->value();
     int c = ((BoolProperty*) properties()["stepmode"])->value() ? count : 1;
     for (int i = 0; i < count; i++) {
+        QMatrix m;
         qreal x = (double) i / count;
-        p.save();
-        p.translate(c*((SplineProperty*) properties()["xpos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().x(),
+        m.translate(c*((SplineProperty*) properties()["xpos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().x(),
                     c*((SplineProperty*) properties()["ypos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().y());
-        p.rotate(c*((SplineProperty*) properties()["linrot-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->rotation());
+        m.rotate(c*((SplineProperty*) properties()["linrot-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->rotation());
         qreal s = ((SplineProperty*) properties()["linscale-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->scalation();
-        p.scale(1+c*s, 1+c*s);
-        directChildren()[i % directChildren().size()]->paint(p);
-        p.restore();
+        m.scale(1+c*s, 1+c*s);
+        _matrices.append(m);
     }
 }
 
-void Cloner::alignCircle(QPainter &p) const
+void Cloner::alignCircle()
 {
+    _matrices.clear();
     int count = ((IntegerProperty*) properties()["count"])->value();
     qreal r = ((RealProperty*) properties()["radius"])->value();
     bool align = ((BoolProperty*) properties()["align"])->value();
@@ -90,25 +94,25 @@ void Cloner::alignCircle(QPainter &p) const
     start *= M_PI / 180.0;
 
     for (int i = 0; i < count; i++) {
-        p.save();
+        QMatrix m;
         qreal x = (double)i/count;
         qreal alpha = start + span * ((SplineProperty*) properties()["angle-curve"])->getValue(x);
         qreal radius = r * ((SplineProperty*) properties()["radius-curve"])->getValue(x);
         QPointF pos = QPointF(radius * qCos(alpha), radius * qSin(alpha));
-        p.translate(pos);
+        m.translate(pos.x(), pos.y());
         if (align) {
-          p.rotate(alpha * M_1_PI * 180);
+          m.rotate(alpha * M_1_PI * 180);
         }
-        p.rotate(c*((SplineProperty*) properties()["circrot-curve"])->getValue(x) * ((RealProperty*) properties()["rot"])->value());
+        m.rotate(c*((SplineProperty*) properties()["circrot-curve"])->getValue(x) * ((RealProperty*) properties()["rot"])->value());
         qreal s = ((SplineProperty*) properties()["circscale-curve"])->getValue(x) * ((RealProperty*) properties()["scal"])->value();
-        p.scale(1+c*s, 1+c*s);
-        directChildren()[i % directChildren().size()]->paint(p);
-        p.restore();
+        m.scale(1+c*s, 1+c*s);
+        _matrices.append(m);
     }
 }
 
 void Cloner::updatePropertiesVisibility()
 {
+    qDebug() << "updatePropertiesVisibility();";
     for (QString lin : LINEAR_PROPERTIES) {
         properties()[lin]->isVisible = (((SelectProperty*) properties()["mode"])->currentIndex() == 0);
     }
@@ -120,7 +124,31 @@ void Cloner::updatePropertiesVisibility()
 
 void Cloner::emitObjectChanged()
 {
-    updatePropertiesVisibility();
+    _dirtyMatrices = true;
     Object::emitObjectChanged();
 }
 
+QList<QPointF> Cloner::matrices()
+{
+    if (_dirtyMatrices) {
+        updateMatrices();
+    }
+    return QList<QPointF>();
+}
+
+void Cloner::updateMatrices()
+{
+    _dirtyMatrices = false;
+    if (((SelectProperty*) properties()["mode"])->currentIndex() == 0) {
+        alignLinear();
+    } else {
+        alignCircle();
+    }
+}
+
+void Cloner::connectVisibilityTriggers()
+{
+    connect(properties()["mode"], &Property::valueChanged, [=]() {
+        updatePropertiesVisibility();
+    });
+}

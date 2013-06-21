@@ -319,10 +319,8 @@ void ConstraintTag::setScalationObject(quint64 id, bool isEmpty)
     emit valueChanged();
 }
 
-void ConstraintTag::exec(QPainter &p)
+void ConstraintTag::exec()
 {
-    Q_UNUSED(p)
-
     if (!owner()) return;
 
     if (_hasPosId && owner()->isAncestorOf(owner()->project()->getObject(_posId))) {

@@ -59,7 +59,9 @@ SOURCES += main.cpp \
     BackEnd/Properties/transformproperty.cpp \
     BackEnd/Properties/integerproperty.cpp \
     BackEnd/Properties/splineproperty.cpp \
-    FrontEnd/splineedit.cpp
+    FrontEnd/splineedit.cpp \
+    BackEnd/Tags/alignsplinetag.cpp \
+    BackEnd/Objects/pathobject.cpp
 
 
 HEADERS += \
@@ -104,7 +106,9 @@ HEADERS += \
     BackEnd/Properties/transformproperty.h \
     BackEnd/Properties/integerproperty.h \
     BackEnd/Properties/splineproperty.h \
-    FrontEnd/splineedit.h
+    FrontEnd/splineedit.h \
+    BackEnd/Tags/alignsplinetag.h \
+    BackEnd/Objects/pathobject.h
 
 FORMS += \
     FrontEnd/mainwindow.ui \

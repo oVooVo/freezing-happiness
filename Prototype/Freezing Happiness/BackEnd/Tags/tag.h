@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "../Objects/object.h"
+#include <QDebug>
 
 class Tag;
 template<typename T> Tag *createT(Object* owner, QByteArray *data = 0) { return new T(owner, data); }
@@ -22,7 +23,7 @@ public:
     static QWidget* createWidget(QList<Tag*> tags, QWidget* parent = 0);
     static QWidget* closeButton(QList<Tag*> tags, QWidget* parent = 0);
     static QList<Property*> getProperties(QString key, QList<Tag *> tags);
-    virtual void exec(QPainter &p) { Q_UNUSED(p) }
+    virtual void exec() {}
 
 signals:
     void valueChanged();
@@ -34,10 +35,9 @@ protected:
     Property* addProperty(QString key, Property* property);
     QList<Property*> properties() const { return _properties.values(); }
     Property* property(QString key) const { return _properties[key]; }
-    void setOwner(Object* owner) { _owner = owner; }
+    void setOwner(Object* owner);
     void saveProperties(QDataStream& stream) const;
     void restoreProperties(QDataStream& stream);
-
 
 private:
     Object* _owner;

@@ -106,7 +106,7 @@ public:
     static Object* createInstance(QString className, Project* project);
 
     //render
-    void paint(QPainter &p);
+    void paint(QPainter &p, bool render = false);
     virtual void customDraw(QPainter &p) { Q_UNUSED(p) }
     virtual bool drawChildren() const { return true; }
     virtual bool valid() const { return true; }
@@ -117,7 +117,7 @@ public:
     //export
     virtual QString toTikz() const;
 
-    void polish();  //some things should be done only if class object has its final classname
+    virtual void polish();  //some things should be done only if class object has its final classname
 
     QPointF mapToGlobal(QPointF point);
     QPointF mapToLocal(QPointF point);
@@ -126,6 +126,7 @@ public:
     void deleteTag(Tag* tag);
 
     static QStringList objectTypes() { return _creatorMap->keys(); }
+    virtual QTransform getLocaleTransformAt(qreal pos) { Q_UNUSED(pos) return QTransform(); }
 
 
 public slots:
@@ -160,6 +161,7 @@ protected:
     virtual void childrenHasChanged() {}
     virtual void adjustProperties() {} //is called when a Property changes
     virtual void updatePropertiesVisibility() {}
+    virtual void connectVisibilityTriggers() {}
 
 };
 

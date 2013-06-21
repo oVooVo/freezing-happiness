@@ -2,6 +2,7 @@
 #include "rendermanager.h"
 #include "ui_rendermanager.h"
 #include <QFileInfo>
+#include <QPainter>
 
 RenderManager::RenderManager(QWidget *parent) :
     QMainWindow(parent),
@@ -42,6 +43,7 @@ void RenderManager::selectionChanged(QListWidgetItem* item)
 {
     if (!item) return;
     _label->clear();
+
     _label->setPixmap(QPixmap::fromImage(_images[item]));
 }
 

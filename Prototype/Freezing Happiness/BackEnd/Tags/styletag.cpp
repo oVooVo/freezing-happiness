@@ -21,8 +21,8 @@ const QStringList StyleTag::BRUSH_STYLES = QStringList() << tr("Nothing") << tr(
 
 StyleTag::StyleTag(Object *owner, QByteArray *data)
 {
+    setOwner(owner);
     if (data) {
-        setOwner(owner);
         QDataStream stream(data, QIODevice::ReadOnly);
         quint8 brush, pen;
         QString className;
@@ -142,7 +142,7 @@ void StyleTag::setIsGlobal(bool s)
     emit isGlobaleChanged(s);
 }
 
-QWidget* StyleTag::createWidget(QList<Tag *> tags, QWidget *parent)
+QWidget* StyleTag::createWidgetPrivate(QList<Tag *> tags, QWidget *parent)
 {
 
     QWidget* container = new QWidget(parent);

@@ -457,10 +457,23 @@ QString Object::toTikz() const
     return QString();
 }
 
-void Object::paint(QPainter &p)
+void Object::paint(QPainter &p, bool render)
 {
     for (Tag* tag : _tags) {
-        tag->exec(p);
+        tag->exec();
+    }
+
+
+    if (!render) {
+        QPen oldPen = p.pen();
+        p.save();
+        QPen cosmeticPen;
+        cosmeticPen.setCosmetic(true);
+        cosmeticPen.setWidth(4);
+        p.setPen(cosmeticPen);
+        p.drawPoint(0,0);
+        p.restore();
+        p.setPen(oldPen);
     }
 
     if (valid()) {
@@ -470,7 +483,7 @@ void Object::paint(QPainter &p)
         foreach (Object* o, _children) {
             p.save();
             p.setTransform(o->localeTransform(), true);
-            o->paint(p);
+            o->paint(p, render);
             p.restore();
         }
     }
@@ -581,11 +594,13 @@ Object* Object::deserialize(QDataStream &in, Project* project, bool assertId, bo
         *childrenCount_ = childrenCount;
     }
     o->updatePropertiesVisibility();
+    o->polish();
     return o;
 }
 
 void Object::polish()
 {
+    connectVisibilityTriggers();
     _project->emitStructureChanged();
 }
 
@@ -701,4 +716,3 @@ void Object::applyStyleOptions(QPainter &p)
     brush.setStyle(sp->brushStyle());
     p.setBrush(brush);
 }
-

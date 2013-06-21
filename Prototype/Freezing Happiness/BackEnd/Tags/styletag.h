@@ -15,7 +15,7 @@ public:
     StyleTag(Object* owner = 0, QByteArray *data = 0);
     QByteArray toByteArray() const;
     QString toString() const;
-    static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
+    static QWidget* createWidgetPrivate(QList<Tag *> tags, QWidget *parent);
 
     Qt::PenStyle penStyle() const { return _penStyle; }
     Qt::BrushStyle brushStyle() const { return _brushStyle; }
