@@ -18,7 +18,7 @@ AlignSplineTag::AlignSplineTag(Object *owner, QByteArray *data)
         Q_ASSERT(className == type());
     } else {
         addProperty("object", new ReferenceProperty("AlignSplineTag", tr("Object")));
-        addProperty("position", new RealProperty("AlignSplineTag", tr("Position"), 0, 100, 0));
+        addProperty("position", new RealProperty("AlignSplineTag", tr("Position"), 0, 100, 0, 1));
         addProperty("align", new BoolProperty("AlignSplineTag", tr("Align"), true));
     }
 }

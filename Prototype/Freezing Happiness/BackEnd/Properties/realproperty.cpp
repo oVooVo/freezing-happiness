@@ -21,6 +21,30 @@ RealProperty::RealProperty(QByteArray *data)
 
 RealProperty::RealProperty(QString category, QString name, qreal min, qreal max, qreal value, qreal singleStep)
 {
+    init(category, name, min, max, value, singleStep);
+}
+RealProperty::RealProperty(QString category, QString name, qreal min, qreal value, qreal singleStep)
+{
+    init(category, name, min, std::numeric_limits<qreal>::max(), value, singleStep);
+}
+
+RealProperty::RealProperty(QString category, QString name, qreal value, qreal singleStep)
+{
+    init(category, name, -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), value, singleStep);
+}
+
+RealProperty::RealProperty(QString category, QString name, qreal value)
+{
+    init(category, name, -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), value, 1);
+}
+
+RealProperty::RealProperty(QString category, QString name)
+{
+    init(category, name, -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0, 1);
+}
+
+void RealProperty::init(QString category, QString name, qreal min, qreal max, qreal value, qreal singleStep)
+{
     _min = min < max ? min : max;
     _max = min < max ? max : min;
     _value = value > max ? max : value < min ? min : value;

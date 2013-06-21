@@ -31,7 +31,7 @@ void SplineEdit::paintEvent(QPaintEvent *)
     }
     qreal stepwide = 1.0/_size.width();
     QPainterPath curve(map(QPoint(0,_data->getValue(0))));
-    _data->update();
+    _data->calcCoef();
     for (qreal x = 0; x <= 1; x += stepwide) {
         curve.lineTo(map(QPointF(x, _data->getValue(x))));
     }
@@ -85,7 +85,7 @@ void SplineEdit::mouseMoveEvent(QMouseEvent *event)
 {
     if (_grabbedIndex < 0) return;
     _data->setPoint(_grabbedIndex, reMap(event->pos()));
-    _data->update();
+    _data->calcCoef();
     emit pointsChanged();
     update();
 }
@@ -96,11 +96,11 @@ void SplineEdit::mouseDoubleClickEvent(QMouseEvent *event)
     if (grab < 0) {
         _data->addPoint(reMap(event->pos()));
         _grabbedIndex = _data->points().size() - 1;
-        _data->update();
+        _data->calcCoef();
         update();
     } else {
         _data->removePoint(grab);
-        _data->update();
+        _data->calcCoef();
         _grabbedIndex = -1;
         update();
     }

@@ -23,10 +23,10 @@ TransformProperty::TransformProperty(QString category, QString name, qreal x, qr
 {
     setCategory(category);
     setName(name);
-    addProperty("x", new RealProperty(category, "x", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), x));
-    addProperty("y", new RealProperty(category, "y", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), y));
-    addProperty("Rotation", new RealProperty(category, "Rotation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), rot, 0.1));
-    addProperty("Scalation", new RealProperty(category, "Scalation", -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), scale, 0.1));
+    addProperty("x", new RealProperty(category, "x", x));
+    addProperty("y", new RealProperty(category, "y", y));
+    addProperty("Rotation", new RealProperty(category, "Rotation", rot, 0.1));
+    addProperty("Scalation", new RealProperty(category, "Scalation", scale, 0.1));
 }
 
 QWidget* TransformProperty::createWidget(QList<Property *> props, QWidget *parent)

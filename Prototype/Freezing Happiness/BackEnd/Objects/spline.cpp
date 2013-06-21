@@ -14,6 +14,7 @@ REGISTER_DEFN_OBJECTTYPE(Spline);
 Spline::Spline(Project* project, QString name) : PathObject(project, name)
 {
     addProperty("closed", new BoolProperty("Spline", "Closed", false));
+    addProperty("Interpolation", new SelectProperty("Spline", tr("Interpolation"), 0, QStringList() << tr("Linear") << tr("Cubic")));
     polish();
     installEventFilter(this);
 }
@@ -26,20 +27,20 @@ void Spline::childrenHasChanged()
 
 void Spline::updatePath()
 {
-    QList<QPointF> points;
+    QList<Point*> points;
 
     QList<Object*> extras;
     for (Object* child : directChildren()) {
         if (child->type() == "Point") {
-            points.append(child->localePosition());
+            points.append((Point*) child);
         } else if (child->hasTag("PointTag")) {
-            extras.append(child);
+           //extras.append(child);
         }
     }
     qSort(extras.begin(), extras.end(), [](Object* a, Object* b)
         { return ((PointTag*) a->tag("PointTag"))->index() > ((PointTag*) b->tag("PointTag"))->index(); } );
     for (Object* extraObject : extras) {
-        points.insert(((PointTag*) extraObject->tag("PointTag"))->index(), extraObject->localePosition());
+        //points.insert(((PointTag*) extraObject->tag("PointTag"))->index(), extraObject);
     }
 
     if (((BoolProperty*) properties()["closed"])->value() && !points.isEmpty()) {
@@ -47,9 +48,15 @@ void Spline::updatePath()
     }
 
     if (!points.isEmpty()) {
-        _path = QPainterPath(points.first());
+        _path = QPainterPath(points.first()->localePosition());
         for (int i = 1; i < points.size(); i++) {
-            _path.lineTo(points[i]);
+            if (((SelectProperty*) properties()["Interpolation"])->currentIndex() == 0) {
+                _path.lineTo(points[i]->localePosition());
+            } else if (((SelectProperty*) properties()["Interpolation"])->currentIndex() == 1) {
+                _path.cubicTo(points[i-1]->ctrlB(),
+                              points[i]->ctrlA(),
+                              points[i]->localePosition());
+            }
         }
     } else {
         _path = QPainterPath();

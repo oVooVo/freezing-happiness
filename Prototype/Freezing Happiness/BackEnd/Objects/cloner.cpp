@@ -35,16 +35,16 @@ Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
     addProperty("align", new BoolProperty(tr("Cloner"), tr("Align"), true));
     addProperty("start", new RealProperty(tr("Cloner"), tr("Start")));
     addProperty("angle-curve", new SplineProperty(tr("Cloner"), tr("Angle spread")));
-    addProperty("end", new RealProperty(tr("Cloner"), tr("End"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 360));
-    addProperty("radius", new RealProperty(tr("Cloner"), tr("Radius"), 0, std::numeric_limits<qreal>::max(), 100));
+    addProperty("end", new RealProperty(tr("Cloner"), tr("End"), 360));
+    addProperty("radius", new RealProperty(tr("Cloner"), tr("Radius"), 0, 100, 1));
     addProperty("radius-curve", new SplineProperty(tr("Cloner"), tr("Radius spread"), SplineProperty::One));
-    addProperty("scal", new RealProperty(tr("Cloner"), tr("Scalation"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0));
-    addProperty("rot", new RealProperty(tr("Cloner"), tr("Rotation"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0));
+    addProperty("scal", new RealProperty(tr("Cloner"), tr("Scalation"), 0, 0.1));
+    addProperty("rot", new RealProperty(tr("Cloner"), tr("Rotation"), 0, 0.1));
     addProperty("circscale-curve", new SplineProperty(tr("Cloner"), tr("Scalation spread")));
     addProperty("circrot-curve", new SplineProperty(tr("Cloner"), tr("Rotaion spread")));
 
-    addProperty("spline-start", new RealProperty(tr("Cloner"), tr("Start"), 0, 100, 0));
-    addProperty("spline-end", new RealProperty(tr("Cloner"), tr("End"), 0, 100, 100));
+    addProperty("spline-start", new RealProperty(tr("Cloner"), tr("Start"), 0, 100, 0, 1));
+    addProperty("spline-end", new RealProperty(tr("Cloner"), tr("End"), 0, 100, 100, 1));
     addProperty("spline-position-curve", new SplineProperty(tr("Cloner"), tr("Position spread"), SplineProperty::Up));
     addProperty("spline-scale", new RealProperty(tr("Cloner"), tr("Scalation"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0));
     addProperty("spline-rot", new RealProperty(tr("Cloner"), tr("Rotation"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0));

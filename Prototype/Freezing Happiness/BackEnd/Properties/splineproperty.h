@@ -20,10 +20,6 @@ public:
     void removePoint(int index);
     void setPoint(int index, QPointF p);
     QList<QPointF> points() const { return _points; }
-    void update();
-
-
-private:
     void calcCoef();
 
 

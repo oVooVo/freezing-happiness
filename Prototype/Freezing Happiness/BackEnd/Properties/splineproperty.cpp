@@ -94,27 +94,22 @@ void SplineProperty::addPoint(QPointF p)
     }
     if (!overwritten)
         _points.append(p);
-    update();
+    calcCoef();
     emit valueChanged();
 }
 
 void SplineProperty::removePoint(int index)
 {
     _points.removeAt(index);
-    update();
-    emit valueChanged();
-}
-
-void SplineProperty::update()
-{
     calcCoef();
+    emit valueChanged();
 }
 
 void SplineProperty::setPoint(int index, QPointF p)
 {
     p = QPointF(p.x() < 0 ? 0 : p.x() > 1 ? 1 : p.x(), p.y() < 0 ? 0 : p.y() > 1 ? 1 : p.y());
     _points[index] = p;
-    update();
+    calcCoef();
 }
 
 QWidget* SplineProperty::createWidget(QList<Property *> props, QWidget *parent)
@@ -181,6 +176,6 @@ quint64 SplineProperty::hash() const
 void SplineProperty::setPoints(QList<QPointF> points)
 {
     _points = points;
-    update();
+    calcCoef();
     emit valueChanged();
 }

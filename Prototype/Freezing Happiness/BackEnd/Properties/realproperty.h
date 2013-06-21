@@ -8,10 +8,15 @@ class RealProperty : public Property
     Q_OBJECT
 public:
     RealProperty(QByteArray *data);
-    RealProperty(QString category, QString name, qreal min = -std::numeric_limits<qreal>::max(), qreal max = std::numeric_limits<qreal>::max(),
-                 qreal value = 0, qreal singleStep = 1);
+    RealProperty(QString category, QString name, qreal min, qreal max,
+                 qreal value, qreal singleStep);
+    RealProperty(QString category, QString name, qreal min, qreal value, qreal singleStep);
+    RealProperty(QString category, QString name, qreal value, qreal singleStep);
+    RealProperty(QString category, QString name, qreal value);
+    RealProperty(QString category, QString name);
     QByteArray toByteArray();
     QString toString() const;
+    void init(QString category, QString name, qreal min, qreal max, qreal value, qreal singleStep);
     static QWidget* createWidget(QList<Property *> props, QWidget *parent);
     qreal value() const { return _value; }
 
