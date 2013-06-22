@@ -46,8 +46,8 @@ Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
     addProperty("spline-start", new RealProperty(tr("Cloner"), tr("Start"), 0, 100, 0, 1));
     addProperty("spline-end", new RealProperty(tr("Cloner"), tr("End"), 0, 100, 100, 1));
     addProperty("spline-position-curve", new SplineProperty(tr("Cloner"), tr("Position spread"), SplineProperty::Up));
-    addProperty("spline-scale", new RealProperty(tr("Cloner"), tr("Scalation"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0));
-    addProperty("spline-rot", new RealProperty(tr("Cloner"), tr("Rotation"), -std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max(), 0));
+    addProperty("spline-scale", new RealProperty(tr("Cloner"), tr("Scalation"), 0, 0.1));
+    addProperty("spline-rot", new RealProperty(tr("Cloner"), tr("Rotation"), 0, 0.1));
     addProperty("spline-scale-curve", new SplineProperty(tr("Cloner"), tr("Scalation spread")));
     addProperty("spline-rot-curve", new SplineProperty(tr("Cloner"), tr("Rotaion spread")));
     addProperty("spline-align", new BoolProperty(tr("Cloner"), tr("Align"), true));

@@ -458,14 +458,15 @@ QString Object::toTikz() const
     return QString();
 }
 
-void Object::paint(QPainter &p, bool render)
+void Object::paint(QPainter &p, bool applyStyle, bool render)
 {
     for (Tag* tag : _tags) {
-        tag->exec();
+        if (tag->type() != "StyleTag" || applyStyle)
+            tag->exec();
     }
 
 
-    if (!render) {
+    if (!render && (isSelected() || !treeParent() || treeParent()->isSelected() || treeParent()->selectedDirectChildren().size() > 0)) {
         QPen oldPen = p.pen();
         p.save();
         QPen cosmeticPen;
@@ -716,4 +717,15 @@ void Object::applyStyleOptions(QPainter &p)
     brush.setColor(sp->fillColor());
     brush.setStyle(sp->brushStyle());
     p.setBrush(brush);
+}
+
+QList<Object*> Object::selectedDirectChildren() const
+{
+    QList<Object*> selection;
+    for (Object* o : directChildren()) {
+        if (o->isSelected()) {
+            selection.append(o);
+        }
+    }
+    return selection;
 }

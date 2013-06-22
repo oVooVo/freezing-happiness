@@ -53,3 +53,30 @@ QPointF Point::ctrlB() const
     QTransform t = localeTransform().translate(ctrlBPrivate().x(), ctrlBPrivate().y());
     return QPointF(t.dx(), t.dy());
 }
+
+QPointF Point::globaleCtrlA()
+{
+    QTransform t = globaleTransform().translate(ctrlAPrivate().x(), ctrlAPrivate().y());
+    return QPointF(t.dx(), t.dy());
+}
+
+
+QPointF Point::globaleCtrlB()
+{
+    QTransform t = globaleTransform().translate(ctrlBPrivate().x(), ctrlBPrivate().y());
+    return QPointF(t.dx(), t.dy());
+}
+
+void Point::setGlobaleCtrlA(QPointF p)
+{
+    QTransform t = globaleTransformInverted().translate(p.x(), p.y());
+    ((RealProperty*) properties()["xctrlA"])->setValue(t.dx());
+    ((RealProperty*) properties()["yctrlA"])->setValue(t.dy());
+}
+
+void Point::setGlobaleCtrlB(QPointF p)
+{
+    QTransform t = globaleTransformInverted().translate(p.x(), p.y());
+    ((RealProperty*) properties()["xctrlB"])->setValue(t.dx());
+    ((RealProperty*) properties()["yctrlB"])->setValue(t.dy());
+}

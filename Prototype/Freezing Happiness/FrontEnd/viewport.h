@@ -4,6 +4,7 @@
 #include <FrontEnd/Manager/manager.h>
 #include "FrontEnd/psrgrabber.h"
 #include <BackEnd/project.h>
+#include "BackEnd/Objects/point.h"
 
 
 class Viewport : public Manager
@@ -39,10 +40,13 @@ protected:
 private:
     PSRGrabber* _psr;
     Object* clickedObject(QPoint pos, bool askObject);
-    bool isInEnvironmentOf(QPoint pos, Object* o);
+    bool isInEnvironmentOf(QPointF pos, Object* o);
+    bool isInEnvironmentOf(QPointF p1, QPointF p2);
     void newPoint(QPoint pos);
 
-
+    QPointF _lastPos;
+    Point* _grabbedPoint = 0;
+    bool _tangentA;
 
 private slots:
     void emitModeChanged();

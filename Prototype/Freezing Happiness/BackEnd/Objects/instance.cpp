@@ -18,7 +18,7 @@ void Instance::customDraw(QPainter &p)
     if (original) {
         p.save();
         applyStyleOptions(p);
-        original->paint(p);
+        original->paint(p, !hasTag("StyleTag"));
         p.restore();
     }
 }

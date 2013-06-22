@@ -64,6 +64,7 @@ public:
     void setSelected(bool selected);
     bool isExpanded() const { return _isExpanded; }
     void setExpanded(bool expanded);
+    QList<Object*> selectedDirectChildren() const;
 
 
     //object specific properties
@@ -108,7 +109,7 @@ public:
     static Object* createInstance(QString className, Project* project);
 
     //render
-    void paint(QPainter &p, bool render = false);
+    void paint(QPainter &p, bool applyStyle = true, bool render = false);
     virtual void customDraw(QPainter &p) { Q_UNUSED(p) }
     virtual bool drawChildren() const { return true; }
     virtual bool valid() const { return true; }

@@ -32,9 +32,39 @@ bool Viewport::eventFilter(QObject *o, QEvent *e)
                     _psr->setLiveMode(true);
                     project()->createNewUndoRecord();
                     _psr->setLeftButtonDownPosition(mouseEvent->pos());
+                    _lastPos = mouseEvent->pos();
+                    _grabbedPoint = 0;
+                    for (Object* object : project()->selectedObjects()) {
+                        if (object->type() == "Point") {
+                            Point* point = (Point*) object;
+                            if (isInEnvironmentOf(point->globaleCtrlA(), mouseEvent->pos())) {
+                                _grabbedPoint = point;
+                                _tangentA = true;
+                                qDebug() << "trefferA";
+                                break;
+                            } else if (isInEnvironmentOf(point->globaleCtrlB(), mouseEvent->pos())) {
+                                _grabbedPoint = point;
+                                _tangentA = false;
+                                qDebug() << "trefferB";
+                                break;
+                            }
+                        }
+                    }
                 } else if (e->type() == QEvent::MouseMove) {
                     project()->setRecordHistory(false);
-                    _psr->setMousePosition(mouseEvent->pos());
+                    if (_grabbedPoint) {
+                        //TODO non grabbed tangent behaves badly
+                        if (_tangentA) {
+                            _grabbedPoint->setGlobaleCtrlA(_grabbedPoint->globaleCtrlA() + mouseEvent->pos() - _lastPos);
+                            _grabbedPoint->setGlobaleCtrlB(_grabbedPoint->globaleCtrlB() - mouseEvent->pos() + _lastPos);
+                        } else {
+                            _grabbedPoint->setGlobaleCtrlB(_grabbedPoint->globaleCtrlB() + mouseEvent->pos() - _lastPos);
+                            _grabbedPoint->setGlobaleCtrlA(_grabbedPoint->globaleCtrlA() - mouseEvent->pos() + _lastPos);
+                        }
+                        _lastPos = mouseEvent->pos();
+                    } else {
+                        _psr->setMousePosition(mouseEvent->pos());
+                    }
                     project()->setRecordHistory(true);
                 } else if (e->type() == QEvent::MouseButtonRelease && mouseEvent->button() == Qt::LeftButton) {
                     _psr->resetActions();
@@ -98,11 +128,29 @@ bool Viewport::eventFilter(QObject *o, QEvent *e)
                     _psr->resetActions();
                     _psr->setLiveMode(false);
                 }
+            } else if (mouseEvent->modifiers() == Qt::ShiftModifier) {
+                if (e->type() == QEvent::MouseMove) {
+                    project()->setRecordHistory(false);
+                    if (_grabbedPoint) {
+                        if (_tangentA) {
+                            _grabbedPoint->setGlobaleCtrlA(_grabbedPoint->globaleCtrlA() + mouseEvent->pos() - _lastPos);
+                        } else {
+                            _grabbedPoint->setGlobaleCtrlB(_grabbedPoint->globaleCtrlB() + mouseEvent->pos() - _lastPos);
+                        }
+                        _lastPos = mouseEvent->pos();
+                    } else {
+                        _psr->setMousePosition(mouseEvent->pos());
+                    }
+                    project()->setRecordHistory(true);
+                }
             }
         }
     }
     if (e->type() == QEvent::MouseButtonRelease) {
+        _grabbedPoint = 0;
         update();
+    } else if (e->type() == QEvent::FocusOut) {
+        _grabbedPoint = 0;
     }
     return QWidget::eventFilter(o, e);
 
@@ -183,12 +231,15 @@ Object* Viewport::clickedObject(QPoint pos, bool askObject)
     return objects[0];
 }
 
-bool Viewport::isInEnvironmentOf(QPoint pos, Object *o)
+bool Viewport::isInEnvironmentOf(QPointF pos, Object *o)
 {
     if (!o) return false;
+    return isInEnvironmentOf(pos, o->globalePosition());
+}
 
-    QPointF globPos = o->globalePosition();
-    if ((globPos - pos).manhattanLength() < 10) {
+bool Viewport::isInEnvironmentOf(QPointF p1, QPointF p2)
+{
+    if ((p1 - p2).manhattanLength() < 10) {
         return true;
     } else {
         return false;

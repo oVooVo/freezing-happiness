@@ -12,6 +12,10 @@ public:
     bool visibleInObjectTree() const { return false; }
     QPointF ctrlA() const;
     QPointF ctrlB() const;
+    QPointF globaleCtrlA();
+    QPointF globaleCtrlB();
+    void setGlobaleCtrlA(QPointF p);
+    void setGlobaleCtrlB(QPointF p);
 
 protected:
     void customDraw(QPainter &p);
