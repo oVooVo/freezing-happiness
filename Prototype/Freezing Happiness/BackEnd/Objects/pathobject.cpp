@@ -1,6 +1,8 @@
 #include "pathobject.h"
 #include <qmath.h>
 #include "BackEnd/Tags/styletag.h"
+#include "spline.h"
+#include "point.h"
 
 PathObject::PathObject(Project *project, QString name) : Object(project, name, false)
 {
@@ -51,6 +53,22 @@ void PathObject::emitObjectChanged()
 {
     updatePath();
     Object::emitObjectChanged();
+}
+
+Object* PathObject::convert()
+{
+    Spline* spline = new Spline(project(), name());
+    spline->setLocaleTransform(localeTransform());
+    spline->setTreeParent(treeParent());
+
+    for (int i = 0; i < _path.elementCount(); i++) {
+        QPainterPath::Element element = _path.elementAt(i);
+        Point* p = new Point(project());
+        p->setTreeParent(spline);
+        p->setLocalePosition(QPointF(element.x, element.y));
+
+    }
+    return spline;
 }
 
 

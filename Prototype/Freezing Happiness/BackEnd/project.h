@@ -51,6 +51,7 @@ public slots:
     void undo() { emit undoRequest(); }
     void redo() { emit redoRequest(); }
     void duplicateSelected();
+    void convertSelected();
     QImage render();
     void showRenderOptions();
 

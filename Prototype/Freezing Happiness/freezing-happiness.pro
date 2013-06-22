@@ -65,7 +65,8 @@ SOURCES += main.cpp \
     BackEnd/Tags/alignsplinetag.cpp \
     BackEnd/Objects/pathobject.cpp \
     FrontEnd/EditorWidgets/doubleedit.cpp \
-    BackEnd/Objects/plotobject.cpp
+    BackEnd/Objects/plotobject.cpp \
+    FrontEnd/EditorWidgets/integeredit.cpp
 
 HEADERS += \
     BackEnd/project.h \
@@ -113,7 +114,8 @@ HEADERS += \
     BackEnd/Tags/alignsplinetag.h \
     BackEnd/Objects/pathobject.h \
     FrontEnd/EditorWidgets/doubleedit.h \
-    BackEnd/Objects/plotobject.h
+    BackEnd/Objects/plotobject.h \
+    FrontEnd/EditorWidgets/integeredit.h
 
 
 FORMS += \

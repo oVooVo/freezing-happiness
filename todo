@@ -47,3 +47,8 @@ Objects:
  - Text
  - ...
 
+
+Point tag is useless! Find strategy to use it again. May all objects "magically" get Tangets as a spline becomes their parent?
+Renderer renders wrong and the usage is not cute.
+
+

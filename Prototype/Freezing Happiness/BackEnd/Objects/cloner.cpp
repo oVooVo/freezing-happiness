@@ -10,6 +10,7 @@
 #include "BackEnd/Properties/referenceproperty.h"
 #include <BackEnd/project.h>
 #include "BackEnd/mathutility.h"
+#include "empty.h"
 
 const QStringList Cloner::LINEAR_PROPERTIES = QStringList() << "offset" << "xpos-curve" << "ypos-curve" << "linrot-curve" << "linscale-curve" << "stepmode";
 const QStringList Cloner::CIRCLE_PROPERTIES = QStringList() << "align" << "start" << "angle-curve" << "end" << "radius" << "radius-curve"
@@ -63,7 +64,7 @@ void Cloner::customDraw(QPainter &p)
     if (_dirtyMatrices) updateMatrices();
     for (int i = 0; i < _matrices.size(); i++) {
         p.save();
-        p.setMatrix((QTransform(_matrices[i]) * globaleTransform()).toAffine());
+        p.setMatrix(_matrices[i] * p.matrix());
         directChildren()[i % directChildren().size()]->paint(p);
         p.restore();
     }
@@ -184,7 +185,7 @@ QList<QPointF> Cloner::matrices()
 
 void Cloner::updateMatrices()
 {
-    _dirtyMatrices = false;
+    if (!_dirtyMatrices)  return;
     if (((SelectProperty*) properties()["mode"])->currentIndex() == 0) {
         alignLinear();
     } else if (((SelectProperty*) properties()["mode"])->currentIndex() == 1) {
@@ -192,6 +193,7 @@ void Cloner::updateMatrices()
     } else if (((SelectProperty*) properties()["mode"])->currentIndex() == 2) {
         alignSpline();
     }
+    _dirtyMatrices = false;
 }
 
 void Cloner::connectPropertyTriggers()
@@ -202,4 +204,36 @@ void Cloner::connectPropertyTriggers()
 
     connect((ReferenceProperty*)properties()["spline-reference"], &ReferenceProperty::watchedObjectChanged, [=]() {
         updateMatrices();
-    });}
+    });
+}
+
+Object* Cloner::convert()
+{
+    Object* object = new Empty(project(), name());
+    if (!directChildren().isEmpty()) {
+        updateMatrices();
+        QList<QByteArray> data;
+        for (Object* o : directChildren()) {
+            qDebug() << "1";
+            QByteArray array;
+            QDataStream stream(&array, QIODevice::WriteOnly);
+            o->serialize(stream);
+            data.append(array);
+        }
+        for (int i = 0; i < _matrices.size(); i++) {
+            qDebug() << "2.0";
+            QDataStream stream(&data[i % data.size()], QIODevice::ReadOnly);
+            qDebug() << "2.1";
+            Object* o = Object::deserialize(stream, project(), false);
+            qDebug() << "2.2";
+            o->setTreeParent(object);
+            qDebug() << "2.3";
+            o->setLocaleTransform(QTransform(_matrices[i]));
+            qDebug() << "2.4";
+        }
+
+    }
+    object->setLocaleTransform(localeTransform());
+    object->setTreeParent(treeParent());
+    return object;
+}

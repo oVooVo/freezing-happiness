@@ -11,6 +11,7 @@ public:
     void customDraw(QPainter &p);
     bool valid() const;
     QList<QPointF> matrices();
+    Object* convert();
 
 protected:
     bool drawChildren() const { return false; }

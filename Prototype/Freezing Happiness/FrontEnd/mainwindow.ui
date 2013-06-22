@@ -61,6 +61,7 @@
      <string>Function</string>
     </property>
     <addaction name="actionDuplicate_Selected"/>
+    <addaction name="actionConvert"/>
    </widget>
    <widget class="QMenu" name="menuRender">
     <property name="title">
@@ -148,6 +149,11 @@
   <action name="actionCamera">
    <property name="text">
     <string>Camera</string>
+   </property>
+  </action>
+  <action name="actionConvert">
+   <property name="text">
+    <string>Convert</string>
    </property>
   </action>
  </widget>

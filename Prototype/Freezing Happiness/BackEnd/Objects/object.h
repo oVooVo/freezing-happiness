@@ -67,6 +67,7 @@ public:
     QList<Object*> selectedDirectChildren() const;
 
 
+
     //object specific properties
     QString name() const;
     void setName(QString newName);
@@ -130,6 +131,8 @@ public:
 
     static QStringList objectTypes() { return _creatorMap->keys(); }
     virtual QTransform getLocaleTransformAt(qreal pos) { Q_UNUSED(pos) return QTransform(); }
+
+    virtual Object* convert() { return 0; }
 
 
 public slots:

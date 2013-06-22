@@ -420,6 +420,20 @@ Object* Project::cameraObject()
     return root();
 }
 
+void Project::convertSelected()
+{
+
+    blockSignals(true);
+    for (Object* o : selectedParents()) {
+        if (!o->convert()) return;
+        if (o->deletable()) {
+            freeId(o->id());
+            delete o;
+        }
+    }
+    blockSignals(false);
+    emitStructureChanged();
+}
 
 
 

@@ -82,6 +82,7 @@ void MainWindow::updateActiveProject(Project *project)
     connect(ui->actionUndo, SIGNAL(triggered()), project, SLOT(undo()));
     connect(ui->actionRedo, SIGNAL(triggered()), project, SLOT(redo()));
     connect(ui->actionDuplicate_Selected, SIGNAL(triggered()), project, SLOT(duplicateSelected()));
+    connect(ui->actionConvert, SIGNAL(triggered()), project, SLOT(convertSelected()));
     connect(ui->actionOptions, SIGNAL(triggered()), project, SLOT(showRenderOptions()));
     connect(ui->actionShowRenderFrame, &QAction::triggered, [project](bool checked) { project->showRenderFrame = checked; } );
     project->showRenderFrame = ui->actionShowRenderFrame->isChecked();

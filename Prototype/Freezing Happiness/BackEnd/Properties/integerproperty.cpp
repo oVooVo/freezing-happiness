@@ -1,5 +1,5 @@
 #include "integerproperty.h"
-#include <QDoubleSpinBox>
+#include "FrontEnd/EditorWidgets/integeredit.h"
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -52,7 +52,7 @@ void IntegerProperty::setValue(qint64 value)
 QWidget* IntegerProperty::createWidget(QList<Property *> props, QWidget *parent)
 {
     QString name = props.first()->name();
-    QSpinBox* spinBox = new QSpinBox(parent);
+    IntegerEdit* spinBox = new IntegerEdit(parent);
     spinBox->setRange(((IntegerProperty*) props.first())->_min, ((IntegerProperty*) props.first())->_max);
 
     auto updateSpinBox = [=]() {

@@ -14,6 +14,7 @@ protected:
     void customDraw(QPainter &p);
     QPainterPath _path;
     virtual void polish();
+    Object* convert();
 
 public slots:
     void emitObjectChanged();
