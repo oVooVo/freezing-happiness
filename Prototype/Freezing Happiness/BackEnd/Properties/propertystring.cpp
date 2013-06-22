@@ -11,15 +11,16 @@ PropertyString::PropertyString(QByteArray* data)
 {
     QString className, category, name;
     QDataStream in(data, QIODevice::ReadOnly);
-    in >> className >> category >> name >> _string;
+    in >> className >> category >> name >> _string >> _nonProportional;
     setCategory(category);
     setName(name);
     Q_ASSERT(className == type());
 }
 
-PropertyString::PropertyString(QString category, QString name, QString string)
+PropertyString::PropertyString(QString category, QString name, QString string, bool nonProportional)
 {
     _string = string;
+    _nonProportional = nonProportional;
     setCategory(category);
     setName(name);
 }
@@ -28,8 +29,7 @@ QByteArray PropertyString::toByteArray()
 {
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
-    out << type() << category() << name();
-    out << _string;
+    out << type() << category() << name() << _string << _nonProportional;
 
     return array;
 }
@@ -66,6 +66,9 @@ QWidget* PropertyString::createWidget(QList<Property*> props, QWidget* parent)
         }
 
         lineEdit->setText(string);
+        if (((PropertyString*) props.first())->_nonProportional) {
+            lineEdit->setFont(QFont("Courier"));
+        }
         if (multipleValues) {
             lineEdit->setStyleSheet(QString("background-color:%1").arg(Property::MULTIPLE_VALUES_COLOR));
         } else {

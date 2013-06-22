@@ -8,7 +8,7 @@ class PropertyString : public Property
     Q_OBJECT
 public:
     PropertyString(QByteArray* data);
-    PropertyString(QString category, QString name, QString string);
+    PropertyString(QString category, QString name, QString string = "", bool nonProportional = false);
     QByteArray toByteArray();
     QString toString() const;
 
@@ -17,9 +17,12 @@ public:
 
 public slots:
     void setString(QString s);
+
+
 private:
     REGISTER_DECL_PROPERTYTYPE(PropertyString);
     QString _string;
+    bool _nonProportional = false;
 };
 
 #endif // PROPERTYSTRING_H

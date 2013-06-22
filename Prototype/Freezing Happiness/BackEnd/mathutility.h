@@ -17,6 +17,7 @@ public:
     static qreal aSin(qreal t);
     static QTransform mult(QTransform x, QTransform y);
     static QString colorToString(QColor color);
+    static QList<qreal> parse(QString s, QList<qreal> xs);
 
 private:
     MathUtility();

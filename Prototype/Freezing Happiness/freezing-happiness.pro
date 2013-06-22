@@ -13,6 +13,8 @@ TARGET = de
 #CONFIG   += console
 #CONFIG   -= app_bundle
 
+INCLUDEPATH += /usr/locale/exprtk.hpp
+
 TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++11
@@ -62,8 +64,8 @@ SOURCES += main.cpp \
     FrontEnd/EditorWidgets/splineedit.cpp \
     BackEnd/Tags/alignsplinetag.cpp \
     BackEnd/Objects/pathobject.cpp \
-    FrontEnd/EditorWidgets/doubleedit.cpp
-
+    FrontEnd/EditorWidgets/doubleedit.cpp \
+    BackEnd/Objects/plotobject.cpp
 
 HEADERS += \
     BackEnd/project.h \
@@ -110,7 +112,9 @@ HEADERS += \
     FrontEnd/EditorWidgets/splineedit.h \
     BackEnd/Tags/alignsplinetag.h \
     BackEnd/Objects/pathobject.h \
-    FrontEnd/EditorWidgets/doubleedit.h
+    FrontEnd/EditorWidgets/doubleedit.h \
+    BackEnd/Objects/plotobject.h
+
 
 FORMS += \
     FrontEnd/mainwindow.ui \

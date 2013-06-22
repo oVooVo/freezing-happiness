@@ -22,6 +22,7 @@ void Ellipse::adjustProperties()
     }
 }
 
+/*
 QTransform Ellipse::getLocaleTransformAt(qreal pos)
 {
     qreal alpha = pos * 2 * M_PI;
@@ -31,7 +32,7 @@ QTransform Ellipse::getLocaleTransformAt(qreal pos)
     trans.translate(qCos(alpha) * r1, qSin(alpha) * r2);
     trans.rotate(alpha * 180 * M_1_PI);
     return trans;
-}
+}*/
 
 void Ellipse::updatePath()
 {

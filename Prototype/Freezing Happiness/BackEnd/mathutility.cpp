@@ -1,6 +1,7 @@
 #include "mathutility.h"
 #include <QDebug>
 #include <QColor>
+#include <exprtk.hpp>
 
 MathUtility::MathUtility()
 {
@@ -80,9 +81,27 @@ QString MathUtility::colorToString(QColor color)
     return QString("rgb(%1,%2,%3)").arg(color.red()).arg(color.green()).arg(color.blue());
 }
 
+QList<qreal> MathUtility::parse(QString s, QList<qreal> xs)
+{
+    std::string expression_string = s.toStdString();
+    qreal x;
+    exprtk::symbol_table<qreal> symbol_table;
+    symbol_table.add_variable("x",x);
+    symbol_table.add_constants();
 
+    exprtk::expression<qreal> expression;
+    expression.register_symbol_table(symbol_table);
 
+    exprtk::parser<qreal> parser;
+    parser.compile(expression_string,expression);
 
+    QList<qreal> results;
+    foreach (x , xs)
+    {
+       results.append(expression.value());
+    }
+    return results;
+}
 
 
 

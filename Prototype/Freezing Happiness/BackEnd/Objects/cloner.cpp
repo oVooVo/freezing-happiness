@@ -155,7 +155,6 @@ void Cloner::alignSpline()
 
 void Cloner::updatePropertiesVisibility()
 {
-    qDebug() << "updatePropertiesVisibility();";
     for (QString lin : LINEAR_PROPERTIES) {
         properties()[lin]->isVisible = (((SelectProperty*) properties()["mode"])->currentIndex() == 0);
     }
