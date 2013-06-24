@@ -221,15 +221,10 @@ Object* Cloner::convert()
             data.append(array);
         }
         for (int i = 0; i < _matrices.size(); i++) {
-            qDebug() << "2.0";
             QDataStream stream(&data[i % data.size()], QIODevice::ReadOnly);
-            qDebug() << "2.1";
             Object* o = Object::deserialize(stream, project(), false);
-            qDebug() << "2.2";
             o->setTreeParent(object);
-            qDebug() << "2.3";
             o->setLocaleTransform(QTransform(_matrices[i]));
-            qDebug() << "2.4";
         }
 
     }

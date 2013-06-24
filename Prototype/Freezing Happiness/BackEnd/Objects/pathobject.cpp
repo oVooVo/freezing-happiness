@@ -64,7 +64,7 @@ Object* PathObject::convert()
     for (int i = 0; i < _path.elementCount(); i++) {
         QPainterPath::Element element = _path.elementAt(i);
         Point* p = new Point(project());
-        p->setTreeParent(spline);
+        p->setTreeParent(spline, false);
         p->setLocalePosition(QPointF(element.x, element.y));
 
     }

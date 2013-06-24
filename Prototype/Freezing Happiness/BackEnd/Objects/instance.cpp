@@ -29,3 +29,21 @@ bool Instance::valid() const
     if (original == 0) return false;
     return !isDescedantOf(original);
 }
+
+Object* Instance::convert()
+{
+    ReferenceProperty* refProp = (ReferenceProperty*) properties()["reference"];
+    if (refProp->isEmpty()) return 0;
+
+    Object* reference = project()->getObject(refProp->id());
+    QByteArray data;
+    QDataStream readStream(&data, QIODevice::WriteOnly);
+    reference->serialize(readStream);
+
+    QDataStream writeStream(&data, QIODevice::ReadOnly);
+    Object* copy = Object::deserialize(writeStream, project(), false);
+    copy->setTreeParent(treeParent(), false);
+    copy->setLocaleTransform(localeTransform());
+    copy->setName(name());
+    return copy;
+}

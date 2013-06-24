@@ -220,7 +220,9 @@ QString Object::type() const
 
 void Object::setId(quint64 id)
 {
+    project()->freeId(_id);
     _id = id;
+    _project->reserveId(this, id);
 }
 
 QString Object::name() const

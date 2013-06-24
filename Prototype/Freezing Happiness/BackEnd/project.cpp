@@ -101,7 +101,7 @@ quint64 Project::reserveId(Object* object, quint64 id)
         }
     }
     _objects.insert(id, object);
-    object->setId(id);
+    object->_id = id;
     return id;
 }
 
@@ -425,9 +425,11 @@ void Project::convertSelected()
 
     blockSignals(true);
     for (Object* o : selectedParents()) {
-        if (!o->convert()) return;
+        Object* conv = o->convert();
+        if (!conv) return;
         if (o->deletable()) {
             freeId(o->id());
+            conv->setId(o->id());
             delete o;
         }
     }

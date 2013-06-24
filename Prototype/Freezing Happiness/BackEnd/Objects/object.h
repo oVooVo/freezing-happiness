@@ -101,10 +101,10 @@ public:
     void serialize(QDataStream &stream);
     static Object* deserialize(QDataStream &stream, Project* project, bool assertId = true,
                                bool recursive = true, quint64 *childrenCount_ = 0);
+    void setId(quint64 id);
 
     //use for serilization issues only!
     void addChild(Object* o);
-    void setId(quint64 id);
 
     //auto generate
     static Object* createInstance(QString className, Project* project);

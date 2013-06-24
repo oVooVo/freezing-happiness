@@ -29,6 +29,7 @@ ReferenceProperty::ReferenceProperty(QString category, QString name)
     _empty = true;
     setCategory(category);
     setName(name);
+    connect(this, &ReferenceProperty::valueChanged, [=]() { qDebug() << "value changed to " << _id; });
 }
 
 QByteArray ReferenceProperty::toByteArray()
@@ -103,7 +104,8 @@ void ReferenceProperty::setId(quint64 id, bool isEmpty)
 
     if (!_empty) {
         Object* object = project()->getObject(id);
-        disconnect(object, SIGNAL(iChanged()), this, SLOT(emitWatchedObjectChanged()));
+        if (object)
+            disconnect(object, SIGNAL(iChanged()), this, SLOT(emitWatchedObjectChanged()));
     }
 
     _id = id;
