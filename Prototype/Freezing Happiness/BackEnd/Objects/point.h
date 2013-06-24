@@ -16,14 +16,14 @@ public:
     QPointF globaleCtrlB();
     void setGlobaleCtrlA(QPointF p);
     void setGlobaleCtrlB(QPointF p);
+    QPointF ctrlAPosition() const;
+    QPointF ctrlBPosition() const;
 
 protected:
     void customDraw(QPainter &p);
 
 private:
     REGISTER_DECL_OBJECTTYPE(Point);
-    QPointF ctrlAPrivate() const;
-    QPointF ctrlBPrivate() const;
 
 
 };

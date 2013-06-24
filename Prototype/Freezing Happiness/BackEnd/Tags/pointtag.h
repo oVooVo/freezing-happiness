@@ -12,6 +12,16 @@ public:
     qint64 index() const;
     static QWidget* createWidget(QList<Tag *> tags, QWidget *parent);
 
+
+    QPointF ctrlA() const;
+    QPointF ctrlB() const;
+    QPointF globaleCtrlA();
+    QPointF globaleCtrlB();
+    void setGlobaleCtrlA(QPointF p);
+    void setGlobaleCtrlB(QPointF p);
+    QPointF ctrlAPosition() const;
+    QPointF ctrlBPosition() const;
+
 public slots:
     void setIndex(qint64 ind);
 

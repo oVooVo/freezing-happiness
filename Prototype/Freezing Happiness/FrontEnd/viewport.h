@@ -45,7 +45,7 @@ private:
     void newPoint(QPoint pos);
 
     QPointF _lastPos;
-    Point* _grabbedPoint = 0;
+    Object* _grabbedPoint = 0;
     bool _tangentA;
 
 private slots:

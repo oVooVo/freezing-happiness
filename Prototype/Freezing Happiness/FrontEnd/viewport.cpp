@@ -10,6 +10,7 @@
 #include <FrontEnd/combobox.h>
 #include <BackEnd/Objects/empty.h>
 #include "BackEnd/Objects/point.h"
+#include "BackEnd/Tags/pointtag.h"
 
 Viewport::Viewport(QWidget *parent) : Manager(parent)
 {
@@ -35,17 +36,19 @@ bool Viewport::eventFilter(QObject *o, QEvent *e)
                     _lastPos = mouseEvent->pos();
                     _grabbedPoint = 0;
                     for (Object* object : project()->selectedObjects()) {
-                        if (object->type() == "Point") {
+                        if (object->type() == "Point" || object->hasTag("PointTag")) {
                             Point* point = (Point*) object;
-                            if (isInEnvironmentOf(point->globaleCtrlA(), mouseEvent->pos())) {
+                            if (isInEnvironmentOf(
+                                        point->inherits("Point") ? point->globaleCtrlA() : ((PointTag*) point->tag("PointTag"))->globaleCtrlA(),
+                                        mouseEvent->pos())) {
                                 _grabbedPoint = point;
                                 _tangentA = true;
-                                qDebug() << "trefferA";
                                 break;
-                            } else if (isInEnvironmentOf(point->globaleCtrlB(), mouseEvent->pos())) {
+                            } else if (isInEnvironmentOf(
+                                         point->inherits("Point") ? point->globaleCtrlB() : ((PointTag*) point->tag("PointTag"))->globaleCtrlB(),
+                                         mouseEvent->pos())) {
                                 _grabbedPoint = point;
                                 _tangentA = false;
-                                qDebug() << "trefferB";
                                 break;
                             }
                         }
@@ -55,11 +58,29 @@ bool Viewport::eventFilter(QObject *o, QEvent *e)
                     if (_grabbedPoint) {
                         //TODO non grabbed tangent behaves badly
                         if (_tangentA) {
-                            _grabbedPoint->setGlobaleCtrlA(_grabbedPoint->globaleCtrlA() + mouseEvent->pos() - _lastPos);
-                            _grabbedPoint->setGlobaleCtrlB(_grabbedPoint->globaleCtrlB() - mouseEvent->pos() + _lastPos);
+                            if (_grabbedPoint->inherits("Point")) {
+                                Point* point = (Point*) _grabbedPoint;
+                                point->setGlobaleCtrlA(point->globaleCtrlA() + mouseEvent->pos() - _lastPos);
+                                point->setGlobaleCtrlB(point->globaleCtrlB() - mouseEvent->pos() + _lastPos);
+                            } else if (_grabbedPoint->hasTag("PointTag")) {
+                                PointTag* tag = (PointTag*) _grabbedPoint->tag("PointTag");
+                                tag->setGlobaleCtrlA(tag->globaleCtrlA() + mouseEvent->pos() - _lastPos);
+                                tag->setGlobaleCtrlB(tag->globaleCtrlB() - mouseEvent->pos() + _lastPos);
+                            } else {
+                                Q_ASSERT(false);
+                            }
                         } else {
-                            _grabbedPoint->setGlobaleCtrlB(_grabbedPoint->globaleCtrlB() + mouseEvent->pos() - _lastPos);
-                            _grabbedPoint->setGlobaleCtrlA(_grabbedPoint->globaleCtrlA() - mouseEvent->pos() + _lastPos);
+                            if (_grabbedPoint->inherits("Point")) {
+                                Point* point = (Point*) _grabbedPoint;
+                                point->setGlobaleCtrlB(point->globaleCtrlB() + mouseEvent->pos() - _lastPos);
+                                point->setGlobaleCtrlA(point->globaleCtrlA() - mouseEvent->pos() + _lastPos);
+                            } else if (_grabbedPoint->hasTag("PointTag")) {
+                                PointTag* tag = (PointTag*) _grabbedPoint->tag("PointTag");
+                                tag->setGlobaleCtrlB(tag->globaleCtrlB() + mouseEvent->pos() - _lastPos);
+                                tag->setGlobaleCtrlA(tag->globaleCtrlA() - mouseEvent->pos() + _lastPos);
+                            } else {
+                                Q_ASSERT(false);
+                            }
                         }
                         _lastPos = mouseEvent->pos();
                     } else {
@@ -133,10 +154,21 @@ bool Viewport::eventFilter(QObject *o, QEvent *e)
                     project()->setRecordHistory(false);
                     if (_grabbedPoint) {
                         if (_tangentA) {
-                            _grabbedPoint->setGlobaleCtrlA(_grabbedPoint->globaleCtrlA() + mouseEvent->pos() - _lastPos);
+                            if (_grabbedPoint->inherits("Point")) {
+                                Point* point = (Point*) _grabbedPoint;
+                                point->setGlobaleCtrlA(point->globaleCtrlA() + mouseEvent->pos() - _lastPos);
+                            } else if (_grabbedPoint->hasTag("PointTag")) {
+                                PointTag* tag = (PointTag*) _grabbedPoint->tag("PointTag");
+                                tag->setGlobaleCtrlA(tag->globaleCtrlA() + mouseEvent->pos() - _lastPos);
+                            }
                         } else {
-                            _grabbedPoint->setGlobaleCtrlB(_grabbedPoint->globaleCtrlB() + mouseEvent->pos() - _lastPos);
-                        }
+                            if (_grabbedPoint->inherits("Point")) {
+                                Point* point = (Point*) _grabbedPoint;
+                                point->setGlobaleCtrlB(point->globaleCtrlB() + mouseEvent->pos() - _lastPos);
+                            } else if (_grabbedPoint->hasTag("PointTag")) {
+                                PointTag* tag = (PointTag*) _grabbedPoint->tag("PointTag");
+                                tag->setGlobaleCtrlB(tag->globaleCtrlB() + mouseEvent->pos() - _lastPos);
+                            }                        }
                         _lastPos = mouseEvent->pos();
                     } else {
                         _psr->setMousePosition(mouseEvent->pos());

@@ -11,6 +11,9 @@
 
 REGISTER_DEFN_OBJECTTYPE(Spline);
 
+QPointF getCtrlA(Object* object);
+QPointF getCtrlB(Object* object);
+
 Spline::Spline(Project* project, QString name) : PathObject(project, name)
 {
     addProperty("closed", new BoolProperty("Spline", "Closed", false));
@@ -27,20 +30,20 @@ void Spline::childrenHasChanged()
 
 void Spline::updatePath()
 {
-    QList<Point*> points;
+    QList<Object*> points;
 
     QList<Object*> extras;
     for (Object* child : directChildren()) {
         if (child->type() == "Point") {
             points.append((Point*) child);
         } else if (child->hasTag("PointTag")) {
-           //extras.append(child);
+           extras.append(child);
         }
     }
     qSort(extras.begin(), extras.end(), [](Object* a, Object* b)
         { return ((PointTag*) a->tag("PointTag"))->index() > ((PointTag*) b->tag("PointTag"))->index(); } );
     for (Object* extraObject : extras) {
-        //points.insert(((PointTag*) extraObject->tag("PointTag"))->index(), extraObject);
+        points.insert(((PointTag*) extraObject->tag("PointTag"))->index(), extraObject);
     }
 
     if (((BoolProperty*) properties()["closed"])->value() && !points.isEmpty()) {
@@ -53,8 +56,8 @@ void Spline::updatePath()
             if (((SelectProperty*) properties()["Interpolation"])->currentIndex() == 0) {
                 _path.lineTo(points[i]->localePosition());
             } else if (((SelectProperty*) properties()["Interpolation"])->currentIndex() == 1) {
-                _path.cubicTo(points[i-1]->ctrlB(),
-                              points[i]->ctrlA(),
+                _path.cubicTo(getCtrlB(points[i-1]),
+                              getCtrlA(points[i]),
                               points[i]->localePosition());
             }
         }
@@ -97,4 +100,26 @@ QTransform Spline::getLocaleTransformAt(qreal pos)
     return t;
 }
 
+QPointF getCtrlA(Object* object)
+{
+    if (object->inherits("Point")) {
+        return ((Point*) object)->ctrlA();
+    } else if (object->hasTag("PointTag")) {
+        return ((PointTag*) object->tag("PointTag"))->ctrlA();
+    } else {
+        Q_ASSERT(false);
+        return QPointF();
+    }
+}
 
+QPointF getCtrlB(Object* object)
+{
+    if (object->inherits("Point")) {
+        return ((Point*) object)->ctrlB();
+    } else if (object->hasTag("PointTag")) {
+        return ((PointTag*) object->tag("PointTag"))->ctrlB();
+    } else {
+        Q_ASSERT(false);
+        return QPointF();
+    }
+}

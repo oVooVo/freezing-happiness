@@ -21,22 +21,22 @@ void Point::customDraw(QPainter &p)
         cosPen.setCosmetic(true);
         p.setPen(cosPen);
         QPainterPath path;
-        path.addEllipse(ctrlAPrivate(), s, s);
-        path.addEllipse(ctrlBPrivate(), s, s);
+        path.addEllipse(ctrlAPosition(), s, s);
+        path.addEllipse(ctrlBPosition(), s, s);
         p.fillPath(path, Qt::black);
-        p.drawLine(ctrlAPrivate(), QPointF(0,0));
-        p.drawLine(ctrlBPrivate(), QPointF(0,0));
+        p.drawLine(ctrlAPosition(), QPointF(0,0));
+        p.drawLine(ctrlBPosition(), QPointF(0,0));
         p.restore();
     }
 }
 
-QPointF Point::ctrlAPrivate() const
+QPointF Point::ctrlAPosition() const
 {
     return QPointF(((RealProperty*) properties()["xctrlA"])->value(),
                    ((RealProperty*) properties()["yctrlA"])->value());
 }
 
-QPointF Point::ctrlBPrivate() const
+QPointF Point::ctrlBPosition() const
 {
     return QPointF(((RealProperty*) properties()["xctrlB"])->value(),
                    ((RealProperty*) properties()["yctrlB"])->value());
@@ -44,26 +44,26 @@ QPointF Point::ctrlBPrivate() const
 
 QPointF Point::ctrlA() const
 {
-    QTransform t = localeTransform().translate(ctrlAPrivate().x(), ctrlAPrivate().y());
+    QTransform t = localeTransform().translate(ctrlAPosition().x(), ctrlAPosition().y());
     return QPointF(t.dx(), t.dy());
 }
 
 QPointF Point::ctrlB() const
 {
-    QTransform t = localeTransform().translate(ctrlBPrivate().x(), ctrlBPrivate().y());
+    QTransform t = localeTransform().translate(ctrlBPosition().x(), ctrlBPosition().y());
     return QPointF(t.dx(), t.dy());
 }
 
 QPointF Point::globaleCtrlA()
 {
-    QTransform t = globaleTransform().translate(ctrlAPrivate().x(), ctrlAPrivate().y());
+    QTransform t = globaleTransform().translate(ctrlAPosition().x(), ctrlAPosition().y());
     return QPointF(t.dx(), t.dy());
 }
 
 
 QPointF Point::globaleCtrlB()
 {
-    QTransform t = globaleTransform().translate(ctrlBPrivate().x(), ctrlBPrivate().y());
+    QTransform t = globaleTransform().translate(ctrlBPosition().x(), ctrlBPosition().y());
     return QPointF(t.dx(), t.dy());
 }
 

@@ -10,6 +10,8 @@
 #include <QTimer>
 #include <QMetaMethod>
 #include "BackEnd/Properties/transformproperty.h"
+#include "BackEnd/Tags/pointtag.h"
+#include "BackEnd/Objects/point.h"
 
 
 QMap<QString, Object* (*)(Project*)> *Object::_creatorMap = 0;
@@ -478,6 +480,23 @@ void Object::paint(QPainter &p, bool applyStyle, bool render)
         p.drawPoint(0,0);
         p.restore();
         p.setPen(oldPen);
+    }
+
+    if (isSelected() && !render && (inherits("Point") || hasTag("PointTag"))) {
+        QPointF ctrlA = hasTag("PointTag") ? ((PointTag*) tag("PointTag"))->ctrlAPosition() : ((Point*) this)->ctrlAPosition();
+        QPointF ctrlB = hasTag("PointTag") ? ((PointTag*) tag("PointTag"))->ctrlBPosition() : ((Point*) this)->ctrlBPosition();
+        p.save();
+        QPen cosPen;
+        qreal s = 2/globaleScalation();
+        cosPen.setCosmetic(true);
+        p.setPen(cosPen);
+        QPainterPath path;
+        path.addEllipse(ctrlA, s, s);
+        path.addEllipse(ctrlB, s, s);
+        p.fillPath(path, Qt::black);
+        p.drawLine(ctrlA, QPointF(0,0));
+        p.drawLine(ctrlB, QPointF(0,0));
+        p.restore();
     }
 
     if (valid()) {
