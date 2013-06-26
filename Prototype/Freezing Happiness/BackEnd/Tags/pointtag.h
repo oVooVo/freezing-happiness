@@ -19,6 +19,8 @@ public:
     QPointF globaleCtrlB();
     void setGlobaleCtrlA(QPointF p);
     void setGlobaleCtrlB(QPointF p);
+    void setLocaleCtrlA(QPointF p);
+    void setLocaleCtrlB(QPointF p);
     QPointF ctrlAPosition() const;
     QPointF ctrlBPosition() const;
 

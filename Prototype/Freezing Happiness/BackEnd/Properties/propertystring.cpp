@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <BackEnd/project.h>
+#include "FrontEnd/EditorWidgets/textedit.h"
 
 REGISTER_DEFN_PROPERTYTYPE(PropertyString);
 
@@ -11,16 +12,20 @@ PropertyString::PropertyString(QByteArray* data)
 {
     QString className, category, name;
     QDataStream in(data, QIODevice::ReadOnly);
-    in >> className >> category >> name >> _string >> _nonProportional;
+    quint8 nonProportional, singleLine;
+    in >> className >> category >> name >> _string >> nonProportional >> singleLine;
+    _nonProportional = (bool) nonProportional;
+    _singleLine = (bool) singleLine;
     setCategory(category);
     setName(name);
     Q_ASSERT(className == type());
 }
 
-PropertyString::PropertyString(QString category, QString name, QString string, bool nonProportional)
+PropertyString::PropertyString(QString category, QString name, QString string, bool nonProportional, bool singleLine)
 {
     _string = string;
     _nonProportional = nonProportional;
+    _singleLine = singleLine;
     setCategory(category);
     setName(name);
 }
@@ -29,7 +34,7 @@ QByteArray PropertyString::toByteArray()
 {
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
-    out << type() << category() << name() << _string << _nonProportional;
+    out << type() << category() << name() << _string << (quint8) _nonProportional << (quint8) _singleLine;
 
     return array;
 }
@@ -49,9 +54,13 @@ QString PropertyString::toString() const
 
 QWidget* PropertyString::createWidget(QList<Property*> props, QWidget* parent)
 {
-
+    bool singleLine = ((PropertyString*) props.first())->_singleLine;
     QString name = props.first()->name();
-    QLineEdit* lineEdit = new QLineEdit(parent);
+    QWidget* lineEdit;
+    if (singleLine)
+        lineEdit = new QLineEdit(parent);
+    else
+        lineEdit = new TextEdit(parent);
     lineEdit->setAcceptDrops(false);
 
     auto updateLineEdit = [=]() {
@@ -65,7 +74,7 @@ QWidget* PropertyString::createWidget(QList<Property*> props, QWidget* parent)
             }
         }
 
-        lineEdit->setText(string);
+        singleLine ? ((QLineEdit*) lineEdit)->setText(string) : ((TextEdit*) lineEdit)->setPlainText(string);
         if (((PropertyString*) props.first())->_nonProportional) {
             lineEdit->setFont(QFont("Courier"));
         }
@@ -79,9 +88,15 @@ QWidget* PropertyString::createWidget(QList<Property*> props, QWidget* parent)
 
     foreach (Property* p, props) {
         PropertyString* propString = (PropertyString*) p;
-        connect(lineEdit, &QLineEdit::editingFinished, [=]() {
-            propString->setString(lineEdit->text());
-        });
+        if (singleLine) {
+            connect((QLineEdit*) lineEdit, &QLineEdit::editingFinished, [=]() {
+                propString->setString(((QLineEdit*) lineEdit)->text());
+            });
+        }else {
+            connect((TextEdit*) lineEdit, &TextEdit::editingFinished, [=]() {
+                propString->setString(((TextEdit*) lineEdit)->document()->toPlainText());
+            });
+        }
 
         connect(propString, &PropertyString::valueChanged, updateLineEdit);
     }

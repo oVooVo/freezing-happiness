@@ -66,7 +66,10 @@ SOURCES += main.cpp \
     BackEnd/Objects/pathobject.cpp \
     FrontEnd/EditorWidgets/doubleedit.cpp \
     BackEnd/Objects/plotobject.cpp \
-    FrontEnd/EditorWidgets/integeredit.cpp
+    FrontEnd/EditorWidgets/integeredit.cpp \
+    BackEnd/Objects/text.cpp \
+    BackEnd/Properties/fontproperty.cpp \
+    FrontEnd/EditorWidgets/textedit.cpp
 
 HEADERS += \
     BackEnd/project.h \
@@ -115,7 +118,10 @@ HEADERS += \
     BackEnd/Objects/pathobject.h \
     FrontEnd/EditorWidgets/doubleedit.h \
     BackEnd/Objects/plotobject.h \
-    FrontEnd/EditorWidgets/integeredit.h
+    FrontEnd/EditorWidgets/integeredit.h \
+    BackEnd/Objects/text.h \
+    BackEnd/Properties/fontproperty.h \
+    FrontEnd/EditorWidgets/textedit.h
 
 
 FORMS += \

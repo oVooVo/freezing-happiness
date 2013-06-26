@@ -80,3 +80,18 @@ void Point::setGlobaleCtrlB(QPointF p)
     ((RealProperty*) properties()["xctrlB"])->setValue(t.dx());
     ((RealProperty*) properties()["yctrlB"])->setValue(t.dy());
 }
+
+
+void Point::setLocaleCtrlA(QPointF p)
+{
+    QTransform t = localeTransform().inverted().translate(p.x(), p.y());
+    ((RealProperty*) properties()["xctrlA"])->setValue(t.dx());
+    ((RealProperty*) properties()["yctrlA"])->setValue(t.dy());
+}
+
+void Point::setLocaleCtrlB(QPointF p)
+{
+    QTransform t = localeTransform().inverted().translate(p.x(), p.y());
+    ((RealProperty*) properties()["xctrlB"])->setValue(t.dx());
+    ((RealProperty*) properties()["yctrlB"])->setValue(t.dy());
+}

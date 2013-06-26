@@ -7,7 +7,6 @@ Camera::Camera(Project* project, QString name) : Object(project, name, false)
 {
     BoolProperty* bp = new BoolProperty("Camera", "Is Active", false);
     addProperty("active", bp);
-    connect(bp, SIGNAL(valueChanged()), this, SLOT(deactivateOtherCams()));
     polish();
 }
 
@@ -19,6 +18,11 @@ void Camera::deactivateOtherCams()
             ((Camera*) o)->setActive(false);
         }
     }
+}
+
+void Camera::connectPropertyTriggers()
+{
+    connect(((BoolProperty*) properties()["active"]), &BoolProperty::valueChanged, this, &Camera::deactivateOtherCams);
 }
 
 void Camera::setActive(bool active)

@@ -21,10 +21,7 @@ PointTag::PointTag(Object* owner, QByteArray *data)
     } else {
         addProperty("Index", new IntegerProperty("PointTag", tr("Index"), 0, std::numeric_limits<int>::max()));
 
-        addProperty("xctrlA", new RealProperty("Point", tr("x Left"), 10));
-        addProperty("yctrlA", new RealProperty("Point", tr("y Left"), 0));
-        addProperty("xctrlB", new RealProperty("Point", tr("x Right"), -10));
-        addProperty("yctrlB", new RealProperty("Point", tr("y Right"), 0));
+
     }
 }
 
@@ -98,6 +95,20 @@ void PointTag::setGlobaleCtrlA(QPointF p)
 void PointTag::setGlobaleCtrlB(QPointF p)
 {
     QTransform t = owner()->globaleTransformInverted().translate(p.x(), p.y());
+    ((RealProperty*) property("xctrlB"))->setValue(t.dx());
+    ((RealProperty*) property("yctrlB"))->setValue(t.dy());
+}
+
+void PointTag::setLocaleCtrlA(QPointF p)
+{
+    QTransform t = owner()->localeTransform().inverted().translate(p.x(), p.y());
+    ((RealProperty*) property("xctrlA"))->setValue(t.dx());
+    ((RealProperty*) property("yctrlA"))->setValue(t.dy());
+}
+
+void PointTag::setLocaleCtrlB(QPointF p)
+{
+    QTransform t = owner()->localeTransform().inverted().translate(p.x(), p.y());
     ((RealProperty*) property("xctrlB"))->setValue(t.dx());
     ((RealProperty*) property("yctrlB"))->setValue(t.dy());
 }

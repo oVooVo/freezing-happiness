@@ -11,6 +11,9 @@ public:
     Camera(Project *project, QString name = tr("Camera"));
     bool isActive() const { return ((BoolProperty*) properties()["active"])->value(); }
 
+protected:
+    void connectPropertyTriggers();
+
 private slots:
     void deactivateOtherCams();
 

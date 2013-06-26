@@ -12,7 +12,7 @@
 #include "BackEnd/mathutility.h"
 #include "empty.h"
 
-const QStringList Cloner::LINEAR_PROPERTIES = QStringList() << "offset" << "xpos-curve" << "ypos-curve" << "linrot-curve" << "linscale-curve" << "stepmode";
+const QStringList Cloner::LINEAR_PROPERTIES = QStringList() << "offset-begin" << "offset-end" << "xpos-curve" << "ypos-curve" << "linrot-curve" << "linscale-curve" << "stepmode";
 const QStringList Cloner::CIRCLE_PROPERTIES = QStringList() << "align" << "start" << "angle-curve" << "end" << "radius" << "radius-curve"
                                                       << "scal" << "rot" << "circscale-curve" << "circrot-curve";
 const QStringList Cloner::SPLINE_PROPERTIES = QStringList() << "spline-start" << "spline-end" << "spline-position-curve" << "spline-scale" << "spline-rot"
@@ -26,7 +26,8 @@ Cloner::Cloner(Project* project, QString name) : Object(project, name, false)
     addProperty("mode", new SelectProperty(tr("Cloner"), tr("Mode"), 0, MODES));
     addProperty("count", new IntegerProperty(tr("Cloner"), tr("Count"), 0, std::numeric_limits<int>::max(), 10));
 
-    addProperty("offset", new TransformProperty(tr("Cloner"), tr("Offset"), 100,0,0,0));
+    addProperty("offset-begin", new TransformProperty(tr("Cloner"), tr("Offset"), 0,0,0,0));
+    addProperty("offset-end", new TransformProperty(tr("Cloner"), tr("Spread"), 100,0,0,0));
     addProperty("xpos-curve", new SplineProperty(tr("Cloner"), tr("Pos x spread")));
     addProperty("ypos-curve", new SplineProperty(tr("Cloner"), tr("Pos y spread")));
     addProperty("linrot-curve", new SplineProperty(tr("Cloner"), tr("Rotation spread")));
@@ -82,13 +83,16 @@ void Cloner::alignLinear()
     _matrices.clear();
     int count = ((IntegerProperty*) properties()["count"])->value();
     int c = ((BoolProperty*) properties()["stepmode"])->value() ? count : 1;
+
+    TransformProperty* sOff = ((TransformProperty*) properties()["offset-begin"]);
+    TransformProperty* eOff = ((TransformProperty*) properties()["offset-end"]);
     for (int i = 0; i < count; i++) {
         QMatrix m;
         qreal x = (double) i / count;
-        m.translate(c*((SplineProperty*) properties()["xpos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().x(),
-                    c*((SplineProperty*) properties()["ypos-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->position().y());
-        m.rotate(c*((SplineProperty*) properties()["linrot-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->rotation());
-        qreal s = ((SplineProperty*) properties()["linscale-curve"])->getValue(x) * ((TransformProperty*) properties()["offset"])->scalation();
+        m.translate(sOff->position().x() + c*((SplineProperty*) properties()["xpos-curve"])->getValue(x) * eOff->position().x(),
+                    sOff->position().y() + c*((SplineProperty*) properties()["ypos-curve"])->getValue(x) * eOff->position().y());
+        m.rotate(sOff->rotation() + c*((SplineProperty*) properties()["linrot-curve"])->getValue(x) * eOff->rotation());
+        qreal s = sOff->scalation() + ((SplineProperty*) properties()["linscale-curve"])->getValue(x) * eOff->scalation();
         m.scale(1+c*s, 1+c*s);
         _matrices.append(m);
     }

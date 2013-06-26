@@ -23,6 +23,7 @@ PlotObject::PlotObject(Project *project, QString name) : PathObject(project, nam
     addProperty("polar-start", new RealProperty("PlotObject", tr("Start"), 0));
     addProperty("polar-end", new RealProperty("PlotObject", tr("End"), 360));
     polish();
+    updatePropertiesVisibility();
 }
 
 void PlotObject::updatePath()

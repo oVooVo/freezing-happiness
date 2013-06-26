@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include "BackEnd/mathutility.h"
 #include <QDebug>
+#include <QLabel>
 
 REGISTER_DEFN_PROPERTYTYPE(TransformProperty);
 
@@ -32,12 +33,14 @@ TransformProperty::TransformProperty(QString category, QString name, qreal x, qr
 QWidget* TransformProperty::createWidget(QList<Property *> props, QWidget *parent)
 {
     QWidget* par = new QWidget(parent);
+    QWidget* label = new QLabel(props.first()->name(), parent);
     QWidget* xWidget = RealProperty::createWidget(getChildProperties("x", props), par);
     QWidget* yWidget = RealProperty::createWidget(getChildProperties("y", props), par);
     QWidget* rotWidget = RealProperty::createWidget(getChildProperties("Rotation", props), par);
     QWidget* scalWidget = RealProperty::createWidget(getChildProperties("Scalation", props), par);
 
     QVBoxLayout* layout = new QVBoxLayout();
+    layout->addWidget(label);
     layout->addWidget(xWidget);
     layout->addWidget(yWidget);
     layout->addWidget(rotWidget);
