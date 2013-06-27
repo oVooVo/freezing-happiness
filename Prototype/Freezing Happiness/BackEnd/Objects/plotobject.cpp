@@ -13,7 +13,7 @@ const QStringList PlotObject::POLAR = QStringList() << "polar-start" << "polar-e
 
 PlotObject::PlotObject(Project *project, QString name) : PathObject(project, name)
 {
-    addProperty("formular", new PropertyString("PlotObject", tr("formular"), "", true));
+    addProperty("formular", new PropertyString("PlotObject", tr("formular"), "", true, QFont("Courier")));
     addProperty("points", new IntegerProperty("PlotObject", tr("Points"), 0, std::numeric_limits<int>::max(), 100));
     addProperty("mode", new SelectProperty("PlotObject", tr("Mode"), 0, QStringList() << tr("Cartesian") << tr("Polar")));
 

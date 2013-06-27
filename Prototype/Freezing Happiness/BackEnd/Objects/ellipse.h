@@ -9,7 +9,6 @@ class Ellipse : public PathObject
     Q_OBJECT
 public:
     Ellipse(Project *project, QString name = "Ellipse");
-    //QTransform getLocaleTransformAt(qreal pos);
 
 private:
     REGISTER_DECL_OBJECTTYPE(Ellipse);

@@ -5,6 +5,7 @@
 
 class FontProperty : public Property
 {
+    Q_OBJECT
 public:
     FontProperty(QString category, QString name);
     FontProperty(QByteArray *data);
@@ -12,6 +13,7 @@ public:
     QString toString();
     QFont font() const { return _font; }
     static QWidget* createWidget(QList<Property *> props, QWidget *parent);
+    void setFont(QFont font);
 
 
 private:

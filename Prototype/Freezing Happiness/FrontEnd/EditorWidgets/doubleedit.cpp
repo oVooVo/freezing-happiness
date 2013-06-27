@@ -18,7 +18,7 @@ void DoubleEdit::mouseMoveEvent(QMouseEvent *event)
     emit editingFinished();
 }
 
-void DoubleEdit::mouseReleaseEvent(QMouseEvent *)
+void DoubleEdit::mouseReleaseEvent(QMouseEvent *event)
 {
     _pos.setY(-1);
     QApplication::restoreOverrideCursor();

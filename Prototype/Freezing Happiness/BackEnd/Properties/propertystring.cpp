@@ -12,19 +12,18 @@ PropertyString::PropertyString(QByteArray* data)
 {
     QString className, category, name;
     QDataStream in(data, QIODevice::ReadOnly);
-    quint8 nonProportional, singleLine;
-    in >> className >> category >> name >> _string >> nonProportional >> singleLine;
-    _nonProportional = (bool) nonProportional;
+    quint8 singleLine;
+    in >> className >> category >> name >> _string >> singleLine >> _font;
     _singleLine = (bool) singleLine;
     setCategory(category);
     setName(name);
     Q_ASSERT(className == type());
 }
 
-PropertyString::PropertyString(QString category, QString name, QString string, bool nonProportional, bool singleLine)
+PropertyString::PropertyString(QString category, QString name, QString string, bool singleLine, QFont font)
 {
+    _font = font;
     _string = string;
-    _nonProportional = nonProportional;
     _singleLine = singleLine;
     setCategory(category);
     setName(name);
@@ -34,7 +33,7 @@ QByteArray PropertyString::toByteArray()
 {
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
-    out << type() << category() << name() << _string << (quint8) _nonProportional << (quint8) _singleLine;
+    out << type() << category() << name() << _string << (quint8) _singleLine << _font;
 
     return array;
 }
@@ -75,9 +74,7 @@ QWidget* PropertyString::createWidget(QList<Property*> props, QWidget* parent)
         }
 
         singleLine ? ((QLineEdit*) lineEdit)->setText(string) : ((TextEdit*) lineEdit)->setPlainText(string);
-        if (((PropertyString*) props.first())->_nonProportional) {
-            lineEdit->setFont(QFont("Courier"));
-        }
+        lineEdit->setFont(((PropertyString*) props.first())->_font);
         if (multipleValues) {
             lineEdit->setStyleSheet(QString("background-color:%1").arg(Property::MULTIPLE_VALUES_COLOR));
         } else {
@@ -92,7 +89,7 @@ QWidget* PropertyString::createWidget(QList<Property*> props, QWidget* parent)
             connect((QLineEdit*) lineEdit, &QLineEdit::editingFinished, [=]() {
                 propString->setString(((QLineEdit*) lineEdit)->text());
             });
-        }else {
+        } else {
             connect((TextEdit*) lineEdit, &TextEdit::editingFinished, [=]() {
                 propString->setString(((TextEdit*) lineEdit)->document()->toPlainText());
             });
@@ -116,6 +113,14 @@ QWidget* PropertyString::createWidget(QList<Property*> props, QWidget* parent)
         w->setLayout(layout);
         return w;
     }
+}
+
+void PropertyString::setFont(QFont font)
+{
+    if (_font == font) return;
+
+    _font = font;
+    emit valueChanged();
 }
 
 

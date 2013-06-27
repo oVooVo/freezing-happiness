@@ -1,13 +1,17 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include "object.h"
+#include "pathobject.h"
 
-class Text : public Object
+class Text : public PathObject
 {
     Q_OBJECT
 public:
     Text(Project* project, QString name = tr("Text"));
+
+protected:
+    void connectPropertyTriggers();
+    void updatePath();
 
 private:
     REGISTER_DECL_OBJECTTYPE(Text);

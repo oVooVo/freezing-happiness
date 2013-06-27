@@ -8,7 +8,7 @@ class PropertyString : public Property
     Q_OBJECT
 public:
     PropertyString(QByteArray* data);
-    PropertyString(QString category, QString name, QString string = "", bool nonProportional = false, bool singleLine = true);
+    PropertyString(QString category, QString name, QString string = "", bool singleLine = true, QFont font = QFont());
     QByteArray toByteArray();
     QString toString() const;
 
@@ -17,12 +17,13 @@ public:
 
 public slots:
     void setString(QString s);
+    void setFont(QFont font);
 
 
 private:
     REGISTER_DECL_PROPERTYTYPE(PropertyString);
     QString _string;
-    bool _nonProportional = false;
+    QFont _font;
     bool _singleLine = true;
 };
 

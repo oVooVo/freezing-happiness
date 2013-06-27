@@ -69,7 +69,8 @@ SOURCES += main.cpp \
     FrontEnd/EditorWidgets/integeredit.cpp \
     BackEnd/Objects/text.cpp \
     BackEnd/Properties/fontproperty.cpp \
-    FrontEnd/EditorWidgets/textedit.cpp
+    FrontEnd/EditorWidgets/textedit.cpp \
+    BackEnd/Objects/mirror.cpp
 
 HEADERS += \
     BackEnd/project.h \
@@ -121,7 +122,8 @@ HEADERS += \
     FrontEnd/EditorWidgets/integeredit.h \
     BackEnd/Objects/text.h \
     BackEnd/Properties/fontproperty.h \
-    FrontEnd/EditorWidgets/textedit.h
+    FrontEnd/EditorWidgets/textedit.h \
+    BackEnd/Objects/mirror.h
 
 
 FORMS += \

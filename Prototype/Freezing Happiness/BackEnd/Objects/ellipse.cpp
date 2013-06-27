@@ -22,18 +22,6 @@ void Ellipse::adjustProperties()
     }
 }
 
-/*
-QTransform Ellipse::getLocaleTransformAt(qreal pos)
-{
-    qreal alpha = pos * 2 * M_PI;
-    qreal r1 = ((RealProperty*) properties()["xrad"])->value();
-    qreal r2 = ((RealProperty*) properties()["yrad"])->value();
-    QTransform trans;
-    trans.translate(qCos(alpha) * r1, qSin(alpha) * r2);
-    trans.rotate(alpha * 180 * M_1_PI);
-    return trans;
-}*/
-
 void Ellipse::updatePath()
 {
     _path = QPainterPath();
