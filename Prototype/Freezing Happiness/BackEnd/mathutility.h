@@ -17,7 +17,10 @@ public:
     static qreal aSin(qreal t);
     static QTransform mult(QTransform x, QTransform y);
     static QString colorToString(QColor color);
+
+#ifdef EXPRTK
     static QList<qreal> parse(QString s, QList<qreal> xs);
+#endif
 
 private:
     MathUtility();

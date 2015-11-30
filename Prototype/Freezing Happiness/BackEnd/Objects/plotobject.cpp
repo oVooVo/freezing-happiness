@@ -1,3 +1,5 @@
+#ifdef EXPRTK
+
 #include "plotobject.h"
 #include "BackEnd/Properties/propertystring.h"
 #include "BackEnd/Properties/realproperty.h"
@@ -49,6 +51,7 @@ void PlotObject::updatePath()
             return;
         }
         if (xValues.isEmpty()) return;
+
 
         yValues = MathUtility::parse(((PropertyString*) properties()["formular"])->string(), xValues);
         _path = QPainterPath(QPointF(xValues.first(), yValues.first()));
@@ -107,3 +110,4 @@ void PlotObject::connectPropertyTriggers()
 }
 
 
+#endif

@@ -3,6 +3,7 @@
 
 #include "pathobject.h"
 
+#ifdef EXPRTK
 class PlotObject : public PathObject
 {
     Q_OBJECT
@@ -17,5 +18,7 @@ private:
     static const QStringList CARTESIAN;
     static const QStringList POLAR;
 };
+#endif
+
 
 #endif // PLOTOBJECT_H
